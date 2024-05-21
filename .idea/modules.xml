@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/swing-project.iml" filepath="$PROJECT_DIR$/swing-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BookLink.iml" filepath="$PROJECT_DIR$/BookLink.iml" />
     </modules>
   </component>
 </project>
