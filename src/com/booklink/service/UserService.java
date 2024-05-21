@@ -1,6 +1,6 @@
 package com.booklink.service;
 
-import com.booklink.model.UserRegistrationDto;
+import com.booklink.model.user.UserRegistrationDto;
 
 public class UserService {
 

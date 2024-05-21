@@ -1,4 +1,4 @@
-package com.booklink.model;
+package com.booklink.model.user;
 
 import java.time.LocalDateTime;
 

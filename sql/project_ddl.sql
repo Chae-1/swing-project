@@ -118,6 +118,7 @@ create sequence comments_seq
     increment by 1
     nocycle
 cache 20;
+
 create unique index idx_comments on comments(comment_id);
 alter table comments add constraint comments_pk primary key (comment_id);
 alter table comments add constraint comments_book_fk foreign key (book_id) references book (book_id) on delete cascade;

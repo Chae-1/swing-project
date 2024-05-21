@@ -1,7 +1,7 @@
 package com.booklink.dao;
 
-import com.booklink.model.User;
-import com.booklink.model.UserRegistrationDto;
+import com.booklink.model.user.User;
+import com.booklink.model.user.UserRegistrationDto;
 
 import java.util.List;
 
