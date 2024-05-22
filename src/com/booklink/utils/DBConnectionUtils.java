@@ -28,17 +28,4 @@ public class DBConnectionUtils {
             throw new RuntimeException(e);
         }
     }
-
-    public static void main(String[] args) {
-        Connection connection = DBConnectionUtils.getConnection();
-        try {
-            PreparedStatement pstmt = connection.prepareStatement("select * from employees");
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                System.out.println(rs.getString("first_name"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
