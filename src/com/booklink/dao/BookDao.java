@@ -72,7 +72,7 @@ public class BookDao {
     }
 
     public void deleteBook(Long bookId) {
-        String sql = "{call book_pkg.delete_book(?)}";
+           String sql = "{call book_pkg.delete_book(?)}";
         try(Connection con = DBConnectionUtils.getConnection();
             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setLong(1, bookId);
