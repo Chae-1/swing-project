@@ -28,6 +28,7 @@ public class BookService {
 
     }
 
+    // to do -> 카테고리 이름 내역으로 조회가 가능해야한다.
 
     public void findBookByTitle(String title) {
         Optional<Book> bookByTitle = bookDao.findBookByTitle(title);
@@ -35,4 +36,9 @@ public class BookService {
             System.out.println(book.bookShortInfo().getSummary());
         });
     }
+
+    public void deleteBookById(Long bookId) {
+        bookDao.deleteBook(bookId);
+    }
+
 }

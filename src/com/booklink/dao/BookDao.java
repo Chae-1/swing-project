@@ -47,18 +47,15 @@ public class BookDao {
     }
 
     public Optional<Book> findBookByTitle(String title) {
-        Connection con = null;
-        CallableStatement cstmt = null;
+
         String sql = "{ call book_pkg.find_book_by_title(?, ?) }";
 
-        try {
-            con = DBConnectionUtils.getConnection();
-            cstmt = con.prepareCall(sql);
+        try(Connection con = DBConnectionUtils.getConnection();
+            CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setString(1, title);
             // Register output parameter
             cstmt.registerOutParameter(2, OracleTypes.STRUCT, "BOOK_REC");
             cstmt.execute();
-
             STRUCT struct = (STRUCT) cstmt.getObject(2);
             Book findBook = structToBook(struct);
             return Optional.ofNullable(findBook);
@@ -68,10 +65,13 @@ public class BookDao {
     }
 
     private Book structToBook(STRUCT struct) throws SQLException {
-        Object[] idAndBookInfo = struct.getAttributes();
-        long id = ((BigDecimal) idAndBookInfo[0]).longValue();
-        STRUCT bookInfoStruct = (STRUCT) idAndBookInfo[1];
 
+        Object[] idAndBookInfo = struct.getAttributes();
+        if (idAndBookInfo[0] == null) {
+            return null;
+        }
+        Long id = ((BigDecimal) idAndBookInfo[0]).longValue();
+        STRUCT bookInfoStruct = (STRUCT) idAndBookInfo[1];
         // 책 정보 구조체에서 책을 정보를 조회한다.
         Object[] bookInfo = bookInfoStruct.getAttributes();
         String title = (String) bookInfo[0];// title
@@ -96,5 +96,20 @@ public class BookDao {
                 .rating(rating)
                 .price(price)
                 .build();
+    }
+
+    public void deleteBook(Long bookId) {
+        String sql = "{call book_pkg.delete_book(?)}";
+        try(Connection con = DBConnectionUtils.getConnection();
+            CallableStatement cstmt = con.prepareCall(sql)) {
+            cstmt.setLong(1, bookId);
+            // Register output parameter
+            int result = cstmt.executeUpdate();
+            if (result > 0) {
+                System.out.println("성공적으로 삭제했습니다.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

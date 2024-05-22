@@ -26,14 +26,18 @@ public class BookAddForm {
                 6000,
                 "서울미디어코믹스(서울문화사)",
                 0, 0.0);
+
         BookAddForm bookAddForm = new BookAddForm();
+        bookAddForm.deleteBookById(1L);
         bookAddForm.addBook(bookDto);
-
-
     }
 
     private void findBookByTitle(String title) {
         bookService.findBookByTitle(title);
+    }
+
+    private void deleteBookById(Long bookId) {
+        bookService.deleteBookById(bookId);
     }
 }
 // clob -> varchar
