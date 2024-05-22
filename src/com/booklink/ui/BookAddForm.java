@@ -28,5 +28,12 @@ public class BookAddForm {
                 0, 0.0);
         BookAddForm bookAddForm = new BookAddForm();
         bookAddForm.addBook(bookDto);
+
+
+    }
+
+    private void findBookByTitle(String title) {
+        bookService.findBookByTitle(title);
     }
 }
+// clob -> varchar

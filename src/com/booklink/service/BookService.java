@@ -29,4 +29,10 @@ public class BookService {
     }
 
 
+    public void findBookByTitle(String title) {
+        Optional<Book> bookByTitle = bookDao.findBookByTitle(title);
+        bookByTitle.ifPresent((book) -> {
+            System.out.println(book.bookShortInfo().getSummary());
+        });
+    }
 }
