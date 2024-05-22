@@ -7,15 +7,15 @@
 -- -- out 인자는 호출 결과로 리턴받을 수 있다.
 CREATE TABLE Books (
                        book_id INTEGER,
-                       book_title VARCHAR(50),
-                       book_author VARCHAR(30),
+                       book_title VARCHAR2(50),
+                       book_author VARCHAR2(30),
                        book_publication_date DATE,
                        book_sales_point INTEGER,
                        book_summary CLOB,
                        book_description CLOB,
                        book_price INTEGER,
                        book_rating number(2, 1),
-                       book_publisher VARCHAR(50)
+                       book_publisher VARCHAR2(50)
 );
 
 create unique index idx_books on books(book_id);
