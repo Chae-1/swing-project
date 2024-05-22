@@ -11,6 +11,8 @@ import oracle.sql.StructDescriptor;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class BookDao {
@@ -19,7 +21,6 @@ public class BookDao {
         Connection con = null;
         CallableStatement cstmt = null;
         String sql = "{call book_pkg.add_book(?)}";
-
         try {
             con = DBConnectionUtils.getConnection();
             cstmt = con.prepareCall(sql);
@@ -32,7 +33,9 @@ public class BookDao {
         }
     }
 
+
     private Object[] createBookInfo(Connection con, BookDto bookDto) {
+        System.out.println(bookDto.rating());
         return new Object[]{
                 bookDto.title(),
                 bookDto.author(),
@@ -41,7 +44,7 @@ public class BookDao {
                 DbDataTypeMatcher.stringToClob(con, bookDto.summary()),
                 DbDataTypeMatcher.stringToClob(con, bookDto.description()),
                 bookDto.price(),
-                bookDto.rating(),
+                bookDto.rating() != null ? new BigDecimal(bookDto.rating()) : null,
                 bookDto.publisher()
         };
     }
@@ -49,53 +52,23 @@ public class BookDao {
     public Optional<Book> findBookByTitle(String title) {
 
         String sql = "{ call book_pkg.find_book_by_title(?, ?) }";
+        ResultSet rs = null;
 
         try(Connection con = DBConnectionUtils.getConnection();
             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setString(1, title);
             // Register output parameter
-            cstmt.registerOutParameter(2, OracleTypes.STRUCT, "BOOK_REC");
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
             cstmt.execute();
-            STRUCT struct = (STRUCT) cstmt.getObject(2);
-            Book findBook = structToBook(struct);
-            return Optional.ofNullable(findBook);
+            rs = (ResultSet) cstmt.getObject(2);
+            Book book = null;
+            if (rs.next()) {
+                book = getBook(rs);
+            }
+            return Optional.ofNullable(book);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private Book structToBook(STRUCT struct) throws SQLException {
-
-        Object[] idAndBookInfo = struct.getAttributes();
-        if (idAndBookInfo[0] == null) {
-            return null;
-        }
-        Long id = ((BigDecimal) idAndBookInfo[0]).longValue();
-        STRUCT bookInfoStruct = (STRUCT) idAndBookInfo[1];
-        // 책 정보 구조체에서 책을 정보를 조회한다.
-        Object[] bookInfo = bookInfoStruct.getAttributes();
-        String title = (String) bookInfo[0];// title
-        String author = (String) bookInfo[1];// author
-        LocalDate publicationDate = ((Timestamp) bookInfo[2]).toLocalDateTime().toLocalDate();// publicationDate
-        int salesPoint = ((BigDecimal) bookInfo[3]).intValue();// salesPoint
-        String summary = bookInfo[4].toString();// summary
-        String description = bookInfo[5].toString();// description
-        int price = ((BigDecimal) bookInfo[6]).intValue();// price
-        double rating = ((BigDecimal) bookInfo[7]).doubleValue();
-        String publisher = (String) bookInfo[8];// publisher
-        Book.BookBuilder bookBuilder = new Book.BookBuilder();
-
-        return bookBuilder.id(id)
-                .title(title)
-                .author(author)
-                .publicationDate(publicationDate)
-                .summary(summary)
-                .description(description)
-                .salesPoint(salesPoint)
-                .publisher(publisher)
-                .rating(rating)
-                .price(price)
-                .build();
     }
 
     public void deleteBook(Long bookId) {
@@ -110,6 +83,90 @@ public class BookDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void updateBook(Long bookId, BookDto bookDto) {
+        String sql = "{call book_pkg.update_book(?, ?)}";
+
+        try(Connection con = DBConnectionUtils.getConnection();
+            CallableStatement cstmt = con.prepareCall(sql)) {
+            cstmt.setLong(1, bookId);
+            StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_INFO_REC", con);
+            STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookInfo(con, bookDto));
+            cstmt.setObject(2, bookInfoStruct, OracleTypes.STRUCT);
+            int result = cstmt.executeUpdate();
+            if (result > 0) {
+                System.out.println("성공적으로 업데이트 되었습니다.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Optional<Book> findBookById(Long bookId) {
+        String sql = "{call book_pkg.find_book_by_id(?, ?)}";
+        ResultSet rs = null;
+        try(Connection con = DBConnectionUtils.getConnection();
+            CallableStatement cstmt = con.prepareCall(sql)) {
+            cstmt.setLong(1, bookId);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            // Register output parameter
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            Book book = null;
+            if (rs.next()) {
+                book = getBook(rs);
+            }
+            return Optional.ofNullable(book);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private Book getBook(ResultSet rs) throws SQLException {
+        double bookRating = rs.getBigDecimal("book_rating").doubleValue();
+        System.out.println("bookRating: " + bookRating);
+        return new Book.BookBuilder()
+                .id(rs.getLong("book_id"))
+                .title(rs.getString("book_title"))
+                .author(rs.getString("book_author"))
+                .publicationDate(rs.getDate("book_publication_date").toLocalDate())
+                .summary(rs.getString("book_summary"))
+                .description(rs.getString("book_description"))
+                .price(rs.getInt("book_price"))
+                .publisher(rs.getString("book_publisher"))
+                .salesPoint(rs.getInt("book_sales_point"))
+                .rating(bookRating)
+                .build();
+    }
+
+    public List<Book> findAllBook() {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call book_pkg.find_all_book(?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(1);
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
         }
     }
 }

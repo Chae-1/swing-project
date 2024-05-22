@@ -29,6 +29,7 @@ public class Book {
         this.description = builder.description;
         this.price = builder.price;
         this.publisher = builder.publisher;
+        this.rating = builder.rating;
         this.salesPoint = builder.salesPoint;
     }
 
@@ -103,5 +104,22 @@ public class Book {
 
     public BookShortInfo bookShortInfo() {
         return new BookShortInfo(summary);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", publicationDate=" + publicationDate +
+                ", summary='" + summary + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", publisher='" + publisher + '\'' +
+                ", salesPoint=" + salesPoint +
+                ", rating=" + rating +
+                ", categories=" + categories +
+                '}';
     }
 }

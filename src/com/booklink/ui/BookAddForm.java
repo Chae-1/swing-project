@@ -18,7 +18,7 @@ public class BookAddForm {
     }
 
     public static void main(String[] args) {
-        BookDto bookDto = new BookDto("나의 히어로 아카데미아 40",
+        BookDto bookDto = new BookDto("나의 히어로 아카데미아 39",
                 "호리코시 코헤이",
                 LocalDate.of(2024, 05, 31),
                 "소년만화",
@@ -28,8 +28,17 @@ public class BookAddForm {
                 0, 0.0);
 
         BookAddForm bookAddForm = new BookAddForm();
-        bookAddForm.deleteBookById(1L);
-        bookAddForm.addBook(bookDto);
+        BookDto bookDto1 = new BookDto("나의 히어로 아카데미아 39",
+                "zz",
+                LocalDate.of(2024, 05, 31),
+                "zz",
+                "zzzz",
+                610,
+                "서울미디어코믹스(서울문화사)",
+                1, 1.6);
+        bookAddForm.bookService.updateBook(3L, bookDto1);
+        bookAddForm.bookService.viewAllBooks();
+        bookAddForm.bookService.findBookByTitle("나의 히어로 아카데미아 39");
     }
 
     private void findBookByTitle(String title) {

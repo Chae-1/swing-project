@@ -4,6 +4,7 @@ import com.booklink.dao.BookDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BookService {
@@ -25,7 +26,6 @@ public class BookService {
             throw new RuntimeException("이미 존재합니다.");
         });
         bookDao.registerBook(bookDto);
-
     }
 
     // to do -> 카테고리 이름 내역으로 조회가 가능해야한다.
@@ -33,12 +33,27 @@ public class BookService {
     public void findBookByTitle(String title) {
         Optional<Book> bookByTitle = bookDao.findBookByTitle(title);
         bookByTitle.ifPresent((book) -> {
-            System.out.println(book.bookShortInfo().getSummary());
+            System.out.println(book.toString());
         });
     }
 
     public void deleteBookById(Long bookId) {
         bookDao.deleteBook(bookId);
+    }
+
+    public void updateBook(Long bookId, BookDto bookDto) {
+        bookDao.updateBook(bookId, bookDto);
+    }
+
+    public void viewAllBooks() {
+        List<Book> allBook = bookDao.findAllBook();
+        System.out.println(allBook);
+    }
+
+    public static void main(String[] args) {
+
+        BookDao bookDao = new BookDao();
+        System.out.println(bookDao.findBookById(3L));
     }
 
 }
