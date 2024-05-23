@@ -57,7 +57,7 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
     ) as
     begin
         open p_category for
-            with temp as(select category_id, category_name, prior_category_id, level as "t_depth"
+            with temp as(select category_id, category_name, prior_category_id, level as t_depth
             from Categories
             start with prior_category_id is null
             connect by prior category_id = prior_category_id)
