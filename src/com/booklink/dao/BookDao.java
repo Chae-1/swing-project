@@ -4,7 +4,10 @@ import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DbDataTypeMatcher;
+import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
+import oracle.sql.ARRAY;
+import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
 
@@ -16,6 +19,29 @@ import java.util.List;
 import java.util.Optional;
 
 public class BookDao {
+
+    public void registerBooks(List<BookDto> bookDtos) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        String sql = "call add_books(?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+
+            StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_INFO_REC", con);
+            ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("BOOK_INFO_TAB", con);
+            STRUCT[] structArray = new STRUCT[bookDtos.size()];
+            for (int i = 0; i < bookDtos.size(); i++) {
+                structArray[i] = new STRUCT(structDescriptor, con, createBookInfo(con, bookDtos.get(i)));
+            }
+            cstmt.setArray(1, new ARRAY(arrayDescriptor, (OracleConnection) con, structArray));
+            cstmt.execute();
+        } catch (SQLException e) {
+
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, null);
+        }
+    }
     // 등록 수정 삭제 조회
     public void registerBook(BookDto bookDto) {
         Connection con = null;
@@ -169,4 +195,5 @@ public class BookDao {
             DBConnectionUtils.releaseConnection(con, cstmt, rs);
         }
     }
+
 }
