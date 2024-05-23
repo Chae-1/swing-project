@@ -1,7 +1,7 @@
 package com.booklink.service;
 
 import com.booklink.dao.UserDao;
-import com.booklink.model.User;
+import com.booklink.model.user.User;
 import com.booklink.model.UserRegistrationDto;
 
 import java.time.LocalDateTime;

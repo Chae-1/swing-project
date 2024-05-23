@@ -1,6 +1,6 @@
 package com.booklink.dao;
 
-import com.booklink.model.User;
+import com.booklink.model.user.User;
 import com.booklink.model.UserRegistrationDto;
 import com.booklink.utils.DBConnectionUtils;
 import oracle.jdbc.OracleTypes;
@@ -25,6 +25,8 @@ public class UserDao {
             cs.setString(5, dto.getImage());
 
             cs.executeUpdate();
+
+            System.out.println("등록완료");
 
         } catch (SQLException e) {
             e.printStackTrace();
