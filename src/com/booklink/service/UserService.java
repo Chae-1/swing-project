@@ -2,8 +2,6 @@ package com.booklink.service;
 
 import com.booklink.dao.UserDao;
 import com.booklink.model.user.User;
-<<<<<<< HEAD
-=======
 import com.booklink.model.user.UserRegistrationDto;
 import com.booklink.model.user.exception.UserNotFoundException;
 
@@ -16,30 +14,15 @@ public class UserService {
     private final UserDao userDao = new UserDao();
 
     public void registrationUser(UserRegistrationDto userRegistrationDto) {
-        if (userRegistrationDto.getName() == null || userRegistrationDto.getName().isEmpty()) {
+        if (userRegistrationDto.name() == null || userRegistrationDto.name().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
-        }
-
-        if (userRegistrationDto.getPassword() == null || userRegistrationDto.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be null or empty");
-        }
-
-        if (userRegistrationDto.getLoginId() == null || userRegistrationDto.getLoginId().isEmpty()) {
-            throw new IllegalArgumentException("Login ID cannot be null or empty");
-        }
-
-        if (userRegistrationDto.getRegistrationDate() == null) {
-            throw new IllegalArgumentException("Registration Date cannot be null");
         }
         // DAO 접근해서 저장
         userDao.registerUser(userRegistrationDto);
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userDao.findAll();
-
-    public void registrationUser(UserRegistrationDto userRegistrationDto) {
-
     }
 
     public Optional<User> findUserByLogIdAndPassword(String logId, String password) {

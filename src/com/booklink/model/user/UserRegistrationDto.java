@@ -7,4 +7,5 @@ public record UserRegistrationDto(String name,
         String loginId,
         LocalDateTime registrationDate,
         String image) {
+
 }

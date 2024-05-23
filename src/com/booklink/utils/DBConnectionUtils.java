@@ -28,8 +28,6 @@ public class DBConnectionUtils {
             throw new RuntimeException(e);
         }
     }
-<<<<<<< HEAD
-=======
 
     public static void releaseConnection(Connection con, Statement stmt, ResultSet rs) {
         if (con != null) {
@@ -56,5 +54,4 @@ public class DBConnectionUtils {
             }
         }
     }
->>>>>>> feature-branch
 }
