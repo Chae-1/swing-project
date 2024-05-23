@@ -2,6 +2,8 @@ package com.booklink.ui.panel.menu;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UserPanel extends JPanel {
     private JButton loginButton;
@@ -19,5 +21,14 @@ public class UserPanel extends JPanel {
 
         add(loginButton).setBounds(0, 0, 200, 50);
         add(signUpButton).setBounds(200, 0, 200, 50);
+
+        // Add ActionListener to loginButton
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LoginForm(); // Open the LoginForm
+            }
+        });
+
     }
 }
