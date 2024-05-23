@@ -34,7 +34,7 @@ create or replace package user_pkg as
         p_user_log_idin users.user_log_id%type,
         p_user_password in users.user_password%type
     );
-    procedure find_all_user();
+    --procedure find_all_user();
     procedure delete_user_by_id(p_user_id in users.user_id%type);
     -- user 변경 및 선호 카테고리를 변경할 수 있도록 설정
 end user_pkg;
@@ -55,9 +55,20 @@ create or replace package body user_pkg as
         p_user_log_id in users.user_log_id%type,
         p_user_password in users.user_password%type,
         p_user out SYS_REFCURSOR
-    );
-    procedure find_all_user();
-    procedure delete_user_by_id(p_user_id in users.user_id%type);
+    )
+    begin
+        open p_user for
+            select u.*
+            from users u
+            where user_id, user_password in (p_user_log_id, p_user_password);
+    end find_user_by_logid;
+    /
 
+    procedure delete_user_by_id(p_user_id in users.user_id%type)
+    begin
+        delete users
+        where user_id = p_user_id;
+    end delete_user_by_id;
+    /
 end user_pkg;
 /

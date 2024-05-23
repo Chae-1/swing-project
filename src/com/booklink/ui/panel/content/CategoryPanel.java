@@ -8,8 +8,8 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class CategoryPanel extends JPanel {
-    public CategoryPanel() {
-        setPreferredSize(new Dimension(432, 970));
+    public CategoryPanel(int width, int height) {
+        setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
 
         // 트리 루트 노드 생성

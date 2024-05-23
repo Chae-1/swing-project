@@ -7,7 +7,7 @@ public class SearchPanel extends JPanel {
 
     public SearchPanel() {
         // 패널 크기 설정
-        setPreferredSize(new Dimension(800, 50));
+        setPreferredSize(new Dimension(1000, 50));
 
         // 레이아웃 매니저를 null로 설정하여 절대 위치 사용
         setLayout(null);

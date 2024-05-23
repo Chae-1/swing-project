@@ -3,22 +3,30 @@ package com.booklink.ui.panel.menu;
 import javax.swing.*;
 import java.awt.*;
 
+// MenuPanel 클래스
 public class MenuPanel extends JPanel {
+    public MenuPanel(int width, int height) {
+        setPreferredSize(new Dimension(1920, 50));
+        setLayout(null);
 
-    public MenuPanel() {
-        // 패널 크기 설정
-        setPreferredSize(new Dimension(1440, 50));
-
-        // BorderLayout으로 설정
-        setLayout(new BorderLayout());
-
-        // SearchPanel과 UserPanel 인스턴스 생성
         SearchPanel searchPanel = new SearchPanel();
         UserPanel userPanel = new UserPanel();
 
-        // MenuPanel에 SearchPanel을 가운데에 추가
-        add(searchPanel, BorderLayout.CENTER);
-        // MenuPanel에 UserPanel을 오른쪽에 추가
-        add(userPanel, BorderLayout.EAST);
+        int searchPanelWidth = 1000;
+        int searchPanelHeight = 50;
+        int userPanelWidth = 800;
+        int userPanelHeight = 50;
+
+        int searchPanelX = (1920 - searchPanelWidth - userPanelWidth - 20) / 2;
+        int searchPanelY = (50 - searchPanelHeight) / 2;
+
+        int userPanelX = 1920 - userPanelWidth - 10;
+        int userPanelY = (50 - userPanelHeight) / 2;
+
+        searchPanel.setBounds(0, 0, searchPanelWidth, searchPanelHeight);
+        userPanel.setBounds(searchPanelWidth, 0, userPanelWidth, userPanelHeight);
+
+        add(searchPanel);
+        add(userPanel);
     }
 }

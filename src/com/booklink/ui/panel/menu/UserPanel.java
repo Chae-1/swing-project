@@ -4,37 +4,20 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UserPanel extends JPanel {
+    private JButton loginButton;
+    private JButton signUpButton;
 
     public UserPanel() {
-        // 패널 크기 설정
-        setPreferredSize(new Dimension(600, 50));
-
-        // 레이아웃 매니저를 null로 설정하여 절대 위치 사용
+        setPreferredSize(new Dimension(800, 50));
         setLayout(null);
 
-        // loginButton과 signUpButton 생성
-        JButton loginButton = new JButton("Login");
-        JButton signUpButton = new JButton("Sign Up");
+        loginButton = new JButton("Login");
+        loginButton.setSize(200, 50);
 
-        // 버튼 크기 설정
-        int buttonWidth = 100;
-        int buttonHeight = 50;
+        signUpButton = new JButton("Sign Up");
+        signUpButton.setSize(200, 50);
 
-        // 컴포넌트 위치 설정
-        int panelWidth = 600;
-        int panelHeight = 50;
-
-        int loginButtonX = (panelWidth - buttonWidth * 2 - 10) / 2;
-        int loginButtonY = (panelHeight - buttonHeight) / 2;
-
-        int signUpButtonX = loginButtonX + buttonWidth + 10;
-        int signUpButtonY = loginButtonY;
-
-        loginButton.setBounds(loginButtonX, loginButtonY, buttonWidth, buttonHeight);
-        signUpButton.setBounds(signUpButtonX, signUpButtonY, buttonWidth, buttonHeight);
-
-        // 패널에 컴포넌트 추가
-        add(loginButton);
-        add(signUpButton);
+        add(loginButton).setBounds(0, 0, 200, 50);
+        add(signUpButton).setBounds(200, 0, 200, 50);
     }
 }
