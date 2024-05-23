@@ -7,46 +7,6 @@ import com.booklink.service.BookService;
 import java.time.LocalDate;
 
 public class BookAddForm {
-    private BookService bookService;
 
-    public BookAddForm() {
-        this.bookService = new BookService(new BookDao());
-    }
-
-    public void addBook(BookDto bookDto) {
-        bookService.registerBook(bookDto);
-    }
-
-    public static void main(String[] args) {
-        BookDto bookDto = new BookDto("나의 히어로 아카데미아 39",
-                "호리코시 코헤이",
-                LocalDate.of(2024, 05, 31),
-                "소년만화",
-                "내겐 밀리오 같은 용기나, 하도 같은 활약은 할 수 없을지도 몰라. 그렇다 해도 자신을 믿고 동료들과 함께 싸우자! 일어서라! 힘을 잃고도 여전히 인지를 초월한 AFO을 억누르고 있는, 줄곧 동경해온 올마이트의 저 커다란 뒷모습에 지지 않도록!",
-                6000,
-                "서울미디어코믹스(서울문화사)",
-                0, 0.0);
-
-        BookAddForm bookAddForm = new BookAddForm();
-        BookDto bookDto1 = new BookDto("나의 히어로 아카데미아 39",
-                "zz",
-                LocalDate.of(2024, 05, 31),
-                "zz",
-                "zzzz",
-                610,
-                "서울미디어코믹스(서울문화사)",
-                1, 1.6);
-        bookAddForm.bookService.updateBook(3L, bookDto1);
-        bookAddForm.bookService.viewAllBooks();
-        bookAddForm.bookService.findBookByTitle("나의 히어로 아카데미아 39");
-    }
-
-    private void findBookByTitle(String title) {
-        bookService.findBookByTitle(title);
-    }
-
-    private void deleteBookById(Long bookId) {
-        bookService.deleteBookById(bookId);
-    }
 }
 // clob -> varchar

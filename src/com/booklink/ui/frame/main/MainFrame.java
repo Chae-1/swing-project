@@ -1,10 +1,9 @@
-package com.booklink.ui.frame;
+package com.booklink.ui.frame.main;
 
 import com.booklink.ui.panel.content.CategoryPanel;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.menu.MenuPanel;
 
-import java.awt.*;
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
