@@ -2,7 +2,12 @@ package com.booklink.service;
 
 import com.booklink.dao.UserDao;
 import com.booklink.model.user.User;
-import com.booklink.model.UserRegistrationDto;
+<<<<<<< HEAD
+=======
+import com.booklink.model.user.UserRegistrationDto;
+import com.booklink.model.user.exception.UserNotFoundException;
+
+import java.util.Optional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,7 +16,6 @@ public class UserService {
     private final UserDao userDao = new UserDao();
 
     public void registrationUser(UserRegistrationDto userRegistrationDto) {
-        // 검증
         if (userRegistrationDto.getName() == null || userRegistrationDto.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
@@ -33,6 +37,17 @@ public class UserService {
 
     public List<User> getAllUsers(){
         return userDao.findAll();
+
+    public void registrationUser(UserRegistrationDto userRegistrationDto) {
+
+    }
+
+    public Optional<User> findUserByLogIdAndPassword(String logId, String password) {
+        if (logId.isBlank() || password.isBlank()) {
+            throw new UserNotFoundException("존재하지 않는 회원입니다.");
+        }
+
+        return null;
     }
 
     private void deleteUserById(long userId) {
@@ -66,7 +81,6 @@ public class UserService {
         //사용자 삭제
         long userIdToDelete = 5; // 삭제할 사용자 ID
         userService.deleteUserById(userIdToDelete);
-
     }
 }
 

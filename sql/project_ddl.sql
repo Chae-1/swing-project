@@ -2,11 +2,11 @@
 drop table users;
 create table users (
                        user_id int,
-                       user_name VARCHAR(30),
-                       user_password VARCHAR(30),
-                       user_log_id VARCHAR(30),
+                       user_name VARCHAR2(30),
+                       user_password VARCHAR2(30),
+                       user_log_id VARCHAR2(30),
                        user_registration_date timestamp,
-                       user_image VARCHAR(30)
+                       user_image VARCHAR2(30)
 );
 
 create unique index idx_users on users(user_id);
@@ -24,7 +24,7 @@ create sequence users_seq
 drop table categories;
 CREATE TABLE Categories (
                             category_id INTEGER,
-                            category_name VARCHAR(50),
+                            category_name VARCHAR2(50),
                             prior_category_id INTEGER
 );
 drop sequence categories_seq;
@@ -43,15 +43,15 @@ alter table categories add constraint prior_category_fk foreign key (prior_categ
 drop table books;
 CREATE TABLE Books (
                        book_id INTEGER,
-                       book_title VARCHAR(50),
-                       book_author VARCHAR(30),
+                       book_title VARCHAR2(50),
+                       book_author VARCHAR2(30),
                        book_publication_date DATE,
                        book_sales_point INTEGER,
                        book_summary CLOB,
                        book_description CLOB,
                        book_price INTEGER,
                        book_rating number(2, 1),
-                       book_publisher VARCHAR(50)
+                       book_publisher VARCHAR2(50)
 );
 
 create unique index idx_books on books(book_id);
@@ -107,7 +107,7 @@ CREATE TABLE comments (
                           comment_content CLOB,
                           comment_rating INTEGER,
                           comment_field DATE,
-                          comment_is_purchased VARCHAR(20),
+                          comment_is_purchased VARCHAR2(20),
                           book_id INTEGER,
                           user_id INTEGER
 );
@@ -118,9 +118,10 @@ create sequence comments_seq
     increment by 1
     nocycle
 cache 20;
+
 create unique index idx_comments on comments(comment_id);
 alter table comments add constraint comments_pk primary key (comment_id);
-alter table comments add constraint comments_book_fk foreign key (book_id) references book (book_id) on delete cascade;
+alter table comments add constraint comments_book_fk foreign key (book_id) references books (book_id) on delete cascade;
 alter table comments add constraint comments_users_fk foreign key (user_id) references users (user_id) on delete cascade;
 alter table comments add constraint comments_book_id_nn check(book_id is not null);
 alter table comments add constraint comments_user_id_nn check(user_id is not null);
@@ -131,7 +132,7 @@ CREATE TABLE BookDiscussions (
                                  discussion_id INTEGER,
                                  discussion_date timestamp,
                                  discussion_content CLOB,
-                                 discussion_title VARCHAR(30),
+                                 discussion_title VARCHAR2(30),
                                  book_id INTEGER,
                                  user_id INTEGER,
                                  is_purchased INTEGER
@@ -157,7 +158,7 @@ CREATE TABLE DiscussionComments (
                                     dis_comment_content clob,
                                     discussion_id INTEGER,
                                     user_id INTEGER,
-                                    dis_comment_is_purchased VARCHAR(20)
+                                    dis_comment_is_purchased VARCHAR2(20)
 );
 
 create sequence discussion_comments_seq

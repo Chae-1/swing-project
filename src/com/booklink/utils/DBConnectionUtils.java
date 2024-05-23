@@ -28,4 +28,33 @@ public class DBConnectionUtils {
             throw new RuntimeException(e);
         }
     }
+<<<<<<< HEAD
+=======
+
+    public static void releaseConnection(Connection con, Statement stmt, ResultSet rs) {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+>>>>>>> feature-branch
 }
