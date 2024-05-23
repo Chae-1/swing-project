@@ -33,7 +33,17 @@ CREATE OR REPLACE TYPE book_info_rec AS OBJECT (
     book_price INTEGER,
     book_rating NUMBER(2, 1),
     book_publisher VARCHAR2(50)
-);
+);drop sequence books_seq;
+
+create sequence books_seq
+    start with 1
+    increment by 1
+    nocycle
+    cache 20;
+
+CREATE OR REPLACE TYPE book_info_tab
+    AS TABLE OF book_info_rec;
+
 
 CREATE OR REPLACE TYPE book_rec as OBJECT (
         book_id INTEGER,
@@ -42,6 +52,9 @@ CREATE OR REPLACE TYPE book_rec as OBJECT (
 
 
 create or replace package book_pkg as
+    procedure add_books(
+        p_books in book_info_tab
+    );
 
     procedure add_book(
         book_info in book_info_rec
@@ -73,6 +86,26 @@ end book_pkg;
 /
 
 create or replace package body book_pkg as
+procedure add_books(
+    p_books in book_info_tab
+) as
+begin
+    for i in 1 .. p_books.COUNT loop
+        insert into books
+            (book_id, book_title, book_author, book_publication_date, book_sales_point, book_summary, book_description, book_price, book_rating, book_publisher)
+        values
+            (books_seq.nextval,
+             p_books(i).book_title,
+             p_books(i).book_author,
+             p_books(i).book_publication_date,
+             p_books(i).book_sales_point,
+             p_books(i).book_summary,
+             p_books(i).book_description,
+             p_books(i).book_price,
+             p_books(i).book_rating,
+             p_books(i).book_publisher);
+    end loop;
+end add_books;
 procedure add_book(book_info in book_info_rec) as
 begin
     insert into books (book_id,
