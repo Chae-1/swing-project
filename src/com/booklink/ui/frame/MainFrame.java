@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
         setTitle("Main Frame with Panels");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT); // 전체 프레임 크기 설정
+        setResizable(false); // 프레임 고정
 
         // 레이아웃 매니저를 null로 설정하여 절대 위치 사용
         setLayout(null);
