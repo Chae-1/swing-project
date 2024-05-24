@@ -5,10 +5,7 @@ import com.booklink.model.book.BookDto;
 import com.booklink.model.book.BookListWithCount;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DbDataTypeMatcher;
-import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
-import oracle.sql.ARRAY;
-import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
 
@@ -43,6 +40,7 @@ public class BookDao {
             DBConnectionUtils.releaseConnection(con, cstmt, null);
         }
     }
+
     // 등록 수정 삭제 조회
     public void registerBook(BookDto bookDto) {
         Connection con = null;
@@ -226,5 +224,4 @@ public class BookDao {
     public static void main(String[] args) {
 
     }
-
 }
