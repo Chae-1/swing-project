@@ -229,26 +229,30 @@ create or replace package body book_pkg as
             FROM Books
             where contains(book_title, p_book_title, 1) > 1;
     end find_book_contains_title;
-PROCEDURE find_books_by_cat_name(
-    p_category_name IN categories.category_name%TYPE,
-    p_books OUT SYS_REFCURSOR
-) IS
-    v_sql VARCHAR2(4000);
-BEGIN
-    v_sql := 'SELECT b.book_id, b.book_title, b.book_author, b.book_publication_date, ' ||
-             'b.book_sales_point, b.book_summary, b.book_description, ' ||
-             'b.book_price, b.book_rating, b.book_publisher ' ||
-             'FROM (SELECT b.*, ROW_NUMBER() OVER(PARTITION BY b.book_id ORDER BY b.book_title) AS rn ' ||
-             'FROM books b ' ||
-             'JOIN bookcategories bc ON b.book_id = bc.book_id ' ||
-             'JOIN categories c ON c.category_id = bc.category_id';
 
-    IF p_category_name != '전체' THEN
-        v_sql := v_sql || ' WHERE c.category_name = :category_name';
-    END IF;
-    v_sql := v_sql || ') ' || 'WHERE rn = 1';
-
-    OPEN p_books FOR v_sql USING p_category_name;
-END find_books_by_cat_name;
+    PROCEDURE find_books_by_cat_name(
+        p_category_name IN categories.category_name%TYPE,
+        p_books OUT SYS_REFCURSOR
+    ) IS
+    BEGIN
+        IF p_category_name != '전체' THEN
+            OPEN p_books FOR
+                SELECT book_id, book_title, book_author, book_publication_date,
+                       book_sales_point, book_summary, book_description,
+                       book_price, book_rating, BOOK_PUBLISHER
+                FROM (SELECT b.*, ROW_NUMBER() OVER(PARTITION BY b.book_id ORDER BY b.book_title) AS rn
+                      FROM books b
+                               JOIN bookcategories bc ON b.book_id = bc.book_id
+                               JOIN categories c ON c.category_id = bc.category_id
+                      where c.category_name = p_category_name)
+                where rn = 1;
+        ELSE
+            OPEN p_books FOR
+                SELECT book_id, book_title, book_author, book_publication_date,
+                       book_sales_point, book_summary, book_description,
+                       book_price, book_rating, book_publisher
+                FROM Books;
+        END IF;
+    END find_books_by_cat_name;
 end book_pkg;
 /
