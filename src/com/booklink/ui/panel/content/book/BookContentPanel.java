@@ -2,6 +2,7 @@ package com.booklink.ui.panel.content.book;
 
 import com.booklink.controller.BookController;
 import com.booklink.model.book.Book;
+import com.booklink.model.categories.CategoryDto;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.content.PagingPanel;
@@ -43,13 +44,32 @@ public class BookContentPanel extends ContentPanel {
         update(currentPage);
     }
 
-    private void init(int width, int height) {
-        setLayout(new FlowLayout());
-        setSize(width, height);
-        setBackground(Color.LIGHT_GRAY);
+    public BookContentPanel(MainFrame mainFrame, String title) {
+        super(mainFrame);
+        bookController = new BookController();
+        // books And count를 가지고 온다.
+        books = bookController.findBooksByContainsTitle(title);
+        maxPage = (int) Math.ceil(books.size() / pagePerContent);
+        currentPage = 1;
 
-        // ContentPanel에 SummaryPanel을 추가한다.
-        updateSummaryContent();
+        // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
+        pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
+        update(currentPage);
+
+    }
+
+    public BookContentPanel(MainFrame mainFrame, CategoryDto categoryDto) {
+        super(mainFrame);
+        bookController = new BookController();
+        // books And count를 가지고 온다.
+        books = bookController.findBooksByContainsCategoryName(categoryDto.name());
+        maxPage = (int) Math.ceil(books.size() / pagePerContent);
+        currentPage = 1;
+
+        // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
+        pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
+        update(currentPage);
+
     }
 
     // update가 호출되면 pageNum를 갱신하고 해당 페이지로 이동시킨다.
@@ -68,21 +88,6 @@ public class BookContentPanel extends ContentPanel {
             Book book = books.get(i);
             BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(contentWidth, (contentHeight - 300) / 5, this, book);
             add(bookSummaryPanel);
-        }
-    }
-
-    static class TestFrame extends JFrame {
-        public TestFrame() {
-            setLayout(new BorderLayout());
-            setSize(1980, 1020);
-            add(new BookContentPanel(null), BorderLayout.CENTER);
-        }
-
-        public static void main(String[] args) {
-            TestFrame testFrame = new TestFrame();
-            SwingUtilities.invokeLater(() -> {
-                testFrame.setVisible(true);
-            });
         }
     }
 }

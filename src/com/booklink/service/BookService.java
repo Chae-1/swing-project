@@ -48,4 +48,12 @@ public class BookService {
     public List<Book> findAllBookWithCount() {
         return bookDao.findAllBookWithCount();
     }
+
+    public List<Book> findBooksContainsTitle(String title) {
+        return bookDao.findBookContainsTitle(title);
+    }
+
+    public List<Book> findBookByCategoryName(String categoryName) {
+        return bookDao.findBookByCategoryName(categoryName);
+    }
 }

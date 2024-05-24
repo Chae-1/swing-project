@@ -8,11 +8,11 @@ import java.awt.*;
 public class PagingPanel extends JPanel {
 
     private static final int SIZE = 10;
-    private BookContentPanel contentPanel;
+    private ContentPanel contentPanel;
     private int width;
     private int height;
 
-    public PagingPanel(int width, int height, BookContentPanel contentPanel) {
+    public PagingPanel(int width, int height, ContentPanel contentPanel) {
         setPreferredSize(new Dimension(width, height));
         setLayout(new FlowLayout());
         setBackground(Color.GRAY);

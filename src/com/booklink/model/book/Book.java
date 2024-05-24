@@ -36,6 +36,14 @@ public class Book {
         this.salesPoint = builder.salesPoint;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public String getRating() {
+        return String.valueOf(rating);
+    }
+
 
     public static class BookBuilder {
         private Long id;

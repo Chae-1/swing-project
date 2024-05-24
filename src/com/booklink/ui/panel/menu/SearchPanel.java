@@ -1,5 +1,8 @@
 package com.booklink.ui.panel.menu;
 
+import com.booklink.ui.frame.main.MainFrame;
+import com.booklink.ui.panel.content.book.BookContentPanel;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,7 +30,13 @@ public class SearchPanel extends JPanel {
         // 컴포넌트 위치 설정
         searchField.setBounds(0, 0, fieldWidth, fieldHeight);
         searchButton.setBounds(fieldWidth, 0, buttonWidth, buttonHeight);
-
+        searchButton.addActionListener((e) -> {
+            Window windowAncestor = SwingUtilities.getWindowAncestor(SearchPanel.this);
+            if (windowAncestor instanceof MainFrame mainFrame) {
+                String title = searchField.getText();
+                mainFrame.changeCurrentContent(new BookContentPanel(mainFrame, title));
+            }
+        });
         // 패널에 컴포넌트 추가
         add(searchField);
         add(searchButton);

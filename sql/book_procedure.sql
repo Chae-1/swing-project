@@ -19,6 +19,7 @@ CREATE TABLE Books (
 );
 
 create unique index idx_books on books(book_id);
+CREATE INDEX books_title_idx ON books(book_title) INDEXTYPE IS CTXSYS.CONTEXT;
 alter table books add constraint books_pk primary key(book_id);
 alter table books add constraint books_title_nn check(book_title is not null);
 alter table books add constraint books_author_nn check(book_author is not null);
@@ -79,7 +80,10 @@ create or replace package book_pkg as
         p_book_id in books.book_id%type,
         book_info in book_info_rec
     );
-
+    procedure find_book_contains_title(
+        p_book_title in books.book_title%type,
+        p_book out sys_refcursor
+    );
     procedure find_book_by_id(
         p_book_id in books.book_id%type,
         p_books OUT SYS_REFCURSOR
@@ -207,5 +211,18 @@ create or replace package body book_pkg as
             FROM Books
             where book_id > 0;
     end find_all_book_with_count;
+    procedure find_book_contains_title(
+        p_book_title in books.book_title%type,
+        p_book out sys_refcursor
+    ) as
+    begin
+        open p_book for
+            SELECT book_id, book_title, book_author, book_publication_date,
+                   book_sales_point, book_summary, book_description,
+                   book_price, book_rating, book_publisher
+            FROM Books
+            where contains(book_title, p_book_title, 1) > 1;
+    end find_book_contains_title;
+
 end book_pkg;
 /

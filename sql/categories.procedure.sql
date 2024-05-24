@@ -11,33 +11,28 @@ CREATE TABLE Categories (
 );
 
 CREATE OR REPLACE PACKAGE Categories_Pkg IS
-    PROCEDURE insert_category (
-        p_category_name IN Categories.category_name%TYPE,
-        p_prior_category_id IN Categories.prior_category_id%TYPE
+    procedure insert_maincategory(
+        p_category_name in Categories.category_name%type
     );
 
-    PROCEDURE get_category (
-        p_category_id IN Categories.category_id%TYPE,
-        p_category_name OUT Categories.category_name%TYPE,
-        p_prior_category_id OUT Categories.prior_category_id%TYPE
+    procedure insert_subcategory(
+        p_category_name in Categories.category_name%type,
+        p_prior_id in Categories.prior_category_id%type
     );
 
-
-    PROCEDURE update_category (
-        p_category_id IN Categories.category_id%TYPE,
-        p_category_name IN Categories.category_name%TYPE,
-        p_prior_category_id IN Categories.prior_category_id%TYPE
+    PROCEDURE find_parent_category (
+        p_category_name in Categories.category_name%TYPE,
+        p_category out sys_refcursor
     );
 
-    PROCEDURE delete_category (
-        p_category_id IN Categories.category_id%TYPE
+    procedure find_all_with_level(
+        p_category out sys_refcursor
     );
 END Categories_Pkg;
 /
 
 CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
 
-<<<<<<< HEAD
     procedure insert_maincategory(
         p_category_name in Categories.category_name%type
     ) as
@@ -71,51 +66,13 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
     PROCEDURE find_parent_category (
         p_category_name in Categories.category_name%TYPE,
         p_category out sys_refcursor
-=======
-    PROCEDURE insert_category (
-        p_category_name IN Categories.category_name%TYPE,
-        p_prior_category_id IN Categories.prior_category_id%TYPE
->>>>>>> parent of 2d343ac (feat : add category list)
-    ) IS
-    BEGIN
-        INSERT INTO Categories (category_id, category_name, prior_category_id)
-        VALUES (categories_seq.nextval, p_category_name, p_prior_category_id);
-        COMMIT;
-    END insert_category;
-
-    PROCEDURE get_category (
-        p_category_id IN Categories.category_id%TYPE,
-        p_category_name OUT Categories.category_name%TYPE,
-        p_prior_category_id OUT Categories.prior_category_id%TYPE
-    ) IS
-    BEGIN
-        SELECT category_name, prior_category_id
-        INTO p_category_name, p_prior_category_id
-        FROM Categories
-        WHERE category_id = p_category_id;
-    END get_category;
-
-    PROCEDURE update_category (
-        p_category_id IN Categories.category_id%TYPE,
-        p_category_name IN Categories.category_name%TYPE,
-        p_prior_category_id IN Categories.prior_category_id%TYPE
-    ) IS
-    BEGIN
-        UPDATE Categories
-        SET category_name = p_category_name,
-            prior_category_id = p_prior_category_id
-        WHERE category_id = p_category_id;
-        COMMIT;
-    END update_category;
-
-    PROCEDURE delete_category (
-        p_category_id IN Categories.category_id%TYPE
-    ) IS
-    BEGIN
-        DELETE FROM Categories
-        WHERE category_id = p_category_id;
-        COMMIT;
-    END delete_category;
+    ) as
+    begin
+        open p_category for
+            select category_id, category_name, prior_category_id
+            from Categories
+            where category_name = p_category_name;
+    END find_parent_category;
 
 END Categories_Pkg;
 /

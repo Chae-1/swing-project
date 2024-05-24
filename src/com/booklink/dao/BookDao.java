@@ -208,11 +208,9 @@ public class BookDao {
             cstmt.registerOutParameter(1, OracleTypes.CURSOR);
             cstmt.execute();
             rs = (ResultSet) cstmt.getObject(1);
-            int count = 0;
             List<Book> books = new ArrayList<>();
             while (rs.next()) {
                 books.add(getBook(rs));
-                count = rs.getInt("count");
             }
             return books;
         } catch (SQLException e) {
@@ -222,22 +220,51 @@ public class BookDao {
         }
     }
 
-
-    public static void main(String[] args) {
-        List<BookDto> bookDtos = new ArrayList<>();
-        for (int i = 50; i <= 100; i++) {
-            bookDtos.add(new BookDto(
-                    "Title " + i,
-                    "Author " + i,
-                    LocalDate.of(2023, 5, (i) % 31 + 1 ),
-                    "Summary " + i,
-                    "Description " + i,
-                    10000 + i,
-                    "Publisher " + i,
-                    100 + i,
-                    4.5 + (i % 5) * 0.1
-            ));
+    public List<Book> findBookContainsTitle(String title) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call book_pkg.find_book_contains_title(?, ?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.setString(1, title);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
         }
-        new BookDao().registerBooks(bookDtos);
+    }
+
+    public List<Book> findBookByCategoryName(String categoryName) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call book_pkg.find_book_contains_title(?, ?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.setString(1, categoryName);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
     }
 }
