@@ -4,7 +4,6 @@ import com.booklink.dao.BookDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 
-import com.booklink.model.book.BookListWithCount;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +45,7 @@ public class BookService {
     }
 
 
-    public BookListWithCount findAllBookWithCount() {
+    public List<Book> findAllBookWithCount() {
         return bookDao.findAllBookWithCount();
     }
 }

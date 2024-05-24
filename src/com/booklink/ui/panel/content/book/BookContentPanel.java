@@ -1,42 +1,81 @@
-package com.booklink.ui.panel.content;
+package com.booklink.ui.panel.content.book;
 
+import com.booklink.controller.BookController;
 import com.booklink.model.book.Book;
 import com.booklink.ui.frame.main.MainFrame;
-import com.booklink.ui.panel.content.book.bookdetail.BookDetailPanel;
+import com.booklink.ui.panel.content.ContentPanel;
+import com.booklink.ui.panel.content.PagingPanel;
+import com.booklink.ui.panel.content.book.booksummary.BookSummaryPanel;
 
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 // 1488, 970
 
 
-public class ContentPanel extends JPanel {
-    protected int contentWidth = MainFrame.WIDTH - (MainFrame.WIDTH / 4) - 20 - 250;
-    protected int contentHeight = MainFrame.HEIGHT - 50 - 100;
+public class BookContentPanel extends ContentPanel {
+    private BookController bookController;
+    private PagingPanel pagingPanel;
 
-    private MainFrame mainFrame;
+    private List<Book> books;
+    private int currentPage;
+    private int maxPage;
+    private int pagePerContent = 5;
 
-    public ContentPanel(MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
-        init();
+    public int getCurrentPage() {
+        return currentPage;
     }
 
-    private void init() {
+    public int getMaxPage() {
+        return maxPage;
+    }
+
+    public BookContentPanel(MainFrame mainFrame) {
+        super(mainFrame);
+        bookController = new BookController();
+        // books And count를 가지고 온다.
+        books = bookController.findAllBookWithCount();
+        maxPage = (int) Math.ceil(books.size() / pagePerContent);
+        currentPage = 1;
+
+        // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
+        pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
+        update(currentPage);
+    }
+
+    private void init(int width, int height) {
         setLayout(new FlowLayout());
-        setSize(contentWidth, contentHeight);
+        setSize(width, height);
         setBackground(Color.LIGHT_GRAY);
+
+        // ContentPanel에 SummaryPanel을 추가한다.
+        updateSummaryContent();
     }
 
-    // 상위
-    public void moveOtherPanel(Book contentBook) {
-        mainFrame.loadPrevContent(this);
-        // BookDetailPanel을 생성해서 mainFrame으로 전달하면 된다.
-        mainFrame.changeCurrentContent(new BookDetailPanel(mainFrame, contentBook));
+    // update가 호출되면 pageNum를 갱신하고 해당 페이지로 이동시킨다.
+    public void update(int pageNum) {
+        removeAll();
+        currentPage = pageNum;
+        pagingPanel.updatePagingPanel();
+        updateSummaryContent();
+        add(pagingPanel);
+    }
+
+    private void updateSummaryContent() {
+        int start = (currentPage - 1) * pagePerContent;
+        int end = currentPage * pagePerContent;
+        for (int i = start; i < end; i++) {
+            Book book = books.get(i);
+            BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(contentWidth, (contentHeight - 300) / 5, this, book);
+            add(bookSummaryPanel);
+        }
     }
 
     static class TestFrame extends JFrame {
         public TestFrame() {
             setLayout(new BorderLayout());
             setSize(1980, 1020);
+            add(new BookContentPanel(null), BorderLayout.CENTER);
         }
 
         public static void main(String[] args) {

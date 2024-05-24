@@ -1,34 +1,35 @@
-package com.booklink.ui.panel.content.bookdetail;
+package com.booklink.ui.panel.content.book.bookdetail;
 
 import com.booklink.model.book.Book;
+import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
 
-//public class BookDetailPanel extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+
+public class BookDetailPanel extends ContentPanel {
+    public BookDetailPanel(MainFrame mainFrame, Book book) {
+        super(mainFrame);
+        JLabel titleLabel = new JLabel(book.getTitle());
+        titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(titleLabel);
+
+    }
 //    public BookDetailPanel(Book book, ContentPanel parentPanel) {
 //        setLayout(new BorderLayout());
 //        setBackground(Color.WHITE);
 //
 //        JLabel titleLabel = new JLabel(book.getTitle());
-//        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+//        titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
 //        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 //
 //        JLabel authorLabel = new JLabel("Author: " + book.getAuthor());
-//        authorLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+//        authorLabel.setFont(new Font("Malgun Gothic", Font.PLAIN, 18));
 //        authorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 //
 //        JTextArea descriptionArea = new JTextArea(book.getDescription());
-//        descriptionArea.setFont(new Font("Arial", Font.PLAIN, 14));
+//        descriptionArea.setFont(new Font("Malgun Gothic", Font.PLAIN, 14));
 //        descriptionArea.setLineWrap(true);
 //        descriptionArea.setWrapStyleWord(true);
 //        descriptionArea.setEditable(false);
@@ -51,4 +52,4 @@ import javax.swing.SwingConstants;
 //        add(topPanel, BorderLayout.NORTH);
 //        add(scrollPane, BorderLayout.CENTER);
 //    }
-//}
+}

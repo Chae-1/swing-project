@@ -1,5 +1,7 @@
 package com.booklink.ui.panel.content;
 
+import com.booklink.ui.frame.main.MainFrame;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JPanel;
@@ -8,7 +10,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class CategoryPanel extends JPanel {
-    public CategoryPanel(int width, int height) {
+    public CategoryPanel(int width, int height, MainFrame mainFrame) {
         setPreferredSize(new Dimension(width, height));
         setLayout(new BorderLayout());
 

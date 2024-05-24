@@ -2,7 +2,6 @@ package com.booklink.dao;
 
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
-import com.booklink.model.book.BookListWithCount;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DbDataTypeMatcher;
 import oracle.jdbc.OracleConnection;
@@ -198,7 +197,7 @@ public class BookDao {
         }
     }
 
-    public BookListWithCount findAllBookWithCount() {
+    public List<Book> findAllBookWithCount() {
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
@@ -215,7 +214,7 @@ public class BookDao {
                 books.add(getBook(rs));
                 count = rs.getInt("count");
             }
-            return new BookListWithCount(books, count);
+            return books;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -225,6 +224,20 @@ public class BookDao {
 
 
     public static void main(String[] args) {
-
+        List<BookDto> bookDtos = new ArrayList<>();
+        for (int i = 50; i <= 100; i++) {
+            bookDtos.add(new BookDto(
+                    "Title " + i,
+                    "Author " + i,
+                    LocalDate.of(2023, 5, (i) % 31 + 1 ),
+                    "Summary " + i,
+                    "Description " + i,
+                    10000 + i,
+                    "Publisher " + i,
+                    100 + i,
+                    4.5 + (i % 5) * 0.1
+            ));
+        }
+        new BookDao().registerBooks(bookDtos);
     }
 }
