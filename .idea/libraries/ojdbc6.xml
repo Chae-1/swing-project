@@ -2,7 +2,6 @@
   <library name="ojdbc6">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../../../oraclexe/app/oracle/product/11.2.0/server/jdbc/lib/ojdbc6.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../../../../oraclexe/app/oracle/product/11.2.0/server/jdbc/lib/ojdbc6.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
