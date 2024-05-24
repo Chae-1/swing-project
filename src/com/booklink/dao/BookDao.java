@@ -224,10 +224,7 @@ public class BookDao {
 
 
     public static void main(String[] args) {
-        List<BookDto> books = new ArrayList<>();
 
-        BookDao bookDao = new BookDao();
-        bookDao.registerBooks(books);
     }
 
 }

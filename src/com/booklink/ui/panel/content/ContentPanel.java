@@ -29,29 +29,36 @@ public class ContentPanel extends JPanel {
     public ContentPanel(int width, int height) {
         this.width = width;
         this.height = height;
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
 
-        setLayout(new BorderLayout());
+        setLayout(null); // 레이아웃을 null로 설정하여 절대 위치 사용
         setSize(width, height);
         setBackground(Color.LIGHT_GRAY);
         bookController = new BookController();
         booksWithCount = bookController.findAllBookWithCount();
 
+
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+        mainPanel.setBounds(0, 0, width, height - 50); // 위치와 크기 설정
+        mainPanel.setLayout(null);
+
         bookContainer = new JPanel();
         bookContainer.setLayout(new BoxLayout(bookContainer, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(bookContainer);
+        scrollPane.setBounds(0, 0, width, height - 100); //
 
-        pagingPanel = new JPanel();
+        pagingPanel = new JPanel(new FlowLayout());
+        pagingPanel.setBounds(0, height - 100, width, 50); // 위치와 크기 설정
 
-        JPanel bookListPanel = new JPanel(new BorderLayout());
-        bookListPanel.add(scrollPane, BorderLayout.CENTER);
-        bookListPanel.add(pagingPanel, BorderLayout.SOUTH);
+        JPanel bookListPanel = new JPanel(null);
+        bookListPanel.add(scrollPane);
+        bookListPanel.add(pagingPanel);
 
         mainPanel.add(bookListPanel, "BookList");
-        add(mainPanel, BorderLayout.CENTER);
+        add(mainPanel);
+
         loadBooks();
-        updateBookSummaryPanels(width, height);
+        updateBookSummaryPanels();
         updatePagingPanel();
     }
 
@@ -59,13 +66,13 @@ public class ContentPanel extends JPanel {
         totalPageCount = (int) Math.ceil((double) booksWithCount.count() / pageSize);
     }
 
-    private void updateBookSummaryPanels(int width, int height) {
+    private void updateBookSummaryPanels() {
         bookContainer.removeAll();
         List<Book> books = booksWithCount.books();
         int start = (currentPage - 1) * pageSize;
         int end = Math.min(start + pageSize, books.size());
         for (int i = start; i < end; i++) {
-            BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(width, (height - 300) / 5, books.get(i), this);
+            BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(books.get(i), this);
             bookContainer.add(bookSummaryPanel);
         }
         bookContainer.revalidate();
@@ -78,7 +85,7 @@ public class ContentPanel extends JPanel {
             JButton pageButton = new JButton(String.valueOf(i));
             pageButton.addActionListener(e -> {
                 currentPage = Integer.parseInt(pageButton.getText());
-                updateBookSummaryPanels(width, height);
+                updateBookSummaryPanels();
             });
             pagingPanel.add(pageButton);
         }

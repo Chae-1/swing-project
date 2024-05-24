@@ -13,8 +13,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class BookSummaryPanel extends JPanel {
+    private static int width = 1488;
+    private static int height = 200;
 
-    public BookSummaryPanel(int width, int height, Book book, ContentPanel parentPanel) {
+    public BookSummaryPanel(Book book, ContentPanel parentPanel) {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(width, height)); // 너비를 1488로 수정
         setBorder(BorderFactory.createLineBorder(Color.YELLOW));
@@ -31,7 +33,6 @@ public class BookSummaryPanel extends JPanel {
             }
         });
 
-        add(imageLabel, BorderLayout.WEST);
         add(imageLabel, BorderLayout.WEST);
 
         BookSummaryContentPanel contentPanel = new BookSummaryContentPanel(width - 200, height, book);
