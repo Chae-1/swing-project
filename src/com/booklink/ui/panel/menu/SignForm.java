@@ -1,5 +1,8 @@
 package com.booklink.ui.panel.menu;
 
+import com.booklink.dao.UserDao;
+import com.booklink.model.user.UserRegistrationDto;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -7,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDateTime;
 
 public class SignForm extends JDialog {
     private LoginForm owner;
@@ -28,7 +32,13 @@ public class SignForm extends JDialog {
     public SignForm(LoginForm owner) {
         super(owner, "Sign up", true);
         this.owner = owner;
-        users = owner.getUsers();
+
+        if (owner != null) {
+            users = owner.getUsers();
+        } else {
+            users = new UserDataSet();
+
+        }
 
         init();
         setDisplay();
@@ -40,7 +50,7 @@ public class SignForm extends JDialog {
         // 크기 고정
         int tfSize = 10;
         Dimension lblSize = new Dimension(150, 35);
-        Dimension btnSize = new Dimension(100 ,25);
+        Dimension btnSize = new Dimension(100, 25);
 
 
         lblTitle = new JLabel("회원가입");
@@ -138,7 +148,7 @@ public class SignForm extends JDialog {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 // 정보 하나라도 비어있으면
-                if(isBlank()) {
+                if (isBlank()) {
                     JOptionPane.showMessageDialog(
                             SignForm.this,
                             "모든 정보를 입력해주세요."
@@ -146,30 +156,30 @@ public class SignForm extends JDialog {
                     // 모두 입력했을 때
                 } else {
                     // Id 중복일 때
-                    if(users.isIdOverlap(tfId.getText())) {
-                        JOptionPane.showMessageDialog(
-                                SignForm.this,
-                                "이미 존재하는 Id입니다."
-                        );
+                    if (users.isIdOverlap(tfId.getText())) {
+                        JOptionPane.showMessageDialog(SignForm.this,
+                                "이미 존재하는 Id입니다.");
                         tfId.requestFocus();
 
                         // Pw와 Re가 일치하지 않았을 때
-                    } else if(!String.valueOf(tfPw.getPassword()).equals(String.valueOf(tfRe.getPassword()))) {
-                        JOptionPane.showMessageDialog(
-                                SignForm.this,
-                                "Password와 Retry가 일치하지 않습니다."
-                        );
+                    } else if (!String.valueOf(tfPw.getPassword()).equals(String.valueOf(tfRe.getPassword()))) {
+                        JOptionPane.showMessageDialog(SignForm.this,
+                                "Password와 Retry가 일치하지 않습니다.");
                         tfPw.requestFocus();
                     } else {
-                        users.addUsers(new UserLoginForm(
-                                tfId.getText(),
+                        // UserRegistrationDto 객체 생성
+                        UserRegistrationDto userDto = new UserRegistrationDto(
+                                tfName.getText(),
                                 String.valueOf(tfPw.getPassword()),
-                                tfName.getText()
-                        ));
-                        JOptionPane.showMessageDialog(
-                                SignForm.this,
-                                "회원가입을 완료했습니다!"
+                                tfId.getText(),
+                                LocalDateTime.now(),
+                                null // 이미지 경로 (이미지 업로드 기능 추가 시 수정)
                         );
+                        UserDao userDao = new UserDao();
+                        userDao.registerUser(userDto);
+
+
+                        JOptionPane.showMessageDialog(SignForm.this, "회원가입을 완료했습니다!");
                         dispose();
                         owner.setVisible(true);
                     }
@@ -180,19 +190,19 @@ public class SignForm extends JDialog {
 
     public boolean isBlank() {
         boolean result = false;
-        if(tfId.getText().isEmpty()) {
+        if (tfId.getText().isEmpty()) {
             tfId.requestFocus();
             return true;
         }
-        if(String.valueOf(tfPw.getPassword()).isEmpty()) {
+        if (String.valueOf(tfPw.getPassword()).isEmpty()) {
             tfPw.requestFocus();
             return true;
         }
-        if(String.valueOf(tfRe.getPassword()).isEmpty()) {
+        if (String.valueOf(tfRe.getPassword()).isEmpty()) {
             tfRe.requestFocus();
             return true;
         }
-        if(tfName.getText().isEmpty()) {
+        if (tfName.getText().isEmpty()) {
             tfName.requestFocus();
             return true;
         }

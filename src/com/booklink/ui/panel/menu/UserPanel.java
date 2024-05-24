@@ -22,11 +22,20 @@ public class UserPanel extends JPanel {
         add(loginButton).setBounds(0, 0, 200, 50);
         add(signUpButton).setBounds(200, 0, 200, 50);
 
-        // Add ActionListener to loginButton
+
+        //login in 버튼 누르면 로그인 폼으로 이동
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new LoginForm(); // Open the LoginForm
+            }
+        });
+
+        //sign up 버튼 누르면 회원가입 폼으로 이동
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SignForm(null); // Open the SingForm
             }
         });
 

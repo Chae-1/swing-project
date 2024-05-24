@@ -20,7 +20,7 @@ create sequence users_seq
     nocycle
   cache 20;
 
-create or replace type user_form as object (
+create or replace type users_form as object (
     user_name VARCHAR2(30),
     user_password VARCHAR2(30),
     user_log_id VARCHAR2(30),

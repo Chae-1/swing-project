@@ -4,6 +4,8 @@ import com.booklink.model.user.User;
 import com.booklink.model.user.UserRegistrationDto;
 import com.booklink.utils.DBConnectionUtils;
 import oracle.jdbc.OracleTypes;
+import oracle.sql.STRUCT;
+import oracle.sql.StructDescriptor;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,26 +41,41 @@ import java.util.Optional;
  */
 public class UserDao {
 
+
     public void registerUser(UserRegistrationDto dto) {
-        String sql = "{call ADD_USER(?, ?, ?, ?, ?)}"; //저장 프로지서 호출
+        Connection con = null;
+        CallableStatement cstmt = null;
+        String sql = "{call user_pkg.ADD_USER(?)}";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
 
-        try (Connection con = DBConnectionUtils.getConnection();
-             CallableStatement cs = con.prepareCall(sql)) {
-
-            // dto에 있는 데이터를 꺼내서 DB 에 저장
-            cs.setString(1, dto.name());
-            cs.setString(2, dto.password());
-            cs.setString(3, dto.loginId());
-            cs.setTimestamp(4, Timestamp.valueOf(dto.registrationDate()));
-            cs.setString(5, dto.image());
-
-            cs.executeUpdate();
-
-            System.out.println("등록완료");
-
+            StructDescriptor structDescriptor = StructDescriptor.createDescriptor("USER_FORM", con);
+            STRUCT userInfoStruct = new STRUCT(structDescriptor, con, createUserInfo(dto));
+            cstmt.setObject(1, userInfoStruct, OracleTypes.STRUCT);
+            cstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, null);
         }
+    }
+
+    /*
+        user_name VARCHAR2(30),
+        user_password VARCHAR2(30),
+        user_log_id VARCHAR2(30),
+        user_registration_date timestamp,
+        user_image VARCHAR2(30)
+     */
+    private Object[] createUserInfo(UserRegistrationDto dto) {
+        return new Object[]{
+                dto.name(),
+                dto.password(),
+                dto.loginId(),
+                Timestamp.valueOf(dto.registrationDate()),
+                dto.image()
+        };
     }
 
     public List<User> findAll() {
@@ -70,6 +87,7 @@ public class UserDao {
             cs.registerOutParameter(1, OracleTypes.CURSOR);
             cs.execute();
 
+
             try (ResultSet rs = (ResultSet) cs.getObject(1)) {
                 while (rs.next()) {
                     User user = new User();
@@ -80,7 +98,7 @@ public class UserDao {
                     Timestamp registrationDate = rs.getTimestamp("registrationDate");
                     user.setRegistrationDate(registrationDate != null ? registrationDate.toLocalDateTime() : null);
                     user.setImage(rs.getString("image"));
-                    users.add(user);
+                    users.add(null);
                 }
             }
             return users;
@@ -90,33 +108,6 @@ public class UserDao {
 
         return users;
     }
-
-    public void addUser(UserRegistrationDto dto) {
-        // dto에 있는 데이터를 꺼내서 DB 에 저장
-        Connection con = null;
-        CallableStatement cstmt = null;
-        ResultSet rs = null;
-        String sql = "call user_pkg.add_user(?, ?, ?)";
-        try {
-            con = DBConnectionUtils.getConnection();
-            cstmt = con.prepareCall(sql);
-            cstmt.setString(1, "");
-//            cstmt.setString(2, logId);
-            cstmt.registerOutParameter(3, OracleTypes.CURSOR);
-            cstmt.execute();
-
-            rs = (ResultSet) cstmt.getObject(3);
-            User user = null;
-            if (rs.next()) {
-                user = getUser(rs);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            DBConnectionUtils.releaseConnection(con, cstmt, rs);
-        }
-    }
-
 
     public void deleteUserById(long userId) {
         String sql = "{call DELETE_USER_BY_ID(?)}"; // 삭제 프로시저 호출
