@@ -4,6 +4,7 @@ import com.booklink.dao.BookDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 
+import com.booklink.model.book.BookListWithCount;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,6 @@ public class BookService {
     }
 
     // to do -> 카테고리 이름 내역으로 조회가 가능해야한다.
-
     public void findBookByTitle(String title) {
         Optional<Book> bookByTitle = bookDao.findBookByTitle(title);
         bookByTitle.ifPresent((book) -> {
@@ -45,15 +45,8 @@ public class BookService {
         bookDao.updateBook(bookId, bookDto);
     }
 
-    public void viewAllBooks() {
-        List<Book> allBook = bookDao.findAllBook();
-        System.out.println(allBook);
+
+    public BookListWithCount findAllBookWithCount() {
+        return bookDao.findAllBookWithCount();
     }
-
-    public static void main(String[] args) {
-
-        BookDao bookDao = new BookDao();
-        System.out.println(bookDao.findBookById(3L));
-    }
-
 }

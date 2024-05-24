@@ -14,7 +14,7 @@ public class SearchPanel extends JPanel {
 
         // searchField와 searchButton 생성
         JTextField searchField = new JTextField();
-        JButton searchButton = new JButton("Search");
+        JButton searchButton = new JButton("검색");
 
         // 컴포넌트 크기 설정
         int fieldWidth = 500;

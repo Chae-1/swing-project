@@ -19,6 +19,9 @@ public class Book {
     private Double rating;
     private Categories categories;
 
+    public String getDescription() {
+        return description;
+    }
 
     private Book(BookBuilder builder) {
         this.id = builder.id;
@@ -104,6 +107,22 @@ public class Book {
 
     public BookShortInfo bookShortInfo() {
         return new BookShortInfo(summary);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getPublisher() {
+        return publisher;
     }
 
     @Override

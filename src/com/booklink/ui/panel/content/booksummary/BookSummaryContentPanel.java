@@ -1,7 +1,11 @@
 package com.booklink.ui.panel.content.booksummary;
 
+import com.booklink.model.book.Book;
+import com.booklink.ui.panel.content.ContentPanel;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 
 public class BookSummaryContentPanel extends JPanel {
     public BookSummaryContentPanel(int width, int height) {

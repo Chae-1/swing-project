@@ -2,6 +2,7 @@ package com.booklink.dao;
 
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
+import com.booklink.model.book.BookListWithCount;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DbDataTypeMatcher;
 import oracle.jdbc.OracleConnection;
@@ -23,7 +24,7 @@ public class BookDao {
     public void registerBooks(List<BookDto> bookDtos) {
         Connection con = null;
         CallableStatement cstmt = null;
-        String sql = "call add_books(?)";
+        String sql = "call book_pkg.add_books(?)";
         try {
             con = DBConnectionUtils.getConnection();
             cstmt = con.prepareCall(sql);
@@ -37,11 +38,12 @@ public class BookDao {
             cstmt.setArray(1, new ARRAY(arrayDescriptor, (OracleConnection) con, structArray));
             cstmt.execute();
         } catch (SQLException e) {
-
+            throw new RuntimeException(e);
         } finally {
             DBConnectionUtils.releaseConnection(con, cstmt, null);
         }
     }
+
     // 등록 수정 삭제 조회
     public void registerBook(BookDto bookDto) {
         Connection con = null;
@@ -196,4 +198,33 @@ public class BookDao {
         }
     }
 
+    public BookListWithCount findAllBookWithCount() {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call book_pkg.find_all_book_with_count(?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(1);
+            int count = 0;
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+                count = rs.getInt("count");
+            }
+            return new BookListWithCount(books, count);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
+
+
+    public static void main(String[] args) {
+
+    }
 }

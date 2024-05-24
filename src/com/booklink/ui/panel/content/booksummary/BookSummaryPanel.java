@@ -1,13 +1,12 @@
 package com.booklink.ui.panel.content.booksummary;
 
+import com.booklink.model.book.Book;
+import com.booklink.ui.panel.content.ContentPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 public class BookSummaryPanel extends JPanel {

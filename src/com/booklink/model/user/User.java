@@ -17,62 +17,62 @@ public class User {
 
     public User(Long id, String name, String password,
                 String loginId, LocalDateTime registrationDate, String image) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.loginId = loginId;
-        this.registrationDate = registrationDate;
-        this.image = image;
-    }
-    // 래퍼 vs 기본형 user table 보고 클래스로 옮기기.
+            this.id = id;
+            this.name = name;
+            this.password = password;
+            this.loginId = loginId;
+            this.registrationDate = registrationDate;
+            this.image = image;
+        }
+        // 래퍼 vs 기본형 user table 보고 클래스로 옮기기.
 
-    public Long getId() {
-        return id;
-    }
+        public Long getId () {
+            return id;
+        }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+        public void setId (Long id){
+            this.id = id;
+        }
 
-    public String getName() {
-        return name;
-    }
+        public String getName () {
+            return name;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public void setName (String name){
+            this.name = name;
+        }
 
-    public String getPassword() {
-        return password;
-    }
+        public String getPassword () {
+            return password;
+        }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        public void setPassword (String password){
+            this.password = password;
+        }
 
-    public String getLoginId() {
-        return loginId;
-    }
+        public String getLoginId () {
+            return loginId;
+        }
 
-    public void setLoginId(String loginId) {
-        this.loginId = loginId;
-    }
+        public void setLoginId (String loginId){
+            this.loginId = loginId;
+        }
 
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
+        public LocalDateTime getRegistrationDate () {
+            return registrationDate;
+        }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
+        public void setRegistrationDate (LocalDateTime registrationDate){
+            this.registrationDate = registrationDate;
+        }
 
-    public String getImage() {
-        return image;
-    }
+        public String getImage () {
+            return image;
+        }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
+        public void setImage (String image){
+            this.image = image;
+        }
 
-}
+    }
 

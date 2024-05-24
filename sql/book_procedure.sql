@@ -33,7 +33,9 @@ CREATE OR REPLACE TYPE book_info_rec AS OBJECT (
     book_price INTEGER,
     book_rating NUMBER(2, 1),
     book_publisher VARCHAR2(50)
-);drop sequence books_seq;
+);
+
+drop sequence books_seq;
 
 create sequence books_seq
     start with 1
@@ -52,6 +54,10 @@ CREATE OR REPLACE TYPE book_rec as OBJECT (
 
 
 create or replace package book_pkg as
+    procedure find_all_book_with_count(
+        p_books OUT SYS_REFCURSOR
+    );
+
     procedure add_books(
         p_books in book_info_tab
     );
@@ -66,12 +72,12 @@ create or replace package book_pkg as
     );
 
     procedure delete_book(
-       p_book_id in books.book_id%type
+        p_book_id in books.book_id%type
     );
 
     procedure update_book(
-       p_book_id in books.book_id%type,
-       book_info in book_info_rec
+        p_book_id in books.book_id%type,
+        book_info in book_info_rec
     );
 
     procedure find_book_by_id(
@@ -85,30 +91,32 @@ create or replace package book_pkg as
 end book_pkg;
 /
 
+
 create or replace package body book_pkg as
-procedure add_books(
-    p_books in book_info_tab
-) as
-begin
-    for i in 1 .. p_books.COUNT loop
-        insert into books
-            (book_id, book_title, book_author, book_publication_date, book_sales_point, book_summary, book_description, book_price, book_rating, book_publisher)
-        values
-            (books_seq.nextval,
-             p_books(i).book_title,
-             p_books(i).book_author,
-             p_books(i).book_publication_date,
-             p_books(i).book_sales_point,
-             p_books(i).book_summary,
-             p_books(i).book_description,
-             p_books(i).book_price,
-             p_books(i).book_rating,
-             p_books(i).book_publisher);
-    end loop;
-end add_books;
-procedure add_book(book_info in book_info_rec) as
-begin
-    insert into books (book_id,
+    procedure add_books(
+        p_books in book_info_tab
+    ) as
+    begin
+        for i in 1 .. p_books.COUNT loop
+                insert into books
+                (book_id, book_title, book_author, book_publication_date, book_sales_point, book_summary, book_description, book_price, book_rating, book_publisher)
+                values
+                    (books_seq.nextval,
+                     p_books(i).book_title,
+                     p_books(i).book_author,
+                     p_books(i).book_publication_date,
+                     p_books(i).book_sales_point,
+                     p_books(i).book_summary,
+                     p_books(i).book_description,
+                     p_books(i).book_price,
+                     p_books(i).book_rating,
+                     p_books(i).book_publisher);
+            end loop;
+        commit;
+    end add_books;
+    procedure add_book(book_info in book_info_rec) as
+    begin
+        insert into books (book_id,
                            book_title,
                            book_author,
                            book_publication_date,
@@ -118,7 +126,7 @@ begin
                            book_price,
                            book_rating,
                            book_publisher)
-    values (books_seq.nextval,
+        values (books_seq.nextval,
                 book_info.book_title,
                 book_info.book_author,
                 book_info.book_publication_date,
@@ -128,63 +136,76 @@ begin
                 book_info.book_price,
                 book_info.book_rating,
                 book_info.book_publisher);
-end add_book;
+    end add_book;
 
-PROCEDURE find_book_by_title(
+    PROCEDURE find_book_by_title(
         p_book_title IN Books.book_title%TYPE,
         p_book OUT SYS_REFCURSOR
     ) AS
-BEGIN
-    OPEN p_book FOR
-        SELECT book_id, book_title, book_author, book_publication_date,
-                book_sales_point, book_summary, book_description,
-                book_price, book_rating, book_publisher
-        FROM Books
-        WHERE book_title = p_book_title;
-END find_book_by_title;
+    BEGIN
+        OPEN p_book FOR
+            SELECT book_id, book_title, book_author, book_publication_date,
+                   book_sales_point, book_summary, book_description,
+                   book_price, book_rating, book_publisher
+            FROM Books
+            WHERE book_title = p_book_title;
+    END find_book_by_title;
 
-PROCEDURE delete_book(p_book_id IN Books.book_id%TYPE) AS
-BEGIN
-    DELETE FROM Books WHERE book_id = p_book_id;
-END delete_book;
-procedure update_book(
-       p_book_id in books.book_id%type,
-       book_info in book_info_rec) as
-begin
-    update books
-    set book_title = book_info.book_title,
-        book_author = book_info.book_author,
-        book_price = book_info.book_price,
-        book_description = book_info.book_description,
-        book_summary = book_info.book_summary,
-        book_publication_date = book_info.book_publication_date,
-        book_sales_point = book_info.book_sales_point,
-        book_rating = book_info.book_rating
-    where book_id = p_book_id;
-end update_book;
+    PROCEDURE delete_book(p_book_id IN Books.book_id%TYPE) AS
+    BEGIN
+        DELETE FROM Books WHERE book_id = p_book_id;
+    END delete_book;
+    procedure update_book(
+        p_book_id in books.book_id%type,
+        book_info in book_info_rec) as
+    begin
+        update books
+        set book_title = book_info.book_title,
+            book_author = book_info.book_author,
+            book_price = book_info.book_price,
+            book_description = book_info.book_description,
+            book_summary = book_info.book_summary,
+            book_publication_date = book_info.book_publication_date,
+            book_sales_point = book_info.book_sales_point,
+            book_rating = book_info.book_rating
+        where book_id = p_book_id;
+    end update_book;
 
-procedure find_book_by_id(
-    p_book_id in books.book_id%type,
-    p_books OUT SYS_REFCURSOR
-) as
-begin
-    OPEN p_books FOR
-        SELECT book_id, book_title, book_author, book_publication_date,
-               book_sales_point, book_summary, book_description,
-               book_price, book_rating, book_publisher
-        FROM Books
-        WHERE book_id = p_book_id;
-end find_book_by_id;
+    procedure find_book_by_id(
+        p_book_id in books.book_id%type,
+        p_books OUT SYS_REFCURSOR
+    ) as
+    begin
+        OPEN p_books FOR
+            SELECT book_id, book_title, book_author, book_publication_date,
+                   book_sales_point, book_summary, book_description,
+                   book_price, book_rating, book_publisher
+            FROM Books
+            WHERE book_id = p_book_id;
+    end find_book_by_id;
 
-procedure find_all_book(
-    p_books OUT SYS_REFCURSOR
-) as
-begin
-    OPEN p_books FOR
-        SELECT book_id, book_title, book_author, book_publication_date,
-               book_sales_point, book_summary, book_description,
-               book_price, book_rating, book_publisher
-        FROM Books;
-end find_all_book;
+    procedure find_all_book(
+        p_books OUT SYS_REFCURSOR
+    ) as
+    begin
+        OPEN p_books FOR
+            SELECT book_id, book_title, book_author, book_publication_date,
+                   book_sales_point, book_summary, book_description,
+                   book_price, book_rating, book_publisher
+            FROM Books
+            where book_id > 0;
+    end find_all_book;
+
+    procedure find_all_book_with_count(
+        p_books OUT SYS_REFCURSOR
+    ) as
+    begin
+        OPEN p_books FOR
+            SELECT book_id, book_title, book_author, book_publication_date,
+                   book_sales_point, book_summary, book_description,
+                   book_price, book_rating, book_publisher
+            FROM Books
+            where book_id > 0;
+    end find_all_book_with_count;
 end book_pkg;
 /
