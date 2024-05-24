@@ -83,7 +83,7 @@ public class BookContentPanel extends ContentPanel {
 
     private void updateSummaryContent() {
         int start = (currentPage - 1) * pagePerContent;
-        int end = currentPage * pagePerContent;
+        int end = Math.min(currentPage * pagePerContent, books.size());
         for (int i = start; i < end; i++) {
             Book book = books.get(i);
             BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(contentWidth, (contentHeight - 300) / 5, this, book);

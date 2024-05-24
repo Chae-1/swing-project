@@ -1,5 +1,6 @@
 package com.booklink.ui.panel.content.book.bookdetail;
 
+import com.booklink.controller.CategoryController;
 import com.booklink.model.book.Book;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
@@ -9,9 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 public class BookDetailPanel extends ContentPanel {
-
+    private CategoryController controller = new CategoryController();
     public BookDetailPanel(MainFrame mainFrame, Book book) {
         super(mainFrame);
         init();
@@ -20,7 +22,10 @@ public class BookDetailPanel extends ContentPanel {
         titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel).setBounds(0, 0, 1215, 100);
-
+        List<String> allCategories = controller.findAllCategories(book.getId());
+        for (String allCategory : allCategories) {
+            System.out.println(allCategory);
+        }
         // 이미지 490 * 200, 위치 :
         URL location = null;
         try {

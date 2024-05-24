@@ -35,8 +35,7 @@ public class CategoryService {
         return roots;
     }
 
-    public static void main(String[] args) {
-        CategoryService categoryService = new CategoryService();
-        categoryService.allRootAndChildCategories();
+    public List<String> findAllCategoriesByBookId(Long bookId) {
+        return dao.findAllCategories(bookId);
     }
 }

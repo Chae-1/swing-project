@@ -10,4 +10,8 @@ public class CategoryController {
     public List<Categories> requestAllRootAndChildCategories() {
         return categoryService.allRootAndChildCategories();
     }
+
+    public List<String> findAllCategories(Long bookId) {
+        return categoryService.findAllCategoriesByBookId(bookId);
+    }
 }

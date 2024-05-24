@@ -24,6 +24,10 @@ CREATE OR REPLACE PACKAGE Categories_Pkg IS
         p_category_name in Categories.category_name%TYPE,
         p_category out sys_refcursor
     );
+    procedure find_all_categories_of_book(
+        p_book_id in books.book_id%type,
+        p_category in out sys_refcursor
+    );
 
     procedure find_all_with_level(
         p_category out sys_refcursor
@@ -54,6 +58,27 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
             from temp;
     end find_all_with_level;
 
+    procedure find_all_categories_of_book(
+        p_book_id in books.book_id%type,
+        p_category in out sys_refcursor
+    ) as
+    begin
+        with book_category as(
+            select b.book_id,
+                   case
+                       when level = 1 then c.category_name
+                       else substr(SYS_CONNECT_BY_PATH(c.category_name, ' -> '), 5)
+                       end AS category_path
+            from bookcategories bc
+                     join books b on bc.book_id = b.book_id
+                     join categories c on bc.category_id = c.category_id
+            start with c.prior_category_id is null
+            connect by prior c.category_id = c.prior_category_id
+        )
+        select category_path
+        from book_category
+        where book_id = p_book_id;
+    end;
     procedure insert_subcategory(
         p_category_name in Categories.category_name%type,
         p_prior_id in Categories.prior_category_id%type

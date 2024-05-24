@@ -44,6 +44,10 @@ public class Book {
         return String.valueOf(rating);
     }
 
+    public Long getId() {
+        return id;
+    }
+
 
     public static class BookBuilder {
         private Long id;
