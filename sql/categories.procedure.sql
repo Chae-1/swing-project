@@ -9,6 +9,10 @@ CREATE TABLE Categories (
                             category_name VARCHAR2(50),
                             prior_category_id INTEGER
 );
+create unique index idx_categories on Categories(category_id);
+alter table categories add constraint category_pk primary key(category_id);
+alter table categories add constraint category_name_nn check(category_name is not null);
+alter table categories add constraint prior_category_fk foreign key (prior_category_id) references categories(category_id) on delete cascade;
 
 CREATE OR REPLACE PACKAGE Categories_Pkg IS
     procedure insert_maincategory(
@@ -26,7 +30,7 @@ CREATE OR REPLACE PACKAGE Categories_Pkg IS
     );
     procedure find_all_categories_of_book(
         p_book_id in books.book_id%type,
-        p_category in out sys_refcursor
+        p_category out sys_refcursor
     );
 
     procedure find_all_with_level(
