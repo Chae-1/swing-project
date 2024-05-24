@@ -1,4 +1,4 @@
-package com.booklink.ui.panel.content.booksummary;
+package com.booklink.ui.panel.content.book.booksummary;
 
 import com.booklink.model.book.Book;
 import com.booklink.ui.panel.content.ContentPanel;
@@ -12,13 +12,26 @@ import javax.swing.*;
 public class BookSummaryPanel extends JPanel {
     private static int SUMMARY_PANEL_WIDTH = 1488;
     private static int SUMMARY_PANEL_HEIGHT = 150;
+    private ContentPanel contentPanel;
 
-    public BookSummaryPanel(int width, int height) {
+    public BookSummaryPanel(int width, int height, ContentPanel contentPanel, Book book) {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(width, height)); // 너비를 1488로 수정
         setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+        this.contentPanel = contentPanel;
+
 
         JLabel imageLabel = new JLabel(new ImageIcon());
+        // 안좋은 방법이지만,
+        // 해당 이미지 라벨을 클릭하면 book을 넘기고
+        // 도서에 대한 디테일한 설명과 댓글 목록을 가지고 오게 할거임
+        imageLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("이벤트 발생");
+                contentPanel.moveOtherPanel(book);
+            }
+        });
         imageLabel.setPreferredSize(new Dimension(200, height)); // 이미지 크기 설정
         imageLabel.setBackground(Color.BLACK);
         imageLabel.setOpaque(true);
@@ -26,23 +39,7 @@ public class BookSummaryPanel extends JPanel {
 
         add(imageLabel, BorderLayout.WEST);
 
-        BookSummaryContentPanel contentPanel = new BookSummaryContentPanel(width - 200, height);
-        add(contentPanel, BorderLayout.CENTER);
-    }
-
-    static class TestFrame extends JFrame {
-        public TestFrame() {
-            setLayout(null);
-            setSize(1920, 1080); // 프레임 크기 설정
-            BookSummaryPanel comp = new BookSummaryPanel(SUMMARY_PANEL_WIDTH, SUMMARY_PANEL_HEIGHT);
-            add(comp).setBounds(0, 0, SUMMARY_PANEL_WIDTH, SUMMARY_PANEL_HEIGHT); // BookSummaryContentPanel 추가
-        }
-
-        public static void main(String[] args) {
-            TestFrame testFrame = new TestFrame();
-            SwingUtilities.invokeLater(() -> {
-                testFrame.setVisible(true);
-            });
-        }
+        BookSummaryContentPanel summaryContentPanel = new BookSummaryContentPanel(width - 200, height, book);
+        add(summaryContentPanel, BorderLayout.CENTER);
     }
 }

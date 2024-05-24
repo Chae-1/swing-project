@@ -2,7 +2,6 @@ package com.booklink.dao;
 
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
-import com.booklink.model.book.BookListWithCount;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DbDataTypeMatcher;
 import oracle.jdbc.OracleConnection;
@@ -198,7 +197,7 @@ public class BookDao {
         }
     }
 
-    public BookListWithCount findAllBookWithCount() {
+    public List<Book> findAllBookWithCount() {
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
@@ -209,13 +208,11 @@ public class BookDao {
             cstmt.registerOutParameter(1, OracleTypes.CURSOR);
             cstmt.execute();
             rs = (ResultSet) cstmt.getObject(1);
-            int count = 0;
             List<Book> books = new ArrayList<>();
             while (rs.next()) {
                 books.add(getBook(rs));
-                count = rs.getInt("count");
             }
-            return new BookListWithCount(books, count);
+            return books;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -223,8 +220,51 @@ public class BookDao {
         }
     }
 
+    public List<Book> findBookContainsTitle(String title) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call book_pkg.find_book_contains_title(?, ?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.setString(1, title);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
 
-    public static void main(String[] args) {
-
+    public List<Book> findBookByCategoryName(String categoryName) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call book_pkg.find_book_contains_title(?, ?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.setString(1, categoryName);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
     }
 }

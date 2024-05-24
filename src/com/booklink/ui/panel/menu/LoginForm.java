@@ -157,8 +157,8 @@ import java.util.Optional;
             }
         }
 
-        public static void main(String[] args) {
-            new LoginForm();
-        }
-
+    public static void main(String[] args) {
+        new LoginForm();
     }
+
+}

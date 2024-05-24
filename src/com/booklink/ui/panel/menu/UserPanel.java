@@ -10,7 +10,7 @@ public class UserPanel extends JPanel {
     private JButton signUpButton;
 
     public UserPanel() {
-        setPreferredSize(new Dimension(800, 50));
+        setPreferredSize(new Dimension(400, 50));
         setLayout(null);
 
         loginButton = new JButton("Login");
@@ -19,16 +19,14 @@ public class UserPanel extends JPanel {
         signUpButton = new JButton("Sign Up");
         signUpButton.setSize(200, 50);
 
-        add(loginButton).setBounds(0, 0, 200, 50);
-        add(signUpButton).setBounds(200, 0, 200, 50);
-
+        add(loginButton).setBounds(0, 0, 100, 50);
+        add(signUpButton).setBounds(100, 0, 100, 50);
 
         //login in 버튼 누르면 로그인 폼으로 이동
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new LoginForm(); // Open the LoginForm
-            }
+
+        // Add ActionListener to loginButton
+        loginButton.addActionListener(e -> {
+            new LoginForm(); // Open the LoginForm
         });
 
         //sign up 버튼 누르면 회원가입 폼으로 이동
@@ -38,6 +36,5 @@ public class UserPanel extends JPanel {
                 new SignForm(null); // Open the SingForm
             }
         });
-
     }
 }
