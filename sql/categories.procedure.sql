@@ -69,7 +69,7 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
     begin
         open p_category for
             with book_category as(
-                select b.book_id,
+                 select b.book_id,
                        case
                            when level = 1 then c.category_name
                            else substr(SYS_CONNECT_BY_PATH(c.category_name, ' -> '), 5)

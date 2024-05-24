@@ -64,6 +64,7 @@ public class BookContentPanel extends ContentPanel {
         // books And count를 가지고 온다.
         books = bookController.findBooksByContainsCategoryName(categoryDto.name());
         maxPage = (int) Math.ceil(books.size() / pagePerContent);
+        System.out.println(maxPage);
         currentPage = 1;
 
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.

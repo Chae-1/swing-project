@@ -72,6 +72,11 @@ create or replace package book_pkg as
         p_book OUT SYS_REFCURSOR
     );
 
+    procedure find_books_by_cat_name(
+        p_category_name in categories.category_name%type,
+        p_books OUT SYS_REFCURSOR
+    );
+
     procedure delete_book(
         p_book_id in books.book_id%type
     );
@@ -92,6 +97,7 @@ create or replace package book_pkg as
     procedure find_all_book(
         p_books OUT SYS_REFCURSOR
     );
+
 end book_pkg;
 /
 
@@ -223,6 +229,26 @@ create or replace package body book_pkg as
             FROM Books
             where contains(book_title, p_book_title, 1) > 1;
     end find_book_contains_title;
+PROCEDURE find_books_by_cat_name(
+    p_category_name IN categories.category_name%TYPE,
+    p_books OUT SYS_REFCURSOR
+) IS
+    v_sql VARCHAR2(4000);
+BEGIN
+    v_sql := 'SELECT b.book_id, b.book_title, b.book_author, b.book_publication_date, ' ||
+             'b.book_sales_point, b.book_summary, b.book_description, ' ||
+             'b.book_price, b.book_rating, b.book_publisher ' ||
+             'FROM (SELECT b.*, ROW_NUMBER() OVER(PARTITION BY b.book_id ORDER BY b.book_title) AS rn ' ||
+             'FROM books b ' ||
+             'JOIN bookcategories bc ON b.book_id = bc.book_id ' ||
+             'JOIN categories c ON c.category_id = bc.category_id';
 
+    IF p_category_name != '전체' THEN
+        v_sql := v_sql || ' WHERE c.category_name = :category_name';
+    END IF;
+    v_sql := v_sql || ') ' || 'WHERE rn = 1';
+
+    OPEN p_books FOR v_sql USING p_category_name;
+END find_books_by_cat_name;
 end book_pkg;
 /

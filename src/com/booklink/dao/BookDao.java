@@ -248,7 +248,7 @@ public class BookDao {
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
-        String sql = "call book_pkg.find_book_contains_title(?, ?)";
+        String sql = "call book_pkg.find_books_by_cat_name(?, ?)";
         try {
             con = DBConnectionUtils.getConnection();
             cstmt = con.prepareCall(sql);
