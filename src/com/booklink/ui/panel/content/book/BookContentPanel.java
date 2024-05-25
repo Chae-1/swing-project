@@ -23,10 +23,12 @@ public class BookContentPanel extends ContentPanel {
     private int maxPage;
     private int pagePerContent = 5;
 
+    @Override
     public int getCurrentPage() {
         return currentPage;
     }
 
+    @Override
     public int getMaxPage() {
         return maxPage;
     }
@@ -63,7 +65,7 @@ public class BookContentPanel extends ContentPanel {
         bookController = new BookController();
         // books And count를 가지고 온다.
         books = bookController.findBooksByContainsCategoryName(categoryDto.name());
-        maxPage = (int) Math.ceil(books.size() / pagePerContent);
+        maxPage = Math.max(1, (int) Math.ceil(books.size() / pagePerContent));
         System.out.println(maxPage);
         currentPage = 1;
 
@@ -74,6 +76,7 @@ public class BookContentPanel extends ContentPanel {
     }
 
     // update가 호출되면 pageNum를 갱신하고 해당 페이지로 이동시킨다.
+    @Override
     public void update(int pageNum) {
         removeAll();
         currentPage = pageNum;
@@ -87,48 +90,10 @@ public class BookContentPanel extends ContentPanel {
         int end = Math.min(currentPage * pagePerContent, books.size());
         for (int i = start; i < end; i++) {
             Book book = books.get(i);
-            BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(contentWidth, (contentHeight - 300) / 5, this, book);
+            BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(contentWidth,
+                    (contentHeight - 300) / 5, this,
+                    book);
             add(bookSummaryPanel);
         }
     }
 }
-//    private void loadBooks() {
-//        totalPageCount = (int) Math.ceil((double) booksWithCount.count() / pageSize);
-//    }
-//
-//    private void updateBookSummaryPanels() {
-//        bookContainer.removeAll();
-//        List<Book> books = booksWithCount.books();
-//        int start = (currentPage - 1) * pageSize;
-//        int end = Math.min(start + pageSize, books.size());
-//        for (int i = start; i < end; i++) {
-//            BookSummaryPanel bookSummaryPanel = new BookSummaryPanel(books.get(i), this);
-//            bookContainer.add(bookSummaryPanel);
-//        }
-//        bookContainer.revalidate();
-//        bookContainer.repaint();
-//    }
-
-//    private void updatePagingPanel() {
-//        pagingPanel.removeAll();
-//        for (int i = 1; i <= totalPageCount; i++) {
-//            JButton pageButton = new JButton(String.valueOf(i));
-//            pageButton.addActionListener(e -> {
-//                currentPage = Integer.parseInt(pageButton.getText());
-//                updateBookSummaryPanels();
-//            });
-//            pagingPanel.add(pageButton);
-//        }
-//        pagingPanel.revalidate();
-//        pagingPanel.repaint();
-//    }
-//
-//    public void showBookDetail(Book book) {
-//        BookDetailPanel bookDetailPanel = new BookDetailPanel(book, this);
-//        mainPanel.add(bookDetailPanel, "BookDetail");
-//        cardLayout.show(mainPanel, "BookDetail");
-//    }
-//
-//    public void showBookList() {
-//        cardLayout.show(mainPanel, "BookList");
-//    }

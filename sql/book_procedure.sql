@@ -256,3 +256,5 @@ create or replace package body book_pkg as
     END find_books_by_cat_name;
 end book_pkg;
 /
+
+create trigger

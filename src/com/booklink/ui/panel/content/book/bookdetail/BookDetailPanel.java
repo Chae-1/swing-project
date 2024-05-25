@@ -4,8 +4,8 @@ import com.booklink.controller.CategoryController;
 import com.booklink.model.book.Book;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
-import com.booklink.ui.panel.content.PagingPanel;
 
+import com.booklink.ui.panel.content.book.bookdetail.comment.CommentPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.net.MalformedURLException;
@@ -13,7 +13,9 @@ import java.net.URL;
 import java.util.List;
 
 public class BookDetailPanel extends ContentPanel {
+
     private CategoryController controller = new CategoryController();
+
     public BookDetailPanel(MainFrame mainFrame, Book book) {
         super(mainFrame);
         init();
@@ -22,10 +24,7 @@ public class BookDetailPanel extends ContentPanel {
         titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel).setBounds(0, 0, 1215, 100);
-        List<String> allCategories = controller.findAllCategories(book.getId());
-        for (String allCategory : allCategories) {
-            System.out.println(allCategory);
-        }
+
         // 이미지 490 * 200, 위치 :
         URL location = null;
         try {
@@ -73,24 +72,23 @@ public class BookDetailPanel extends ContentPanel {
         add(scoreLabel);
 
         // 카테고리 추가
-        JLabel categoriesLabel = new JLabel("학");
+        List<String> allCategories = controller.findAllCategories(book.getId());
+        JLabel categoriesLabel = new JLabel(allCategories.stream()
+                .reduce((category1, category2) -> category1 + "\n" + category2)
+                .orElse("분류 없음"));
         categoriesLabel.setFont(malgunGothic);
-        categoriesLabel.setBounds(490, 400, 715, 100);
+        categoriesLabel.setBounds(490, 400, 515, 100);
         add(categoriesLabel);
-        // 500
 
-        CommentPanel commentPanel = new CommentPanel(mainFrame);
+        JButton purchaseButton = new JButton("구매");
+        purchaseButton.setFont(malgunGothic);
+        purchaseButton.setBounds(1005, 400, 100, 100);
+        add(purchaseButton);
+
+        CommentPanel commentPanel = new CommentPanel(mainFrame, book.getId());
+        commentPanel.setBounds(0, 500, 1215, 400);
         add(commentPanel);
     }
-
-    /**
-     * emp 행 10개
-     *
-     * select sum(sal) over(parition by deptno order by sal), sal, deptno
-     * from emp;
-     *
-     * deptno = 10, 20, 30, 40
-     */
 
     private void resizeImage(ImageIcon image) {
         Image originalImage = image.getImage();
