@@ -2,7 +2,6 @@ package com.booklink.controller;
 
 import com.booklink.model.book.comments.CommentDto;
 import com.booklink.model.book.comments.CommentFormDto;
-import com.booklink.model.book.comments.exception.CommentException;
 import com.booklink.service.CommentService;
 import java.util.List;
 
