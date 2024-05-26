@@ -33,7 +33,9 @@ public class CommentSummaryPanel extends JPanel {
             try {
                 if (this.getParent() instanceof CommentPanel p) {
                     p.removeComment(commentDto.commentId(), UserHolder.getId());
+                    p.update(1);
                 }
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(),
                         ex.getMessage(), JOptionPane.ERROR_MESSAGE);

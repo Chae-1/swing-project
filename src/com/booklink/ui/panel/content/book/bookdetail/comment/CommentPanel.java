@@ -51,6 +51,9 @@ public class CommentPanel extends ContentPanel {
         pagingPanel.updatePagingPanel();
         updateComments();
         add(pagingPanel);
+
+        revalidate();
+        repaint();
     }
 
     private void updateComments() {
@@ -61,7 +64,6 @@ public class CommentPanel extends ContentPanel {
             CommentSummaryPanel summary = new CommentSummaryPanel(commentDto);
             add(summary);
         }
-
         // 입력란
         CommentInputPanel commentInputPanel = new CommentInputPanel(bookId);
         add(commentInputPanel);
@@ -69,6 +71,5 @@ public class CommentPanel extends ContentPanel {
 
     public void removeComment(Long commentId, Long userId) {
         commentController.removeComment(commentId, userId);
-        update(1);
     }
 }
