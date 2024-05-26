@@ -2,8 +2,9 @@ package com.booklink.dao;
 
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
+import com.booklink.model.book.BookRegisterDto;
 import com.booklink.utils.DBConnectionUtils;
-import com.booklink.utils.DbDataTypeMatcher;
+import com.booklink.utils.DBDataTypeMatcher;
 import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.ARRAY;
@@ -13,7 +14,6 @@ import oracle.sql.StructDescriptor;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,8 +68,8 @@ public class BookDao {
                 bookDto.author(),
                 Date.valueOf(bookDto.publicationDate()),
                 bookDto.salesPoint(),
-                DbDataTypeMatcher.stringToClob(con, bookDto.summary()),
-                DbDataTypeMatcher.stringToClob(con, bookDto.description()),
+                DBDataTypeMatcher.stringToClob(con, bookDto.summary()),
+                DBDataTypeMatcher.stringToClob(con, bookDto.description()),
                 bookDto.price(),
                 bookDto.rating() != null ? new BigDecimal(bookDto.rating()) : null,
                 bookDto.publisher()
@@ -266,5 +266,38 @@ public class BookDao {
         } finally {
             DBConnectionUtils.releaseConnection(con, cstmt, rs);
         }
+    }
+
+    public void registerBookWithCategories(BookRegisterDto dto) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        String sql = "{call book_pkg.add_book_with_categories(?)}";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            StructDescriptor structDescriptor = StructDescriptor.createDescriptor(" BOOK_REGISTER_INFO", con);
+            STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookWithCategoriesInfo(con, dto));
+            cstmt.setObject(1, bookInfoStruct, OracleTypes.STRUCT);
+            cstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, null);
+        }
+    }
+
+    private Object[] createBookWithCategoriesInfo(Connection con, BookRegisterDto dto) {
+        return new Object[] {
+                dto.title(),
+                dto.author(),
+                Date.valueOf(dto.publicationDate()),
+                DBDataTypeMatcher.stringToClob(con, dto.summary()),
+                DBDataTypeMatcher.stringToClob(con, dto.description()),
+                dto.price(),
+                dto.publisher(),
+                dto.category1(),
+                dto.category2(),
+                dto.imageUrl()
+        };
     }
 }

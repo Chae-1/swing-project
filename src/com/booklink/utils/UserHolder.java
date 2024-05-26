@@ -26,4 +26,12 @@ public class UserHolder {
         }
         return user.getId();
     }
+
+    public static String getName() {
+        return user.getName();
+    }
+
+    public static boolean isRoot() {
+        return user.isRoot();
+    }
 }

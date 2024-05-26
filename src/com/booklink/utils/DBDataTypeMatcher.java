@@ -4,7 +4,7 @@ import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DbDataTypeMatcher {
+public class DBDataTypeMatcher {
     public static Clob stringToClob(Connection connection, String data) {
         if (data == null) {
             return null;

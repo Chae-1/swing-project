@@ -38,7 +38,7 @@ public class BookContentPanel extends ContentPanel {
         bookController = new BookController();
         // books And count를 가지고 온다.
         books = bookController.findAllBookWithCount();
-        maxPage = (int) Math.ceil(books.size() / pagePerContent);
+        maxPage = Math.max(1, (int) Math.ceil(books.size() / pagePerContent));
         currentPage = 1;
 
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
@@ -51,7 +51,7 @@ public class BookContentPanel extends ContentPanel {
         bookController = new BookController();
         // books And count를 가지고 온다.
         books = bookController.findBooksByContainsTitle(title);
-        maxPage = (int) Math.ceil(books.size() / pagePerContent);
+        maxPage = Math.max(1, (int) Math.ceil(books.size() / pagePerContent));
         currentPage = 1;
 
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.

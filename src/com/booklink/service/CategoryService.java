@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CategoryService {
     private final CategoriesDao dao = new CategoriesDao();
@@ -37,5 +38,12 @@ public class CategoryService {
 
     public List<String> findAllCategoriesByBookId(Long bookId) {
         return dao.findAllCategories(bookId);
+    }
+
+    public List<String> findAllCategoryNames() {
+        List<CategoryWithLevelDto> dtos = dao.allCategoriesWithLevel();
+        return dtos.stream()
+                .map(dto -> dto.name())
+                .collect(Collectors.toList());
     }
 }

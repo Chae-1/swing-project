@@ -17,7 +17,6 @@ public class CommentController {
     }
 
     public List<CommentDto> findAllCommentByBookId(Long bookId) {
-
         return commentService.findAllCommentById(bookId);
     }
 

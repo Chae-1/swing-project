@@ -14,4 +14,10 @@ public class CategoryController {
     public List<String> findAllCategories(Long bookId) {
         return categoryService.findAllCategoriesByBookId(bookId);
     }
+
+    public List<String> findAllCategoryNames() {
+        return categoryService.findAllCategoryNames();
+    }
+
+
 }

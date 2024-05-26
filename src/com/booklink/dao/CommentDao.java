@@ -4,7 +4,7 @@ import com.booklink.model.book.comments.CommentDto;
 import com.booklink.model.book.comments.CommentFormDto;
 import com.booklink.model.book.comments.Comments;
 import com.booklink.utils.DBConnectionUtils;
-import com.booklink.utils.DbDataTypeMatcher;
+import com.booklink.utils.DBDataTypeMatcher;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -72,7 +72,7 @@ public class CommentDao {
                 dto.bookId(),
                 dto.rating(),
                 Timestamp.valueOf(dto.regDate()),
-                DbDataTypeMatcher.stringToClob(con, dto.content()),
+                DBDataTypeMatcher.stringToClob(con, dto.content()),
                 purchaseStatus
         };
     }
@@ -118,6 +118,29 @@ public class CommentDao {
             cstmt = con.prepareCall(sql);
             cstmt.setLong(1, commentId);
             cstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, null);
+        }
+    }
+
+    public List<String> findAllCategoryNames() {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call comment_pkg.find_all_category_names(?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) rs.getObject(1);
+            List<String> categories = new ArrayList<>();
+            while (rs.next()) {
+                categories.add(rs.getString("category_name"));
+            }
+            return categories;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {

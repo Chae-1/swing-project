@@ -36,6 +36,7 @@ CREATE OR REPLACE PACKAGE Categories_Pkg IS
     procedure find_all_with_level(
         p_category out sys_refcursor
     );
+
 END Categories_Pkg;
 /
 
@@ -104,6 +105,5 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
             from Categories
             where category_name = p_category_name;
     END find_parent_category;
-
 END Categories_Pkg;
 /
