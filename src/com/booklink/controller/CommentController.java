@@ -20,4 +20,8 @@ public class CommentController {
 
         return commentService.findAllCommentById(bookId);
     }
+
+    public void removeComment(Long commentId, Long userId) {
+        commentService.removeComment(commentId, userId);
+    }
 }

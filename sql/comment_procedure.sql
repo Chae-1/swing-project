@@ -65,6 +65,14 @@ create or replace package comment_pkg is
         p_book_id in books.book_id%type,
         p_comment out sys_refcursor
     );
+    procedure find_comment_by_id(
+        p_comment_id in comments.comment_id%type,
+        p_user_id in comments.user_id%type,
+        p_comment out sys_refcursor
+    );
+    procedure remove_comment(
+        p_comment_id in comments.comment_id%type
+    );
 end comment_pkg;
 /
 
@@ -88,5 +96,23 @@ create or replace package body comment_pkg is
                      join users u on c.user_id = u.user_id
             where c.book_id = p_book_id;
     end find_book_comments;
+    procedure find_comment_by_id(
+        p_comment_id in comments.comment_id%type,
+        p_user_id in comments.user_id%type,
+        p_comment out sys_refcursor
+    ) as
+    begin
+        open p_comment for
+            select *
+            from comments
+            where comment_id = p_comment_id and user_id = p_user_id;
+    end find_comment_by_id;
+    procedure remove_comment(
+        p_comment_id in comments.comment_id%type
+    ) as
+    begin
+        delete comments
+        where comment_id = p_comment_id;
+    end remove_comment;
 end comment_pkg;
 /

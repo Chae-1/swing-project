@@ -66,4 +66,9 @@ public class CommentPanel extends ContentPanel {
         CommentInputPanel commentInputPanel = new CommentInputPanel(bookId);
         add(commentInputPanel);
     }
+
+    public void removeComment(Long commentId, Long userId) {
+        commentController.removeComment(commentId, userId);
+        update(1);
+    }
 }

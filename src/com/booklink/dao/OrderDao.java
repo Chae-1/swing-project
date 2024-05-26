@@ -5,7 +5,7 @@ public class OrderDao {
 
     }
 
-    public int findOrderCount(Long userId, Long bookId) {
+    public int findOrderCountAboutBook(Long userId, Long bookId) {
         return 0;
     }
 }
