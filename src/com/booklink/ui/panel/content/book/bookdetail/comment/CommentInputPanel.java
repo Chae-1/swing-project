@@ -4,6 +4,7 @@ import com.booklink.controller.CommentController;
 import com.booklink.model.book.comments.CommentFormDto;
 import com.booklink.model.user.exception.UserException;
 import com.booklink.utils.UserHolder;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.time.LocalDateTime;
 import javax.swing.JButton;
@@ -14,6 +15,7 @@ import javax.swing.JTextArea;
 public class CommentInputPanel extends JPanel {
 
     private CommentController commentController;
+
     public CommentInputPanel(Long bookId) {
         setLayout(null);
         commentController = new CommentController();
@@ -27,7 +29,7 @@ public class CommentInputPanel extends JPanel {
         add(inputArea);
 
         // 점수판
-        String[] ratings = { "1", "2", "3", "4", "5" };
+        String[] ratings = {"1", "2", "3", "4", "5"};
         JComboBox<String> ratingComboBox = new JComboBox<>(ratings);
         ratingComboBox.setBounds(860, 0, 121, 30);
         add(ratingComboBox);
@@ -46,6 +48,10 @@ public class CommentInputPanel extends JPanel {
             try {
                 commentController.registerComment(new CommentFormDto(UserHolder.getId(), bookId, rating,
                         LocalDateTime.now(), text));
+                Container parent = this.getParent();
+                if (parent instanceof CommentPanel p) {
+                    p.update(1);
+                }
             } catch (UserException e) {
                 // comment 예외시, 메세지를 출력
                 // popUp 형태로 제공할 것.

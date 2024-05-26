@@ -39,6 +39,9 @@ create or replace package user_pkg as
     procedure delete_user_by_id(p_user_id in users.user_id%type);
     -- user 변경 및 선호 카테고리를 변경할 수 있도록 설정
 end user_pkg;
+/
+
+SELECT * FROM USER_ERRORS WHERE NAME = 'USER_PKG';
 
 create or replace package body user_pkg as
 procedure add_user(p_users_form in users_form) as
@@ -49,8 +52,6 @@ values (users_seq.nextval, p_users_form.user_name,
         p_users_form.user_password, p_users_form.user_log_id,
         p_users_form.user_registration_date, p_users_form.user_image);
 end add_user;
-
-
 procedure find_user_by_logid(
     p_user_log_id in users.user_log_id%type,
     p_user_password in users.user_password%type,
@@ -58,9 +59,9 @@ procedure find_user_by_logid(
 ) as
 begin
 open p_user for
-    select u.*
-    from users u
-    where u.user_log_id = p_user_log_id and u.user_password =  p_user_password;
+select u.*
+from users u
+where u.user_log_id = p_user_log_id and u.user_password =  p_user_password;
 end find_user_by_logid;
 
     procedure delete_user_by_id(p_user_id in users.user_id%type) as

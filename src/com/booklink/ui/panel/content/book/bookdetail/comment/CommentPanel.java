@@ -33,7 +33,7 @@ public class CommentPanel extends ContentPanel {
 
     @Override
     protected int getMaxPage() {
-        return comments.size() / 2;
+        return (int) Math.ceil((double)comments.size() / 2);
     }
 
     @Override
@@ -46,6 +46,7 @@ public class CommentPanel extends ContentPanel {
         // 페이징이 눌리면 댓글 목륵을 전부 가지고 온다.
         // commentDto -> userId, commentId, comment, rating, userName
         removeAll();
+        comments = commentController.findAllCommentByBookId(bookId);
         currentPage = page;
         pagingPanel.updatePagingPanel();
         updateComments();
