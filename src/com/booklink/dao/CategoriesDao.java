@@ -83,7 +83,31 @@ public class CategoriesDao {
         }
     }
 
-    public List<String> findAllCategories(Long bookId) {
+    public List<String> findAllCategory(Long bookId) {
+        String sql = "{call categories_pkg.find_all_simple_category(?, ?)}";
+        Connection con = null;
+        ResultSet rs = null;
+        CallableStatement cstmt = null;
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.setLong(1, bookId);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            List<String> categories = new ArrayList<>();
+            while (rs.next()) {
+                categories.add(rs.getString("category_name"));
+            }
+            return categories;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
+
+    public List<String> findAllCategoryPath(Long bookId) {
         String sql = "{call categories_pkg.find_all_categories_of_book(?, ?)}";
         Connection con = null;
         ResultSet rs = null;

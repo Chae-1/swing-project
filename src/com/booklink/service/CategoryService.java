@@ -37,7 +37,7 @@ public class CategoryService {
     }
 
     public List<String> findAllCategoriesByBookId(Long bookId) {
-        return dao.findAllCategories(bookId);
+        return dao.findAllCategoryPath(bookId);
     }
 
     public List<String> findAllCategoryNames() {

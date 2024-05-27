@@ -299,6 +299,7 @@ create or replace package body book_pkg as
             FROM Books
             where book_id > 0;
     end find_all_book_with_count;
+
     procedure find_book_contains_title(
         p_book_title in books.book_title%type,
         p_book out sys_refcursor
@@ -431,11 +432,3 @@ end book_pkg;
 /
 
 
-
-select category_id, category_name
-from categories
-start with category_id in (
-    select category_id
-    from categories
-    where category_name = '소설')
-connect by prior category_id = prior_category_id;

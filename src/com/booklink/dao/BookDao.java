@@ -314,7 +314,8 @@ public class BookDao {
             STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookWithCategoriesInfo(con, dto));
             cstmt.setObject(1, bookInfoStruct, OracleTypes.STRUCT);
             cstmt.setLong(2, id);
-
+            System.out.println(prevCategories);
+            System.out.println(currentCategories);
             ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("CATEGORY_NAME_ARRAY", con);
             ARRAY prevCategoriesArray = new ARRAY(arrayDescriptor, con, prevCategories.toArray());
             ARRAY currentCategoriesArray = new ARRAY(arrayDescriptor, con, currentCategories.toArray());

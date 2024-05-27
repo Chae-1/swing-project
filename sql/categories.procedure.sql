@@ -37,6 +37,11 @@ CREATE OR REPLACE PACKAGE Categories_Pkg IS
         p_category out sys_refcursor
     );
 
+    procedure find_all_simple_category(
+        p_book_id in books.book_id%type,
+        p_category out sys_refcursor
+    );
+
 END Categories_Pkg;
 /
 
@@ -102,5 +107,17 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
             from Categories
             where category_name = p_category_name;
     END find_parent_category;
+
+    procedure find_all_simple_category(
+        p_book_id in books.book_id%type,
+        p_category out sys_refcursor
+    ) as
+    begin
+        open p_category for
+            select category_name
+            from Categories c
+                join bookcategories bc on c.category_id = bc.category_id
+            where bc.book_id = p_book_id;
+    end find_all_simple_category;
 END Categories_Pkg;
 /
