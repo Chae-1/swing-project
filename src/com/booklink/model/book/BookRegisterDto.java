@@ -9,7 +9,5 @@ public record BookRegisterDto(String title,
                               String description,
                               Integer price,
                               String publisher,
-                              String category1,
-                              String category2,
                               String imageUrl) {
 }

@@ -87,7 +87,7 @@ create or replace package body comment_pkg is
 
         update books
         set book_rating = (
-            select avg(comment_rating)
+            select nvl(avg(comment_rating), 0)
             from comments
             where book_id = p_comment.book_id
         )
@@ -118,9 +118,23 @@ create or replace package body comment_pkg is
     procedure remove_comment(
         p_comment_id in comments.comment_id%type
     ) as
+        p_book_id books.book_id%type;
     begin
+
+        select user_id into p_book_id
+        from comments
+        where comment_id = p_comment_id;
+
         delete comments
         where comment_id = p_comment_id;
+
+        update books
+        set book_rating = (
+            select nvl(avg(comment_rating), 0)
+            from comments
+            where book_id = p_book_id
+        )
+        where book_id = p_book_id;
     end remove_comment;
 end comment_pkg;
 /

@@ -51,7 +51,6 @@ alter table bookcategories
 alter table bookcategories
     add constraint bookcategories_book_fk foreign key (book_id) references books (book_id) on delete cascade;
 
-
 CREATE OR REPLACE TYPE book_info_rec AS OBJECT
 (
     book_title            VARCHAR2(50),
@@ -87,8 +86,6 @@ create or replace type book_register_info as object
     book_description      CLOB,
     book_price            INTEGER,
     book_publisher        VARCHAR2(50),
-    book_category1        VARCHAR2(50),
-    book_category2        VARCHAR2(50),
     book_image_url        varchar2(200)
 );
 
@@ -110,6 +107,7 @@ CREATE OR REPLACE TYPE book_rec as OBJECT
     book_info book_info_rec
 );
 
+CREATE OR REPLACE TYPE CATEGORY_NAME_ARRAY AS TABLE OF VARCHAR2(255);/
 
 create or replace package book_pkg as
     procedure find_all_book_with_count(
@@ -154,8 +152,17 @@ create or replace package book_pkg as
     procedure find_all_book(
         p_books OUT SYS_REFCURSOR
     );
+
     procedure add_book_with_categories(
-        p_book_categories_info in book_register_info
+        p_book_categories_info in book_register_info,
+
+        input_categories        IN CATEGORY_NAME_ARRAY
+    );
+
+    PROCEDURE update_book_with_categories(
+        p_book_categories_info IN book_register_info,
+        p_book_id IN books.book_id%TYPE,
+        prev_categories IN CATEGORY_NAME_ARRAY
     );
 end book_pkg;
 /
@@ -365,7 +372,8 @@ create or replace package body book_pkg as
     END find_books_by_cat_name;
 
     procedure add_book_with_categories(
-        p_book_categories_info in book_register_info
+        p_book_categories_info in book_register_info,
+        input_categories        IN CATEGORY_NAME_ARRAY
     ) as
         p_book_id books.book_id%type;
     begin
@@ -384,16 +392,47 @@ create or replace package body book_pkg as
                 p_book_categories_info.book_publisher);
         p_book_id := books_seq.currval;
 
-        insert into bookcategories
-        values ((select category_id
-                        from categories
-                        where category_name = p_book_categories_info.book_category1), p_book_id);
-        insert into bookcategories
-        values ((select category_id
-                            from categories
-                            where category_name = p_book_categories_info.book_category2), p_book_id);
-
+        for i in 1 .. input_categories.count loop
+                insert into bookcategories
+                values ((select category_id
+                         from categories
+                         where category_name = input_categories(i)), p_book_id);
+        end loop;
     end add_book_with_categories;
+    procedure update_book_with_categories(
+        p_book_categories_info in book_register_info,
+        p_book_id books.book_id%type,
+        prev_categories        IN CATEGORY_NAME_ARRAY
+    ) as
+        p_idx int;
+    begin
+
+        update books
+        set book_title            = p_book_categories_info.book_title,
+            book_author           = p_book_categories_info.book_author,
+            book_price            = p_book_categories_info.book_price,
+            book_description      = p_book_categories_info.book_description,
+            book_summary          = p_book_categories_info.book_summary,
+            book_publication_date = p_book_categories_info.book_publication_date,
+            book_image_url = p_book_categories_info.book_image_url,
+            book_publisher = p_book_categories_info.book_publisher
+        where book_id = p_book_id;
+
+        p_idx := 0;
+
+        FOR i IN 1 .. prev_categories.COUNT LOOP
+                select category_id
+                    from categories
+                    where category_name = prev_categories(i);
+                p_idx := i;
+        END LOOP;
+--
+--         update BookCategories
+--         set category_id = (select category_id
+--                            from Categories
+--                            where category_name = prev_category2)
+--         where book_id = p_book_id;
+    end;
 end book_pkg;
 /
 

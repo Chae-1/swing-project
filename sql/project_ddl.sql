@@ -51,7 +51,8 @@ CREATE TABLE Books (
                        book_description CLOB,
                        book_price INTEGER,
                        book_rating number(2, 1),
-                       book_publisher VARCHAR2(50)
+                       book_publisher VARCHAR2(50),
+                       book_image_url varchar2(400)
 );
 
 create unique index idx_books on books(book_id);

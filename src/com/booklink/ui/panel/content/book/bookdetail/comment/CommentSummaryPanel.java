@@ -26,7 +26,6 @@ public class CommentSummaryPanel extends JPanel {
         jLabel.setBounds(0, 0, 700, 30);
         add(jLabel);
 
-        // 415
         JButton removeButton = new JButton("remove");
         removeButton.setBounds(700, 0, 200, 30);
         removeButton.addActionListener((e) -> {
@@ -45,6 +44,9 @@ public class CommentSummaryPanel extends JPanel {
         add(removeButton);
 
         JButton updateButton = new JButton("update");
+        updateButton.addActionListener(e -> {
+
+        });
         updateButton.setBounds(900, 0, 200, 30);
         add(updateButton);
 
@@ -54,6 +56,5 @@ public class CommentSummaryPanel extends JPanel {
         jTextArea.setWrapStyleWord(true);
         jTextArea.setEditable(false);
         add(jTextArea);
-
     }
 }

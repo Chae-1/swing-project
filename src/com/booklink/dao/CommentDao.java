@@ -17,7 +17,7 @@ import oracle.jdbc.OracleTypes;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
 
-public class CommentDao {
+public class    CommentDao {
     public void registerComment(CommentFormDto dto, String purchaseStatus) {
         Connection con = null;
         CallableStatement cstmt = null;
