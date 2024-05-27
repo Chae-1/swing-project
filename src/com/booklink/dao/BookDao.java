@@ -275,11 +275,12 @@ public class BookDao {
         try {
             con = DBConnectionUtils.getConnection();
             cstmt = con.prepareCall(sql);
-            StructDescriptor structDescriptor = StructDescriptor.createDescriptor(" BOOK_REGISTER_INFO", con);
+            StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_REGISTER_INFO", con);
             STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookWithCategoriesInfo(con, dto));
             cstmt.setObject(1, bookInfoStruct, OracleTypes.STRUCT);
             cstmt.execute();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } finally {
             DBConnectionUtils.releaseConnection(con, cstmt, null);

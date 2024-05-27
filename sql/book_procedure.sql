@@ -29,6 +29,29 @@ alter table books
 alter table books
     add constraint books_author_nn check (book_author is not null);
 
+
+CREATE TABLE Categories
+(
+    category_id       INTEGER,
+    category_name     VARCHAR2(50),
+    prior_category_id INTEGER
+);
+
+CREATE TABLE BookCategories
+(
+    category_id INTEGER,
+    book_id     INTEGER
+);
+
+create unique index idx_book_categories on bookcategories (book_id, category_id);
+alter table bookcategories
+    add constraint bookcategories_pk primary key (book_id, category_id);
+alter table bookcategories
+    add constraint bookcategories_category_fk foreign key (category_id) references categories (category_id) on delete cascade;
+alter table bookcategories
+    add constraint bookcategories_book_fk foreign key (book_id) references books (book_id) on delete cascade;
+
+
 CREATE OR REPLACE TYPE book_info_rec AS OBJECT
 (
     book_title            VARCHAR2(50),
@@ -57,16 +80,16 @@ CREATE OR REPLACE TYPE book_info_rec AS OBJECT
 
 create or replace type book_register_info as object
 (
-    book_title books.book_title%type,
-    book_author books.book_author%type,
-    book_publicationDate books.book_publication_date%type,
-    book_summary books.book_summary%type,
-    book_description books.book_description%type,
-    book_price books.book_price%type,
-    book_publisher books.book_publisher%type,
-    book_category1 categories.category_name%type,
-    book_category2 categories.category_name%type,
-    book_image_url books.book_image_url%type
+    book_title            VARCHAR2(50),
+    book_author           VARCHAR2(30),
+    book_publication_date DATE,
+    book_summary          CLOB,
+    book_description      CLOB,
+    book_price            INTEGER,
+    book_publisher        VARCHAR2(50),
+    book_category1        VARCHAR2(50),
+    book_category2        VARCHAR2(50),
+    book_image_url        varchar2(200)
 );
 
 drop sequence books_seq;
@@ -340,12 +363,38 @@ create or replace package body book_pkg as
                 FROM Books;
         END IF;
     END find_books_by_cat_name;
+
     procedure add_book_with_categories(
         p_book_categories_info in book_register_info
     ) as
+        p_book_id books.book_id%type;
     begin
-        set autocommit off;
-    end ;
+        insert into books
+        (book_id, book_title, book_author, book_publication_date, book_sales_point, book_summary,
+         book_description, book_price, book_rating, book_publisher)
+        values (books_seq.nextval,
+                p_book_categories_info.book_title,
+                p_book_categories_info.book_author,
+                p_book_categories_info.book_publication_date,
+                0,
+                p_book_categories_info.book_summary,
+                p_book_categories_info.book_description,
+                p_book_categories_info.book_price,
+                0,
+                p_book_categories_info.book_publisher);
+        p_book_id := books_seq.currval;
+
+        insert into bookcategories
+        values ((select category_id
+                        from categories
+                        where category_name = p_book_categories_info.book_category1), p_book_id);
+        insert into bookcategories
+        values ((select category_id
+                            from categories
+                            where category_name = p_book_categories_info.book_category2), p_book_id);
+
+
+    end add_book_with_categories;
 end book_pkg;
 /
 

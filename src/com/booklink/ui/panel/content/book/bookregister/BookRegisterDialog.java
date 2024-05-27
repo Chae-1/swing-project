@@ -50,7 +50,7 @@ public class BookRegisterDialog extends JDialog {
 
     public BookRegisterDialog(JFrame parent) {
         super(parent, "책 등록", true);
-        setSize(1600, 1080);
+        setSize(1440, 800);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -140,6 +140,7 @@ public class BookRegisterDialog extends JDialog {
                         "Success", JOptionPane.INFORMATION_MESSAGE);
                 dispose();
             } catch (Exception ex) {
+                System.out.println(ex.getMessage());
                 JOptionPane.showMessageDialog(this, "이미 같은 제목의 도서가 있습니다.",
                         "Fail", JOptionPane.INFORMATION_MESSAGE);
             }

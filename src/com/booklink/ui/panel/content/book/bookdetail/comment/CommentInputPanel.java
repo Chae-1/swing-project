@@ -7,10 +7,7 @@ import com.booklink.utils.UserHolder;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.time.LocalDateTime;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 public class CommentInputPanel extends JPanel {
 
@@ -55,7 +52,8 @@ public class CommentInputPanel extends JPanel {
             } catch (UserException e) {
                 // comment 예외시, 메세지를 출력
                 // popUp 형태로 제공할 것.
-                System.out.println(e.getMessage());
+                JOptionPane.showMessageDialog(this, e.getMessage(),
+                        "Fail", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         add(submitButton);

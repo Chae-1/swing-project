@@ -59,7 +59,8 @@ public class BookDetailPanel extends ContentPanel {
         summaryLabel.setBounds(490,150,715,50);
         add(summaryLabel);
 
-        JLabel descriptionLabel = new JLabel(book.getDescription());
+        String description = "<html>"+insertLineBreaks(book.getDescription(), 30) + "</html>";
+        JLabel descriptionLabel = new JLabel(description);
         descriptionLabel.setFont(malgunGothic);
         descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
         descriptionLabel.setBounds(490,200,715,200);
@@ -73,9 +74,11 @@ public class BookDetailPanel extends ContentPanel {
 
         // 카테고리 추가
         List<String> allCategories = controller.findAllCategories(book.getId());
-        JLabel categoriesLabel = new JLabel(allCategories.stream()
-                .reduce((category1, category2) -> category1 + "\n" + category2)
-                .orElse("분류 없음"));
+        String categoryList = allCategories.stream()
+                .reduce((category1, category2) -> category1 + "<br>" + category2)
+                .orElse("분류 없음");
+        categoryList = "<html>" + categoryList + "</html>";
+        JLabel categoriesLabel = new JLabel(categoryList);
         categoriesLabel.setFont(malgunGothic);
         categoriesLabel.setBounds(490, 400, 515, 100);
         add(categoriesLabel);
@@ -88,6 +91,22 @@ public class BookDetailPanel extends ContentPanel {
         CommentPanel commentPanel = new CommentPanel(mainFrame, book.getId());
         commentPanel.setBounds(0, 500, 1215, 400);
         add(commentPanel);
+    }
+
+    public static String insertLineBreaks(String text, int maxLength) {
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        while (index < text.length()) {
+            // 현재 위치부터 maxLength까지의 부분 문자열을 추출
+            int end = Math.min(index + maxLength, text.length());
+            sb.append(text, index, end);
+            // 문자열 끝이 아니면 <br> 태그 삽입
+            if (end < text.length()) {
+                sb.append("<br>");
+            }
+            index += maxLength;
+        }
+        return sb.toString();
     }
 
     private void resizeImage(ImageIcon image) {
