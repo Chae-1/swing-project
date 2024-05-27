@@ -106,7 +106,7 @@ CREATE TABLE comments (
                           comment_id INTEGER,
                           comment_content CLOB,
                           comment_rating INTEGER,
-                          comment_field DATE,
+                          comment_reg_date timestamp,
                           comment_is_purchased VARCHAR2(20),
                           book_id INTEGER,
                           user_id INTEGER

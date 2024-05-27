@@ -3,6 +3,7 @@ package com.booklink.controller;
 import com.booklink.dao.BookDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookListWithCount;
+import com.booklink.model.book.BookRegisterDto;
 import com.booklink.service.BookService;
 
 import java.util.List;
@@ -24,5 +25,13 @@ public class BookController {
 
     public List<Book> findBooksByContainsCategoryName(String categoryName) {
         return bookService.findBookByCategoryName(categoryName);
+    }
+
+    public void registerBookWithCategories(BookRegisterDto dto) {
+        String title = dto.title();
+        // 예외가 발생하면 예외의 내용을 출력해서 보여준다.
+        bookService.findBookByTitle(title);
+        bookService.registerBookWithCategories(dto);
+
     }
 }

@@ -35,4 +35,8 @@ public class Categories {
         }
         return treeNode;
     }
+
+    public String getName() {
+        return name;
+    }
 }

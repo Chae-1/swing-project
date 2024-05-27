@@ -30,7 +30,7 @@ public class UserService {
             throw new UserNotFoundException("존재하지 않는 회원입니다.");
         }
 
-        return null;
+        return userDao.findByLogIdAndPassword(logId, password);
     }
 
     private void deleteUserById(long userId) {

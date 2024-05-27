@@ -36,7 +36,7 @@ public class MainFrame extends JFrame {
 
         // MenuPanel 인스턴스 생성
         // menuPanel은 1920 * 50 최상단에 위치
-        menuPanel = new MenuPanel(WIDTH, 50, this);
+        menuPanel = new MenuPanel(WIDTH, 50);
         // 카테고리 패널은
         int categoryWidth = WIDTH / 4 - 250;
         int categoryHeight = HEIGHT - 50 - 100;

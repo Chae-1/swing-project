@@ -37,20 +37,4 @@ public class BookSummaryContentPanel extends JPanel {
         add(authorLabel);
         add(summaryLabel);
     }
-
-    // TestFrame 클래스
-    static class TestFrame extends JFrame {
-        public TestFrame() {
-            setLayout(new BorderLayout());
-            setSize(1440, 1020); // 프레임 크기 설정
-//            add(new BookSummaryContentPanel(1288, 150, book), BorderLayout.CENTER); // BookSummaryContentPanel 추가
-        }
-
-        public static void main(String[] args) {
-            TestFrame testFrame = new TestFrame();
-            SwingUtilities.invokeLater(() -> {
-                testFrame.setVisible(true);
-            });
-        }
-    }
 }

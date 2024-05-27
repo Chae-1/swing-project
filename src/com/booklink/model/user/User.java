@@ -74,5 +74,8 @@ public class User {
             this.image = image;
         }
 
+    public boolean isRoot() {
+        return name.equals("test1");
     }
+}
 

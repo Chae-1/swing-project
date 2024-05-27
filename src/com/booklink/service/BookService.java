@@ -4,6 +4,7 @@ import com.booklink.dao.BookDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 
+import com.booklink.model.book.BookRegisterDto;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class BookService {
     public void findBookByTitle(String title) {
         Optional<Book> bookByTitle = bookDao.findBookByTitle(title);
         bookByTitle.ifPresent((book) -> {
-            System.out.println(book.toString());
+            throw new RuntimeException("이미 존재하는 책입니다.");
         });
     }
 
@@ -55,5 +56,9 @@ public class BookService {
 
     public List<Book> findBookByCategoryName(String categoryName) {
         return bookDao.findBookByCategoryName(categoryName);
+    }
+
+    public void registerBookWithCategories(BookRegisterDto dto) {
+        bookDao.registerBookWithCategories(dto);
     }
 }
