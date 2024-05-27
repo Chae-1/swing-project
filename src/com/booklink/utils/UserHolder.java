@@ -13,6 +13,9 @@ public class UserHolder {
                 .orElse(null);
     }
 
+    public static boolean isLogin() {
+        return user != null;
+    }
 
     public static void logIn(User user) {
         UserHolder.user = user;

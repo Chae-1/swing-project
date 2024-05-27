@@ -23,7 +23,10 @@ public class MenuPanel extends JPanel {
                 BookRegisterDialog dialog = new BookRegisterDialog(mainFrame);
                 dialog.setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "접근 권한이 없습니다.", "경고", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "접근 권한이 없습니다.",
+                        "경고", JOptionPane.WARNING_MESSAGE);
+
             }
         });
 
