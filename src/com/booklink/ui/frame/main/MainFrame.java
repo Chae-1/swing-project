@@ -1,9 +1,11 @@
 package com.booklink.ui.frame.main;
 
+import com.booklink.model.user.User;
 import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.ui.panel.content.CategoryPanel;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.menu.MenuPanel;
+import com.booklink.ui.panel.menu.MyPagePanel;
 
 import javax.swing.*;
 import java.util.Deque;
@@ -19,6 +21,7 @@ public class MainFrame extends JFrame {
     public static final int HEIGHT = 1080;
 
     private Deque<ContentPanel> prevPanelDeque = new LinkedList<>();
+    private User userHolder;
 
     public MainFrame() {
         // 프레임 제목 설정
@@ -86,5 +89,11 @@ public class MainFrame extends JFrame {
 
     public void updatePrevContent() {
         changeCurrentContent(prevPanelDeque.pop());
+    }
+
+    public void showMyPage(){
+        MyPagePanel myPagePanel = new MyPagePanel(this);
+        loadPrevContent(contentPanel);
+        changeCurrentContent(myPagePanel);
     }
 }

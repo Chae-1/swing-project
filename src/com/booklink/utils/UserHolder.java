@@ -3,9 +3,12 @@ package com.booklink.utils;
 import com.booklink.model.user.User;
 import com.booklink.model.user.exception.UserNotFoundException;
 import com.booklink.service.UserService;
+import com.booklink.ui.frame.main.MainFrame;
 
 public class UserHolder {
     private static User user;
+    private static MainFrame mainFrame;
+
 
     static {
         UserService userService = new UserService();

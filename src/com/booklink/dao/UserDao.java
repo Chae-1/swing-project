@@ -110,7 +110,7 @@ public class UserDao {
     }
 
     public void deleteUserById(long userId) {
-        String sql = "{call DELETE_USER_BY_ID(?)}"; // 삭제 프로시저 호출
+        String sql = "{call user_pkg.DELETE_USER_BY_ID(?)}"; // 삭제 프로시저 호출
 
         try (Connection con = DBConnectionUtils.getConnection();
              CallableStatement cs = con.prepareCall(sql)) {

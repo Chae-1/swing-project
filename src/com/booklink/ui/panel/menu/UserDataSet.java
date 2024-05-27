@@ -14,9 +14,11 @@ public class UserDataSet {
         userLoginForms.add(userLoginForm);
     }
     // 아이디 중복 확인
+
     public boolean isIdOverlap(String id) {
         return userLoginForms.contains(new UserLoginForm(id));
     }
+
     // 회원 삭제
     public void withdraw(String id) {
         userLoginForms.remove(getUser(id));

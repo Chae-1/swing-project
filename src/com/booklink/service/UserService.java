@@ -5,6 +5,7 @@ import com.booklink.model.user.User;
 import com.booklink.model.user.UserRegistrationDto;
 import com.booklink.model.user.exception.UserNotFoundException;
 
+
 import java.util.Optional;
 
 import java.time.LocalDateTime;
@@ -33,22 +34,27 @@ public class UserService {
         return userDao.findByLogIdAndPassword(logId, password);
     }
 
-    private void deleteUserById(long userId) {
+
+    public void deleteUserById(long userId) {
         userDao.deleteUserById(userId);
     }
+
+
 
     public static void main(String[] args) {
         UserService userService = new UserService();
 
-        UserRegistrationDto userDto = new UserRegistrationDto(
-                "김호영2",
-                "1272138",
-                "377112",
-                LocalDateTime.now(),
-                "url:user사진이들어갈url"
+//        UserRegistrationDto userDto = new UserRegistrationDto(
+//                "김호영2",
+//                "1272138",
+//                "377112",
+//                LocalDateTime.now(),
+//                "url:user사진이들어갈url"
+//
+//        );
+//        userService.registrationUser(userDto);
 
-        );
-        userService.registrationUser(userDto);
+
 
         //모든 사용자 조회
         List<User> users = userService.getAllUsers();
@@ -60,10 +66,6 @@ public class UserService {
             System.out.println("Image: " + user.getImage());
             System.out.println();
         }
-
-        //사용자 삭제
-        long userIdToDelete = 5; // 삭제할 사용자 ID
-        userService.deleteUserById(userIdToDelete);
     }
 }
 

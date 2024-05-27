@@ -63,10 +63,10 @@ from users u
 where user_log_id = p_user_log_id and user_password =  p_user_password;
 end find_user_by_logid;
 
-    procedure delete_user_by_id(p_user_id in users.user_id%type) as
+procedure delete_user_by_id(p_user_id in users.user_id%type) as
 begin
-delete from users
-where user_id = p_user_id;
+    delete from users
+    where user_id = p_user_id;
 end delete_user_by_id;
 end user_pkg;
 /
