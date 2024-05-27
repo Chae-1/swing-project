@@ -75,7 +75,7 @@ public class User {
         }
 
     public boolean isRoot() {
-        return name.equals("test1");
+        return name.equals("test");
     }
 }
 

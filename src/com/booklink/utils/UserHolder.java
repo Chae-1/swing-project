@@ -1,6 +1,7 @@
 package com.booklink.utils;
 
 import com.booklink.model.user.User;
+import com.booklink.model.user.exception.UserNotFoundException;
 import com.booklink.service.UserService;
 
 public class UserHolder {
@@ -8,7 +9,8 @@ public class UserHolder {
 
     static {
         UserService userService = new UserService();
-        user = userService.findUserByLogIdAndPassword("test", "test").get();
+        user = userService.findUserByLogIdAndPassword("test", "test")
+                .orElse(null);
     }
 
 
@@ -32,6 +34,9 @@ public class UserHolder {
     }
 
     public static boolean isRoot() {
+        if (user == null) {
+            return false;
+        }
         return user.isRoot();
     }
 }

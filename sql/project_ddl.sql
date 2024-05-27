@@ -185,3 +185,109 @@ create unique index idx_prefer_categories on PreferCategories(user_id, category_
 alter table PreferCategories add constraint prefer_categories_pk primary key(user_id, category_id);
 alter table PreferCategories add constraint prefer_categories_users_fk foreign key (user_id) references users(user_id) on delete cascade;
 alter table PreferCategories add constraint prefer_categories_category_fk foreign key (category_id) references categories(category_id) on delete cascade;
+
+
+-- trigger
+create or replace trigger trg_comment_on_book
+after insert on comments
+for each row
+begin
+    update books
+        set book_rating = (select avg(comment_rating)
+                           from comments
+                           where book_id = :new.book_id)
+    where book_id = :new.book_id;
+end;
+/
+
+CREATE OR REPLACE PACKAGE trg_comment_pkg AS
+    TYPE t_book_id_array IS TABLE OF comments.book_id%TYPE INDEX BY PLS_INTEGER;
+    v_book_ids t_book_id_array;
+    PROCEDURE add_book_id(p_book_id comments.book_id%TYPE);
+    PROCEDURE update_book_ratings(p_book_id comments.book_id%TYPE);
+END trg_comment_pkg;
+/
+CREATE OR REPLACE PACKAGE BODY trg_comment_pkg AS
+
+PROCEDURE add_book_id(p_book_id comments.book_id%TYPE) IS
+BEGIN
+    v_book_ids(v_book_ids.COUNT + 1) := p_book_id;
+END add_book_id;
+ PROCEDURE update_book_ratings(p_book_id comments.book_id%TYPE) IS
+    BEGIN
+        UPDATE books
+        SET book_rating = (
+            SELECT AVG(comment_rating)
+            FROM comments
+            WHERE book_id = p_book_id
+        )
+        WHERE book_id = p_book_id;
+    END update_book_ratings;
+END trg_comment_pkg;
+/
+CREATE OR REPLACE TRIGGER trg_comment_on_book
+    AFTER INSERT ON comments
+    FOR EACH ROW
+BEGIN
+    -- 삽입된 행의 book_id를 패키지 변수에 추가
+    trg_comment_pkg.add_book_id(:NEW.book_id);
+
+    -- 삽입된 행의 book_id에 대한 book_rating 업데이트
+    trg_comment_pkg.update_book_ratings(:NEW.book_id);
+END;
+/
+
+CREATE OR REPLACE PACKAGE trg_comment_pkg AS
+    TYPE t_book_id_array IS TABLE OF comments.book_id%TYPE;
+    v_book_ids t_book_id_array;
+    PROCEDURE add_book_id(p_book_id comments.book_id%TYPE);
+    PROCEDURE update_book_ratings;
+END trg_comment_pkg;
+/
+
+CREATE OR REPLACE PACKAGE BODY trg_comment_pkg AS
+    PROCEDURE add_book_id(p_book_id comments.book_id%TYPE) IS
+    BEGIN
+        IF v_book_ids IS NULL THEN
+            v_book_ids := t_book_id_array();
+        END IF;
+        v_book_ids.EXTEND;
+        v_book_ids(v_book_ids.LAST) := p_book_id;
+    END add_book_id;
+
+    PROCEDURE update_book_ratings IS
+    BEGIN
+        FOR i IN 1 .. v_book_ids.COUNT LOOP
+                UPDATE books
+                SET book_rating = (
+                    SELECT AVG(nvl(comment_rating, 0))
+                    FROM comments
+                    WHERE book_id = v_book_ids(i)
+                )
+                WHERE book_id = v_book_ids(i);
+            END LOOP;
+        -- 패키지 변수를 초기화
+        v_book_ids.DELETE;
+    END update_book_ratings;
+END trg_comment_pkg;
+/
+
+CREATE OR REPLACE TRIGGER trg_comment_on_book
+    BEFORE INSERT ON comments
+    FOR EACH ROW
+BEGIN
+    -- 패키지 변수를 사용하여 삽입된 행의 book_id를 저장
+    trg_comment_pkg.add_book_id(:NEW.book_id);
+END;
+/
+
+CREATE OR REPLACE TRIGGER trg_comment_after_insert
+    AFTER INSERT ON comments
+DECLARE
+    PRAGMA AUTONOMOUS_TRANSACTION;
+BEGIN
+    -- 패키지의 프로시저를 호출하여 books 테이블의 book_rating을 업데이트
+    trg_comment_pkg.update_book_ratings;
+    COMMIT;
+END;
+/

@@ -19,7 +19,7 @@ public class MenuPanel extends JPanel {
         JButton addBookButton = new JButton("도서 등록");
         addBookButton.addActionListener((e) -> {
             MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
-            if (!UserHolder.isRoot()) {
+            if (UserHolder.isRoot()) {
                 BookRegisterDialog dialog = new BookRegisterDialog(mainFrame);
                 dialog.setVisible(true);
             } else {
