@@ -1,5 +1,6 @@
 package com.booklink.ui.panel.content.book.bookdetail;
 
+import com.booklink.controller.BookController;
 import com.booklink.controller.CategoryController;
 import com.booklink.model.book.Book;
 import com.booklink.ui.frame.main.MainFrame;
@@ -15,15 +16,33 @@ import java.util.List;
 public class BookDetailPanel extends ContentPanel {
 
     private CategoryController controller = new CategoryController();
+    private BookController bookController = new BookController();
 
     public BookDetailPanel(MainFrame mainFrame, Book book) {
         super(mainFrame);
         init();
         JLabel titleLabel = new JLabel(book.getTitle() + ": " + book.getAuthor() + "/" + book.getPublisher());
-        titleLabel.setSize(1215, 100);
+        titleLabel.setSize(815, 100);
         titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(titleLabel).setBounds(0, 0, 1215, 100);
+        add(titleLabel).setBounds(0, 0, 815, 100);
+
+        JButton removeBookButton = new JButton("삭제");
+        removeBookButton.setBounds(815, 0, 100, 100);
+        removeBookButton.addActionListener((e) -> {
+            try {
+                bookController.removeBookById(book.getId());
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "카테고리가 중복되었습니다. 다른 카테고리를 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        });
+        add(removeBookButton);
+
+        JButton updateBookButton = new JButton("수정");
+        updateBookButton.setBounds(915, 0, 100, 100);
+        add(updateBookButton);
 
         // 이미지 490 * 200, 위치 :
         URL location = null;

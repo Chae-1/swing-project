@@ -4,7 +4,9 @@ import com.booklink.dao.BookDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookListWithCount;
 import com.booklink.model.book.BookRegisterDto;
+import com.booklink.model.user.User;
 import com.booklink.service.BookService;
+import com.booklink.utils.UserHolder;
 
 import java.util.List;
 
@@ -33,5 +35,9 @@ public class BookController {
         bookService.findBookByTitle(title);
         bookService.registerBookWithCategories(dto);
 
+    }
+
+    public void removeBookById(Long id) {
+        bookService.deleteBookById(id);
     }
 }

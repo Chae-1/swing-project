@@ -393,7 +393,6 @@ create or replace package body book_pkg as
                             from categories
                             where category_name = p_book_categories_info.book_category2), p_book_id);
 
-
     end add_book_with_categories;
 end book_pkg;
 /

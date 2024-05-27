@@ -28,7 +28,7 @@ public abstract class ContentPanel extends JPanel {
     // 상위
     public void moveOtherPanel(Book contentBook) {
         mainFrame.loadPrevContent(this);
-        // BookDetailPanel을 생성해서 mainFrame으로 전달하면 된다.
+        // BookDetailPanel을 생성해서 mainFrame으로 전달하면 된다.w\
         mainFrame.changeCurrentContent(new BookDetailPanel(mainFrame, contentBook));
     }
 

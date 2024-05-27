@@ -20,7 +20,7 @@ public class CommentSummaryPanel extends JPanel {
 
     public CommentSummaryPanel(CommentDto commentDto) {
         setLayout(null);
-        setPreferredSize(new Dimension(1215, 100));
+        setPreferredSize(new Dimension(1215, 70));
 
         JLabel jLabel = new JLabel(commentDto.name() + " / " + commentDto.regDate().toString() + " / " + commentDto.rating());
         jLabel.setBounds(0, 0, 700, 30);
@@ -49,7 +49,7 @@ public class CommentSummaryPanel extends JPanel {
         add(updateButton);
 
         JTextArea jTextArea = new JTextArea(commentDto.comment());
-        jTextArea.setBounds(0, 30, 1215, 70);
+        jTextArea.setBounds(0, 30, 1215, 40);
         jTextArea.setLineWrap(true);
         jTextArea.setWrapStyleWord(true);
         jTextArea.setEditable(false);
