@@ -268,16 +268,19 @@ public class BookDao {
         }
     }
 
-    public void registerBookWithCategories(BookRegisterDto dto) {
+    public void registerBookWithCategories(BookRegisterDto dto, List<String> inputCategories) {
         Connection con = null;
         CallableStatement cstmt = null;
-        String sql = "{call book_pkg.add_book_with_categories(?)}";
+        String sql = "{call book_pkg.add_book_with_categories(?, ?)}";
         try {
             con = DBConnectionUtils.getConnection();
             cstmt = con.prepareCall(sql);
             StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_REGISTER_INFO", con);
             STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookWithCategoriesInfo(con, dto));
             cstmt.setObject(1, bookInfoStruct, OracleTypes.STRUCT);
+            ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("CATEGORY_NAME_ARRAY", con);
+            ARRAY prevCategoriesArray = new ARRAY(arrayDescriptor, con, inputCategories.toArray());
+            cstmt.setArray(2, prevCategoriesArray);
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -296,10 +299,34 @@ public class BookDao {
                 DBDataTypeMatcher.stringToClob(con, dto.description()),
                 dto.price(),
                 dto.publisher(),
-                dto.category1(),
-                dto.category2(),
                 dto.imageUrl()
         };
+    }
+
+    public void updateBookWithCategories(BookRegisterDto dto, Long id, List<String> prevCategories, List<String> currentCategories) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        String sql = "{call book_pkg.update_book_with_categories(?, ?, ?, ?)}";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_REGISTER_INFO", con);
+            STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookWithCategoriesInfo(con, dto));
+            cstmt.setObject(1, bookInfoStruct, OracleTypes.STRUCT);
+            cstmt.setLong(2, id);
+
+            ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("CATEGORY_NAME_ARRAY", con);
+            ARRAY prevCategoriesArray = new ARRAY(arrayDescriptor, con, prevCategories.toArray());
+            ARRAY currentCategoriesArray = new ARRAY(arrayDescriptor, con, currentCategories.toArray());
+            cstmt.setArray(3, prevCategoriesArray);
+            cstmt.setArray(4, currentCategoriesArray);
+            cstmt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, null);
+        }
     }
 
 }

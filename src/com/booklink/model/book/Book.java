@@ -17,6 +17,7 @@ public class Book {
     private String publisher;
     private Integer salesPoint;
     private Double rating;
+    private String imageUrl;
     private Categories categories;
 
     public String getDescription() {
@@ -34,6 +35,7 @@ public class Book {
         this.publisher = builder.publisher;
         this.rating = builder.rating;
         this.salesPoint = builder.salesPoint;
+        this.imageUrl = builder.imageUrl;
     }
 
     public int getPrice() {
@@ -51,6 +53,7 @@ public class Book {
 
     public static class BookBuilder {
         private Long id;
+        private String imageUrl;
         private String title;
         private String author;
         private LocalDate publicationDate;
@@ -73,6 +76,11 @@ public class Book {
 
         public BookBuilder rating(double rating) {
             this.rating = rating;
+            return this;
+        }
+
+        public BookBuilder imageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
             return this;
         }
 
@@ -152,5 +160,17 @@ public class Book {
                 ", rating=" + rating +
                 ", categories=" + categories +
                 '}';
+    }
+
+    public LocalDate getPublicationDate() {
+        return publicationDate;
+    }
+
+    public Integer getSalesPoint() {
+        return salesPoint;
+    }
+
+    public Categories getCategories() {
+        return categories;
     }
 }

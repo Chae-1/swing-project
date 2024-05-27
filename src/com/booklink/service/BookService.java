@@ -1,6 +1,7 @@
 package com.booklink.service;
 
 import com.booklink.dao.BookDao;
+import com.booklink.dao.CategoriesDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 
@@ -13,8 +14,11 @@ import java.util.Optional;
 public class BookService {
     private final BookDao bookDao;
 
-    public BookService(BookDao bookDao) {
-        this.bookDao = bookDao;
+    private final CategoriesDao categoriesDao;
+
+    public BookService() {
+        this.bookDao = new BookDao();
+        this.categoriesDao = new CategoriesDao();
     }
 
     public void registerBook(BookDto bookDto) {
@@ -63,7 +67,13 @@ public class BookService {
         return bookDao.findBookByCategoryName(categoryName);
     }
 
-    public void registerBookWithCategories(BookRegisterDto dto) {
-        bookDao.registerBookWithCategories(dto);
+    public void registerBookWithCategories(BookRegisterDto dto, List<String> inputCategories) {
+        bookDao.registerBookWithCategories(dto, inputCategories);
+    }
+
+    public void updateBookWithCategories(BookRegisterDto dto, Long bookId, List<String> updatedCategories) {
+        System.out.println(bookId);
+        List<String> currentCategories = categoriesDao.findAllCategories(bookId);
+        bookDao.updateBookWithCategories(dto, bookId, currentCategories, updatedCategories);
     }
 }

@@ -3,7 +3,7 @@ create sequence categories_seq
     increment by 1
     nocycle
 cache 20;
-
+CREATE OR REPLACE TYPE CATEGORY_NAME_ARRAY AS TABLE OF VARCHAR2(255);/
 CREATE TABLE Categories (
                             category_id INTEGER,
                             category_name VARCHAR2(50),

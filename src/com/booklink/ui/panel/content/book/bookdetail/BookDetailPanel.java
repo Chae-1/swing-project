@@ -7,6 +7,9 @@ import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 
 import com.booklink.ui.panel.content.book.bookdetail.comment.CommentPanel;
+import com.booklink.ui.panel.content.book.bookregister.BookRegisterDialog;
+import com.booklink.utils.UserHolder;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.MalformedURLException;
@@ -41,6 +44,17 @@ public class BookDetailPanel extends ContentPanel {
         add(removeBookButton);
 
         JButton updateBookButton = new JButton("수정");
+        updateBookButton.addActionListener((e) -> {
+            if (UserHolder.isRoot()) {
+                BookRegisterDialog dialog = new BookRegisterDialog(mainFrame, book);
+                dialog.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "접근 권한이 없습니다.",
+                        "경고", JOptionPane.WARNING_MESSAGE);
+
+            }
+        });
         updateBookButton.setBounds(915, 0, 100, 100);
         add(updateBookButton);
 
