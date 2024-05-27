@@ -64,19 +64,6 @@ CREATE OR REPLACE TYPE book_info_rec AS OBJECT
     book_publisher        VARCHAR2(50)
 );
 
-CREATE OR REPLACE TYPE book_info_rec AS OBJECT
-(
-    book_title            VARCHAR2(50),
-    book_author           VARCHAR2(30),
-    book_publication_date DATE,
-    book_sales_point      INTEGER,
-    book_summary          CLOB,
-    book_description      CLOB,
-    book_price            INTEGER,
-    book_rating           NUMBER(2, 1),
-    book_publisher        VARCHAR2(50)
-);
-
 create or replace type book_register_info as object
 (
     book_title            VARCHAR2(50),
@@ -155,14 +142,14 @@ create or replace package book_pkg as
 
     procedure add_book_with_categories(
         p_book_categories_info in book_register_info,
-
         input_categories        IN CATEGORY_NAME_ARRAY
     );
 
     PROCEDURE update_book_with_categories(
         p_book_categories_info IN book_register_info,
         p_book_id IN books.book_id%TYPE,
-        prev_categories IN CATEGORY_NAME_ARRAY
+        prev_categories IN CATEGORY_NAME_ARRAY,
+        curr_categories in category_name_array
     );
 end book_pkg;
 /
@@ -339,21 +326,23 @@ create or replace package body book_pkg as
     BEGIN
         IF p_category_name != '전체' THEN
             OPEN p_books FOR
-                SELECT book_id,
-                       book_title,
-                       book_author,
-                       book_publication_date,
-                       book_sales_point,
-                       book_summary,
-                       book_description,
-                       book_price,
-                       book_rating,
-                       BOOK_PUBLISHER
-                FROM (SELECT b.*, ROW_NUMBER() OVER (PARTITION BY b.book_id ORDER BY b.book_title) AS rn
-                      FROM books b
-                               JOIN bookcategories bc ON b.book_id = bc.book_id
-                               JOIN categories c ON c.category_id = bc.category_id
-                      where c.category_name = p_category_name)
+                with specified_categories
+                         as(
+                        select category_id, category_name
+                        from categories
+                        start with category_id in (
+                            select category_id
+                            from categories c
+                            where c.category_name = p_category_name
+                        )
+                        connect by prior category_id = prior_category_id
+                    ),result as
+                         (select b.*, row_number() over(partition by b.book_id order by b.book_id) as rn
+                          from books b
+                                   join bookcategories bc on b.book_id = bc.book_id
+                                   join specified_categories sc on sc.category_id = bc.category_id
+                          where b.book_id > 0)
+                select * from result
                 where rn = 1;
         ELSE
             OPEN p_books FOR
@@ -402,11 +391,12 @@ create or replace package body book_pkg as
     procedure update_book_with_categories(
         p_book_categories_info in book_register_info,
         p_book_id books.book_id%type,
-        prev_categories        IN CATEGORY_NAME_ARRAY
+        prev_categories        IN CATEGORY_NAME_ARRAY,
+        curr_categories in CATEGORY_NAME_ARRAY
     ) as
         p_idx int;
     begin
-
+        p_idx := 1;
         update books
         set book_title            = p_book_categories_info.book_title,
             book_author           = p_book_categories_info.book_author,
@@ -418,21 +408,34 @@ create or replace package body book_pkg as
             book_publisher = p_book_categories_info.book_publisher
         where book_id = p_book_id;
 
-        p_idx := 0;
-
         FOR i IN 1 .. prev_categories.COUNT LOOP
-                select category_id
+                update BookCategories
+                set category_id =
+                (
+                    select category_id
                     from categories
-                    where category_name = prev_categories(i);
+                    where category_name = prev_categories(i)
+                )
+                where book_id = p_book_id;
                 p_idx := i;
         END LOOP;
---
---         update BookCategories
---         set category_id = (select category_id
---                            from Categories
---                            where category_name = prev_category2)
---         where book_id = p_book_id;
+
+        for i in p_idx .. curr_categories.count loop
+                insert into BookCategories
+                values ((select category_id
+                           from categories
+                           where category_name = curr_categories(i)), p_book_id);
+        end loop;
     end;
 end book_pkg;
 /
 
+
+
+select category_id, category_name
+from categories
+start with category_id in (
+    select category_id
+    from categories
+    where category_name = '소설')
+connect by prior category_id = prior_category_id;

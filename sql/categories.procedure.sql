@@ -70,20 +70,17 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
     begin
         open p_category for
             with book_category as(
-                 select b.book_id,
-                       case
-                           when level = 1 then c.category_name
-                           else substr(SYS_CONNECT_BY_PATH(c.category_name, ' -> '), 5)
-                           end AS category_path
-                from bookcategories bc
-                         join books b on bc.book_id = b.book_id
-                         join categories c on bc.category_id = c.category_id
-                start with c.prior_category_id is null
-                connect by prior c.category_id = c.prior_category_id
+                select substr(SYS_CONNECT_BY_PATH(category_name, ' -> '), 5) as category_path
+                from categories c
+                start with c.category_id in (
+                    select bc.category_id
+                    from bookcategories bc
+                    where book_id = p_book_id
+                )
+                connect by c.category_id = prior prior_category_id
             )
             select category_path
-            from book_category
-            where book_id = p_book_id;
+            from book_category;
     end;
 
     procedure insert_subcategory(

@@ -106,11 +106,14 @@ public class BookDetailPanel extends ContentPanel {
         add(scoreLabel);
 
         // 카테고리 추가
+        System.out.println(book.getId());
         List<String> allCategories = controller.findAllCategories(book.getId());
+        System.out.println(allCategories);
         String categoryList = allCategories.stream()
                 .reduce((category1, category2) -> category1 + "<br>" + category2)
                 .orElse("분류 없음");
         categoryList = "<html>" + categoryList + "</html>";
+        System.out.println(categoryList);
         JLabel categoriesLabel = new JLabel(categoryList);
         categoriesLabel.setFont(malgunGothic);
         categoriesLabel.setBounds(490, 400, 515, 100);
