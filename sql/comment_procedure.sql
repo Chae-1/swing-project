@@ -84,6 +84,14 @@ create or replace package body comment_pkg is
         insert into comments
         values (comments_seq.nextval, p_comment.comment_content, p_comment.comment_rating, p_comment.comment_reg_date,
                 p_comment.comment_is_purchased, p_comment.book_id, p_comment.user_id);
+
+        update books
+        set book_rating = (
+            select avg(comment_rating)
+            from comments
+            where book_id = p_comment.book_id
+        )
+        where book_id = p_comment.book_id;
     end register_comment;
     procedure find_book_comments(
         p_book_id in books.book_id%type,

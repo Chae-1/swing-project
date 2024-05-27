@@ -5,6 +5,8 @@ import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 
 import com.booklink.model.book.BookRegisterDto;
+import com.booklink.utils.UserHolder;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,9 @@ public class BookService {
     }
 
     public void deleteBookById(Long bookId) {
+        if (!UserHolder.isRoot()) {
+            throw new RuntimeException("삭제할 권한이 존재하지 않습니다.");
+        }
         bookDao.deleteBook(bookId);
     }
 
