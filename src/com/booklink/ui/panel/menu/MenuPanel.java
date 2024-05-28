@@ -9,6 +9,7 @@ import java.awt.*;
 
 // MenuPanel 클래스
 public class MenuPanel extends JPanel {
+
     public MenuPanel(int width, int height) {
         setSize(new Dimension(width, height));
         setLayout(null);
@@ -21,6 +22,7 @@ public class MenuPanel extends JPanel {
             MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
             if (UserHolder.isRoot()) {
                 BookRegisterDialog dialog = new BookRegisterDialog(mainFrame);
+                dialog.setLocationRelativeTo(null); ///수정필요
                 dialog.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this,

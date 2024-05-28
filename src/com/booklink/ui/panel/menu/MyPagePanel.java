@@ -38,7 +38,7 @@ public class MyPagePanel extends ContentPanel {
         // 왼쪽 버튼 패널
         JPanel leftPanel = new JPanel(new GridLayout(4, 1));
         JButton btnCategory = new JButton("선호 카테고리");
-        JButton btnPurchaseHistory = new JButton("구매목록");
+        JButton btnPurchaseHistory = new JButton("주문 목록");
         JButton btnEditInfo = new JButton("회원정보 수정");
         JButton btnDeleteAccount = new JButton("회원 탈퇴");
 
@@ -69,6 +69,25 @@ public class MyPagePanel extends ContentPanel {
         add(centerPanel, BorderLayout.CENTER);
 
 
+
+        //주문 목록 페이지 오픈
+        btnPurchaseHistory.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new UserOrderList(MyPagePanel.this); //
+            }
+        });
+
+
+
+        // 회원 수정 패이지 오픈
+        btnEditInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new UserProfileEditDialog(MyPagePanel.this);
+            }
+        });
+
         // 회원 탈퇴 버튼 기능 추가
         btnDeleteAccount.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this,
@@ -82,14 +101,6 @@ public class MyPagePanel extends ContentPanel {
                         "회원 탈퇴가 완료되었습니다.", "탈퇴 완료", JOptionPane.INFORMATION_MESSAGE);
             }
 
-        });
-
-        // 회원 수정 패이지 오픈
-        btnEditInfo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new UserProfileEditDialog(MyPagePanel.this); // Open the SingForm
-            }
         });
     }
 

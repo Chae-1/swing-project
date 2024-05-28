@@ -5,6 +5,7 @@ import com.booklink.model.book.BookRegisterDto;
 import com.booklink.service.BookService;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BookController {
     private final BookService bookService;
@@ -39,5 +40,9 @@ public class BookController {
 
     public void updateBookWithCategories(BookRegisterDto dto, Long id, List<String> updatedCategories) {
         bookService.updateBookWithCategories(dto, id, updatedCategories);
+    }
+
+    public Optional<Book> findByBookId(Long bookId) {
+        return bookService.findBookById(bookId);
     }
 }

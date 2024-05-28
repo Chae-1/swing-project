@@ -30,7 +30,7 @@ public class SignForm extends JDialog {
     private JButton btnCancel;
 
     public SignForm(LoginForm owner) {
-        super(owner, "Sign up", true);
+        super(owner, "BookLink 회원 가입", true);
         this.owner = owner;
 
         if (owner != null) {
@@ -53,7 +53,7 @@ public class SignForm extends JDialog {
         Dimension btnSize = new Dimension(100, 25);
 
 
-        lblTitle = new JLabel("회원가입");
+        lblTitle = new JLabel("Book Link 회원가입");
         lblTitle.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         lblId = new JLabel("ID", JLabel.LEFT);
         lblId.setPreferredSize(lblSize);
@@ -61,7 +61,7 @@ public class SignForm extends JDialog {
         lblPw.setPreferredSize(lblSize);
         lblRe = new JLabel("Retype Your Password", JLabel.LEFT);
         lblRe.setPreferredSize(lblSize);
-        lblName = new JLabel("Name", JLabel.LEFT);
+        lblName = new JLabel("User Name", JLabel.LEFT);
         lblName.setPreferredSize(lblSize);
 
         tfId = new JTextField(tfSize);
@@ -69,9 +69,9 @@ public class SignForm extends JDialog {
         tfRe = new JPasswordField(tfSize);
         tfName = new JTextField(tfSize);
 
-        btnSign = new JButton("Sign up");
+        btnSign = new JButton("회원가입");
         btnSign.setPreferredSize(btnSize);
-        btnCancel = new JButton("Cancel");
+        btnCancel = new JButton("취소");
         btnCancel.setPreferredSize(btnSize);
 
     }
@@ -164,7 +164,7 @@ public class SignForm extends JDialog {
                         // Pw와 Re가 일치하지 않았을 때
                     } else if (!String.valueOf(tfPw.getPassword()).equals(String.valueOf(tfRe.getPassword()))) {
                         JOptionPane.showMessageDialog(SignForm.this,
-                                "Password와 Retry가 일치하지 않습니다.");
+                                "입력한 Password가 일치하지 않습니다.");
                         tfPw.requestFocus();
                     } else {
                         // UserRegistrationDto 객체 생성
@@ -179,7 +179,7 @@ public class SignForm extends JDialog {
                         userDao.registerUser(userDto);
 
 
-                        JOptionPane.showMessageDialog(SignForm.this, "회원가입을 완료했습니다!");
+                        JOptionPane.showMessageDialog(SignForm.this, "축하드립니다 회원가입을 완료했습니다!");
                         dispose();
                         owner.setVisible(true);
                     }

@@ -37,10 +37,10 @@ public class LoginForm extends JFrame {
     public void init() {
         // 사이즈 통합
         Dimension lblSize = new Dimension(80, 30);
-        int tfSize = 10;
+        int tfSize = 20;
         Dimension btnSize = new Dimension(100, 25);
 
-        lblLogTitle = new JLabel("로그인");
+        lblLogTitle = new JLabel("BookLink 로그인");
         lblLogTitle.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         lblId = new JLabel("ID");
         lblId.setPreferredSize(lblSize);
@@ -52,7 +52,7 @@ public class LoginForm extends JFrame {
 
         btnLogin = new JButton("Login");
         btnLogin.setPreferredSize(btnSize);
-        btnsign = new JButton("Sign up");
+        btnsign = new JButton("회원가입");
         btnsign.setPreferredSize(btnSize);
 
     }
@@ -126,7 +126,7 @@ public class LoginForm extends JFrame {
 
     public void showFrame() {
         setTitle("Login");
-        setSize(300, 600); // 로그인 폼 크기 설정
+        setSize(500, 400); // 로그인 폼 크기 설정
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE); // 로그인 창을 닫을 때 프로그램 종료 설정
         setResizable(false);
