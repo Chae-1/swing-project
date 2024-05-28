@@ -143,7 +143,7 @@ public class LoginForm extends JFrame {
             // 로그인 성공 처리
             UserHolder.logIn(authenticatedUser.get());
 
-            JOptionPane.showMessageDialog(LoginForm.this,
+                JOptionPane.showMessageDialog(LoginForm.this,
                     "로그인 성공!",
                     "로그인 성공",
                     JOptionPane.INFORMATION_MESSAGE);

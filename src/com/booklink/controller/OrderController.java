@@ -15,6 +15,11 @@ public class OrderController {
         this.orderService = new OrderService();
     }
 
+    /**
+     *
+     * @throws com.booklink.model.user.exception.UserNotFoundException
+     * @throws BookNotExistException
+     */
     public void createOrder(Long bookId, Long userId) {
         // 유저 정보는 존재한다고 가정한다.
 

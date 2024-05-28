@@ -88,11 +88,9 @@ public class MyPagePanel extends ContentPanel {
         btnEditInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new UserProfileEditDialog(null); // Open the SingForm
+                new UserProfileEditDialog(MyPagePanel.this); // Open the SingForm
             }
         });
-
-
     }
 
 

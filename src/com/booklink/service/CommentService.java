@@ -5,6 +5,8 @@ import com.booklink.dao.OrderDao;
 import com.booklink.model.book.comments.CommentDto;
 import com.booklink.model.book.comments.CommentFormDto;
 import com.booklink.model.book.comments.exception.CommentException;
+import com.booklink.model.order.OrderCount;
+
 import java.util.List;
 
 public class CommentService {
@@ -20,8 +22,8 @@ public class CommentService {
         if (!isWritable(dto.userId())) {
             throw new CommentException("로그인 부터 우선적으로 해주세요");
         }
-        int orderCount = orderDao.findOrderCountAboutBook(dto.bookId(), dto.userId());
-        commentDao.registerComment(dto, orderCount > 0 ? "Y" : "N");
+        OrderCount orderCount = orderDao.findOrderCountAboutBook(dto.userId(), dto.bookId());
+        commentDao.registerComment(dto, orderCount.isPurchased() ? "Y" : "N");
     }
 
     private static boolean isWritable(Long userId) {

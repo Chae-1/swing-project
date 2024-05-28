@@ -2,6 +2,7 @@ package com.booklink.ui.panel.menu;
 
 import com.booklink.model.user.User;
 import com.booklink.ui.frame.main.MainFrame;
+import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.utils.UserHolder;
 
 import javax.swing.*;
@@ -50,22 +51,15 @@ public class UserPanel extends JPanel {
         logoutButton.addActionListener(e -> {
             UserHolder.logOut(); // 로그아웃
             updateButtons();
+            MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+            mainFrame.changeCurrentContent(new BookContentPanel(mainFrame)); // 초기 화면으로 돌아가기
         });
 
- //
-//        mypageButton.addActionListener(e -> {
-//            if (UserHolder.isLogin()) {
-//            }
-//        });
+        // 회원가입 버튼 누르면 회원가입 폼으로 이동
+        signUpButton.addActionListener(e -> new SignForm(null));
 
-        //sign up 버튼 누르면 회원가입 폼으로 이동
-        signUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new SignForm(null); // Open the SingForm
-            }
-        });
 
+        // 마이페이지 버튼 누르면 마이페이지 폼으로 이동
         mypageButton.addActionListener(e -> {
             if (UserHolder.isLogin()) {
                 MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
