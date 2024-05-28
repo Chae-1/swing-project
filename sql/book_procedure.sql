@@ -317,7 +317,7 @@ create or replace package body book_pkg as
                    book_rating,
                    book_publisher
             FROM Books
-            where contains(book_title, p_book_title, 1) > 1;
+            where book_title like '%title%';
     end find_book_contains_title;
 
     PROCEDURE find_books_by_cat_name(
@@ -328,7 +328,7 @@ create or replace package body book_pkg as
         IF p_category_name != '전체' THEN
             OPEN p_books FOR
                 with specified_categories
-                         as(
+                    as(
                         select category_id, category_name
                         from categories
                         start with category_id in (
@@ -337,7 +337,7 @@ create or replace package body book_pkg as
                             where c.category_name = p_category_name
                         )
                         connect by prior category_id = prior_category_id
-                    ),result as
+                    ), result as
                          (select b.*, row_number() over(partition by b.book_id order by b.book_id) as rn
                           from books b
                                    join bookcategories bc on b.book_id = bc.book_id
@@ -415,9 +415,13 @@ create or replace package body book_pkg as
                 (
                     select category_id
                     from categories
-                    where category_name = prev_categories(i)
+                    where category_name = curr_categories(i)
                 )
-                where book_id = p_book_id;
+                where book_id = p_book_id and category_id = (
+                                                            select category_id
+                                                            from Categories
+                                                            where category_name = prev_categories(i)
+                                                            );
                 p_idx := i;
         END LOOP;
 

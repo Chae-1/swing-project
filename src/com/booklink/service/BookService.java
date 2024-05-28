@@ -74,6 +74,7 @@ public class BookService {
     public void updateBookWithCategories(BookRegisterDto dto, Long bookId, List<String> updatedCategories) {
         System.out.println(bookId);
         List<String> currentCategories = categoriesDao.findAllCategory(bookId);
+
         bookDao.updateBookWithCategories(dto, bookId, currentCategories, updatedCategories);
     }
 }
