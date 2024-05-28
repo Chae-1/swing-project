@@ -26,9 +26,10 @@ public class UserService {
         return userDao.findAll();
     }
 
+
     public Optional<User> findUserByLogIdAndPassword(String logId, String password) {
         if (logId.isBlank() || password.isBlank()) {
-            throw new UserNotFoundException("존재하지 않는 회원입니다.");
+            throw new UserNotFoundException();
         }
 
         return userDao.findByLogIdAndPassword(logId, password);

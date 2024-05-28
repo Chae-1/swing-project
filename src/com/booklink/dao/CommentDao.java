@@ -5,6 +5,7 @@ import com.booklink.model.book.comments.CommentFormDto;
 import com.booklink.model.book.comments.Comments;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DBDataTypeMatcher;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,11 +14,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import oracle.jdbc.OracleTypes;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
 
-public class    CommentDao {
+public class CommentDao {
     public void registerComment(CommentFormDto dto, String purchaseStatus) {
         Connection con = null;
         CallableStatement cstmt = null;

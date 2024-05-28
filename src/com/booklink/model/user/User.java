@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class User {
+    // VO
     private Long id;
+
     private String name;
     private String password;
     private String loginId;

@@ -2,7 +2,10 @@ package com.booklink.ui.panel.content.book.bookdetail;
 
 import com.booklink.controller.BookController;
 import com.booklink.controller.CategoryController;
+import com.booklink.controller.OrderController;
 import com.booklink.model.book.Book;
+import com.booklink.model.book.exception.BookNotExistException;
+import com.booklink.model.user.exception.UserException;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 
@@ -20,11 +23,12 @@ public class BookDetailPanel extends ContentPanel {
 
     private CategoryController controller = new CategoryController();
     private BookController bookController = new BookController();
+    private OrderController orderController = new OrderController();
 
     public BookDetailPanel(MainFrame mainFrame, Book book) {
         super(mainFrame);
         init();
-        JLabel titleLabel = new JLabel(book.getTitle() + ": " + book.getAuthor() + "/" + book.getPublisher());
+        JLabel titleLabel = new JLabel(book.getTitle() + " : " + book.getAuthor() + "/" + book.getPublisher());
         titleLabel.setSize(815, 100);
         titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -89,14 +93,14 @@ public class BookDetailPanel extends ContentPanel {
         JLabel summaryLabel = new JLabel(book.getSummary());
         summaryLabel.setFont(malgunGothic);
         summaryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        summaryLabel.setBounds(490,150,715,50);
+        summaryLabel.setBounds(490, 150, 715, 50);
         add(summaryLabel);
 
-        String description = "<html>"+insertLineBreaks(book.getDescription(), 30) + "</html>";
+        String description = "<html>" + insertLineBreaks(book.getDescription(), 30) + "</html>";
         JLabel descriptionLabel = new JLabel(description);
         descriptionLabel.setFont(malgunGothic);
         descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        descriptionLabel.setBounds(490,200,715,200);
+        descriptionLabel.setBounds(490, 200, 715, 200);
         add(descriptionLabel);
 
         JLabel scoreLabel = new JLabel(book.getRating() + " / " + " 5");
@@ -120,6 +124,23 @@ public class BookDetailPanel extends ContentPanel {
         add(categoriesLabel);
 
         JButton purchaseButton = new JButton("구매");
+        purchaseButton.addActionListener((e) -> {
+            try {
+                if (UserHolder.isLogin()) {
+                    // ValueObj
+                    orderController.createOrder(book.getId(), UserHolder.getId());
+                    JOptionPane.showMessageDialog(this, "주문을 성공적으로 완료했습니다.",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "로그인을 우선적으로 해주세요.",
+                            "Fail", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, ex.getMessage(),
+                        "Fail", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         purchaseButton.setFont(malgunGothic);
         purchaseButton.setBounds(1005, 400, 100, 100);
         add(purchaseButton);
