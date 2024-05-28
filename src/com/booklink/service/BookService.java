@@ -54,6 +54,10 @@ public class BookService {
         bookDao.updateBook(bookId, bookDto);
     }
 
+    public Optional<Book> findBookById(Long bookId) {
+        return bookDao.findBookById(bookId);
+    }
+
 
     public List<Book> findAllBookWithCount() {
         return bookDao.findAllBookWithCount();
