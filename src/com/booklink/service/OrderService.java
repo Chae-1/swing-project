@@ -19,4 +19,8 @@ public class OrderService {
     public void createOrder(Long bookId, Long userId) {
 
     }
+
+    public static void main(String[] args) {
+        System.out.println("123");
+    }
 }
