@@ -18,10 +18,8 @@ public class PagingPanel extends JPanel {
         setBackground(Color.GRAY);
         this.width = width;
         this.height = height;
-
         // pagingPanel의 부모가 되는 패널
         this.contentPanel = contentPanel;
-
         updatePagingPanel();
     }
 

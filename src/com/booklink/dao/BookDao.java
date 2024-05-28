@@ -20,29 +20,6 @@ import java.util.Optional;
 
 public class BookDao {
 
-    public void registerBooks(List<BookDto> bookDtos) {
-        Connection con = null;
-        CallableStatement cstmt = null;
-        String sql = "call book_pkg.add_books(?)";
-        try {
-            con = DBConnectionUtils.getConnection();
-            cstmt = con.prepareCall(sql);
-
-            StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_INFO_REC", con);
-            ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("BOOK_INFO_TAB", con);
-            STRUCT[] structArray = new STRUCT[bookDtos.size()];
-            for (int i = 0; i < bookDtos.size(); i++) {
-                structArray[i] = new STRUCT(structDescriptor, con, createBookInfo(con, bookDtos.get(i)));
-            }
-            cstmt.setArray(1, new ARRAY(arrayDescriptor, (OracleConnection) con, structArray));
-            cstmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            DBConnectionUtils.releaseConnection(con, cstmt, null);
-        }
-    }
-
     // 등록 수정 삭제 조회
     public void registerBook(BookDto bookDto) {
         Connection con = null;
@@ -172,29 +149,6 @@ public class BookDao {
                 .salesPoint(rs.getInt("book_sales_point"))
                 .rating(bookRating)
                 .build();
-    }
-
-    public List<Book> findAllBook() {
-        Connection con = null;
-        CallableStatement cstmt = null;
-        ResultSet rs = null;
-        String sql = "call book_pkg.find_all_book(?)";
-        try {
-            con = DBConnectionUtils.getConnection();
-            cstmt = con.prepareCall(sql);
-            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
-            cstmt.execute();
-            rs = (ResultSet) cstmt.getObject(1);
-            List<Book> books = new ArrayList<>();
-            while (rs.next()) {
-                books.add(getBook(rs));
-            }
-            return books;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            DBConnectionUtils.releaseConnection(con, cstmt, rs);
-        }
     }
 
     public List<Book> findAllBookWithCount() {

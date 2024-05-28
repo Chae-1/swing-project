@@ -6,10 +6,12 @@ import com.booklink.controller.OrderController;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.exception.BookNotExistException;
 import com.booklink.model.user.exception.UserException;
+import com.booklink.model.user.exception.UserNotFoundException;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 
 import com.booklink.ui.panel.content.book.bookdetail.comment.CommentPanel;
+import com.booklink.ui.panel.content.book.bookdiscussion.BookDiscussionPanel;
 import com.booklink.ui.panel.content.book.bookregister.BookRegisterDialog;
 import com.booklink.utils.UserHolder;
 
@@ -32,7 +34,20 @@ public class BookDetailPanel extends ContentPanel {
         titleLabel.setSize(815, 100);
         titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(titleLabel).setBounds(0, 0, 815, 100);
+        add(titleLabel).setBounds(0, 0, 715, 100);
+
+        JButton discBookButton = new JButton("의견공유");
+        discBookButton.setBounds(715, 0, 100, 100);
+        discBookButton.addActionListener((e) -> {
+            try {
+                BookDiscussionPanel bookDiscussionPanel = new BookDiscussionPanel(mainFrame, book);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "카테고리가 중복되었습니다. 다른 카테고리를 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        });
+        add(discBookButton);
 
         JButton removeBookButton = new JButton("삭제");
         removeBookButton.setBounds(815, 0, 100, 100);

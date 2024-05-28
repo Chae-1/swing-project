@@ -89,7 +89,7 @@ create or replace package body comment_pkg is
         set book_rating = (
             select nvl(avg(comment_rating), 0)
             from comments
-            where book_id = p_comment.book_id
+            where book_id = p_comment.book_id and comment_is_purchased = 'Y'
         )
         where book_id = p_comment.book_id;
     end register_comment;
@@ -132,7 +132,7 @@ create or replace package body comment_pkg is
         set book_rating = (
             select nvl(avg(comment_rating), 0)
             from comments
-            where book_id = p_book_id
+            where book_id = p_book_id and comment_is_purchased = 'Y'
         )
         where book_id = p_book_id;
     end remove_comment;

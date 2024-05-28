@@ -143,8 +143,7 @@ CREATE TABLE BookDiscussions (
                                  discussion_content CLOB,
                                  discussion_title VARCHAR2(30),
                                  book_id INTEGER,
-                                 user_id INTEGER,
-                                 is_purchased INTEGER
+                                 user_id INTEGER
 );
 
 create sequence book_discussions_seq
