@@ -6,8 +6,7 @@ import com.booklink.ui.panel.content.book.bookdetail.BookDetailPanel;
 
 import java.awt.*;
 import javax.swing.*;
-// 1488, 970
-
+// 1170, 920
 
 public abstract class ContentPanel extends JPanel {
     protected int contentWidth = MainFrame.WIDTH - (MainFrame.WIDTH / 4) - 20 - 250;

@@ -21,12 +21,12 @@ create or replace package order_pkg as
         p_book_price books.book_price%type
     );
     procedure find_order_count(
-           p_book_id books.book_id%type,
-           p_user_id users.user_id%type,
-           p_order out sys_refcursor
+        p_book_id books.book_id%type,
+        p_user_id users.user_id%type,
+        p_order out sys_refcursor
     );
 end order_pkg;
-
+/
 
 create or replace package body order_pkg as
     procedure create_order(
@@ -40,13 +40,15 @@ create or replace package body order_pkg as
     end create_order;
 
     procedure find_order_count(
-               p_book_id books.book_id%type,
-               p_user_id users.user_id%type,
-               p_order out sys_refcursor
+        p_book_id books.book_id%type,
+        p_user_id users.user_id%type,
+        p_order out sys_refcursor
     ) as
     begin
-        select count(*) as order_count
-        from orders
-        where book_id = p_book_id and user_id = p_user_id;
+        open p_order for
+            select count(*) as order_count
+            from orders
+            where book_id = p_book_id and user_id = p_user_id;
     end find_order_count;
 end order_pkg;
+/

@@ -186,7 +186,7 @@ public class UserDao {
             e.printStackTrace();
             throw new RuntimeException("비밀번호 업데이트 중 오류가 발생했습니다. 사용자 ID: " + userId, e);
         } finally {
-
+            DBConnectionUtils.releaseConnection(con, cs, rs);
         }
     }
 

@@ -66,9 +66,7 @@ public class BookContentPanel extends ContentPanel {
         // books And count를 가지고 온다.
         books = bookController.findBooksByContainsCategoryName(categoryDto.name());
         maxPage = Math.max(1, (int) Math.ceil(books.size() / pagePerContent));
-        System.out.println(maxPage);
         currentPage = 1;
-
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
         pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
         update(currentPage);
@@ -77,15 +75,10 @@ public class BookContentPanel extends ContentPanel {
 
     // update가 호출되면 pageNum를 갱신하고 해당 페이지로 이동시킨다.
     @Override
-    public void update(int pageNum) {
+    public void update(int page) {
         removeAll();
-        currentPage = pageNum;
+        currentPage = page;
         pagingPanel.updatePagingPanel();
-        updateSummaryContent();
-        add(pagingPanel);
-    }
-
-    private void updateSummaryContent() {
         int start = (currentPage - 1) * pagePerContent;
         int end = Math.min(currentPage * pagePerContent, books.size());
         for (int i = start; i < end; i++) {
@@ -95,5 +88,6 @@ public class BookContentPanel extends ContentPanel {
                     book);
             add(bookSummaryPanel);
         }
+        add(pagingPanel);
     }
 }
