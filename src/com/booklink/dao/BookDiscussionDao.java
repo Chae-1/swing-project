@@ -3,6 +3,7 @@ package com.booklink.dao;
 import com.booklink.model.book.disscussion.BookDiscussion;
 import com.booklink.model.book.disscussion.BookDiscussionRegisterForm;
 import com.booklink.utils.DBConnectionUtils;
+import com.booklink.utils.DBDataTypeMatcher;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.STRUCT;
 import oracle.sql.StructDescriptor;
@@ -25,7 +26,7 @@ public class BookDiscussionDao {
             con = DBConnectionUtils.getConnection();
             cstmt = con.prepareCall(sql);
             StructDescriptor structDescriptor = new StructDescriptor("book_disc_obj".toUpperCase(), con);
-            STRUCT struct = new STRUCT(structDescriptor, con, createObj(form));
+            STRUCT struct = new STRUCT(structDescriptor, con, createObj(form, con));
             cstmt.setObject(1, struct, OracleTypes.STRUCT);
             cstmt.execute();
         } catch (SQLException e) {
@@ -36,12 +37,12 @@ public class BookDiscussionDao {
         }
     }
 
-    private Object[] createObj(BookDiscussionRegisterForm form) {
+    private Object[] createObj(BookDiscussionRegisterForm form, Connection con) {
         return new Object[]{
                 form.bookId(),
                 form.userId(),
-                form.title(),
-                form.content()
+                form.title().toString(),
+                DBDataTypeMatcher.stringToClob(con, form.content().toString())
         };
     }
 
