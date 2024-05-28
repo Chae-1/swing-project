@@ -39,9 +39,9 @@ public class BookDetailPanel extends ContentPanel {
         removeBookButton.addActionListener((e) -> {
             try {
                 bookController.removeBookById(book.getId());
-
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "카테고리가 중복되었습니다. 다른 카테고리를 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "경고", JOptionPane.WARNING_MESSAGE);
                 return;
             }
         });

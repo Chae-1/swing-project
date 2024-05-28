@@ -5,8 +5,11 @@ import com.booklink.dao.OrderDao;
 import com.booklink.dao.UserDao;
 import com.booklink.model.book.Book;
 import com.booklink.model.book.exception.BookNotExistException;
+import com.booklink.model.order.OrderDto;
 import com.booklink.model.user.User;
 import com.booklink.model.user.exception.UserNotFoundException;
+
+import java.util.List;
 
 public class OrderService {
 
@@ -37,5 +40,11 @@ public class OrderService {
 
         // 2. order 생성
         orderDao.createOrder(bookId, userId, book.getPrice());
+    }
+
+    public List<OrderDto> findAllOrderByUserId(Long userId) {
+        User user = userDao.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException());
+        return orderDao.findAllOrderByUserId(userId);
     }
 }

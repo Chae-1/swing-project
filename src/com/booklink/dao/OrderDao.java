@@ -1,13 +1,15 @@
 package com.booklink.dao;
 
 import com.booklink.model.order.OrderCount;
+import com.booklink.model.order.OrderDto;
 import com.booklink.utils.DBConnectionUtils;
 import oracle.jdbc.OracleTypes;
+import oracle.sql.ARRAY;
+import oracle.sql.STRUCT;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDao {
 
@@ -55,5 +57,45 @@ public class OrderDao {
         } finally {
             DBConnectionUtils.releaseConnection(con, cstmt, null);
         }
+    }
+
+    public List<OrderDto> findAllOrderByUserId(Long userId) {
+        List<OrderDto> orders = new ArrayList<>();
+        Connection con = null;
+        CallableStatement cstmt = null;
+        String sql = "{call order_pkg.find_orders_by_user_id(?, ?)}"; // 프로시저 호출문
+
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.setLong(1, userId);
+            cstmt.registerOutParameter(2, OracleTypes.ARRAY, "ORDER_TABLE");
+            cstmt.execute();
+
+            ARRAY orderArray = (ARRAY) cstmt.getObject(2);
+            ResultSet rs = orderArray.getResultSet();
+
+            while (rs.next()) {
+                STRUCT orderStruct = (STRUCT) rs.getObject(2);
+                Object[] attrs = orderStruct.getAttributes();
+
+                OrderDto order = new OrderDto(
+                        ((Number) attrs[0]).longValue(),
+                        ((Number) attrs[1]).longValue(),
+                        (String) attrs[2],
+                        ((Timestamp) attrs[3]).toLocalDateTime(),
+                        ((Number) attrs[4]).intValue(),
+                        (String) attrs[5]
+                );
+
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, null);
+        }
+
+        return orders;
     }
 }
