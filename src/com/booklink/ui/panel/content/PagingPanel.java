@@ -33,6 +33,8 @@ public class PagingPanel extends JPanel {
 
         int startNum = Math.max(1, contentPanel.getCurrentPage() - 5);
         int endNum = Math.min(startNum + 10, contentPanel.getMaxPage());
+        System.out.println(startNum);
+        System.out.println(endNum);
         for (int i = startNum; i <= endNum; i++) {
             JButton pageButton = new JButton(String.valueOf(i));
             pageButton.addActionListener(e -> {

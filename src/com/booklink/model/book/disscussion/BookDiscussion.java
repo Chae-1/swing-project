@@ -18,4 +18,28 @@ public class BookDiscussion {
         this.userId = userId;
         this.bookId = bookId;
     }
+
+    public Long getDiscussionId() {
+        return discussionId;
+    }
+
+    public LocalDateTime getDiscussionDate() {
+        return discussionDate;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
 }

@@ -2,12 +2,17 @@ package com.booklink.service;
 
 import com.booklink.dao.CommentDao;
 import com.booklink.dao.OrderDao;
-import com.booklink.model.book.comments.CommentDto;
+import com.booklink.model.book.comments.CommentSummaryDto;
 import com.booklink.model.book.comments.CommentFormDto;
+import com.booklink.model.book.comments.Comments;
 import com.booklink.model.book.comments.exception.CommentException;
+import com.booklink.model.book.comments.exception.CommentExistException;
 import com.booklink.model.order.OrderCount;
+import com.booklink.model.user.exception.UserNotFoundException;
+import com.booklink.utils.UserHolder;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CommentService {
     private final OrderDao orderDao;
@@ -19,15 +24,22 @@ public class CommentService {
     }
 
     public void registerComment(CommentFormDto dto) {
-        if (!isWritable(dto.userId())) {
-            throw new CommentException("로그인 부터 우선적으로 해주세요");
+        if (!UserHolder.isLogin()) {
+            throw new UserNotFoundException();
+        }
+        if (isExistComment(dto.userId(), dto.bookId())) {
+            throw new CommentExistException();
         }
         OrderCount orderCount = orderDao.findOrderCountAboutBook(dto.userId(), dto.bookId());
         commentDao.registerComment(dto, orderCount.isPurchased() ? "Y" : "N");
     }
 
-    private static boolean isWritable(Long userId) {
-        return userId != -1;
+    private boolean isExistComment(Long userId, Long bookId) {
+        Optional<Comments> userCommentOnBook = commentDao.findUserCommentOnBook(userId, bookId);
+        if (userCommentOnBook.isPresent()) {
+            return false;
+        }
+        return true;
     }
 
     public void removeComment(Long commentId, Long userId) {
@@ -40,11 +52,8 @@ public class CommentService {
                 });
     }
 
-    public List<CommentDto> findAllCommentById(Long bookId) {
+    public List<CommentSummaryDto> findAllCommentById(Long bookId) {
         return commentDao.findAllCommentByBookId(bookId);
     }
 
-    public List<String> findAllCategoryNames() {
-        return commentDao.findAllCategoryNames();
-    }
 }

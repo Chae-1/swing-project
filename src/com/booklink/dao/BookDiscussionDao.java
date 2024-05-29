@@ -1,6 +1,7 @@
 package com.booklink.dao;
 
 import com.booklink.model.book.disscussion.BookDiscussion;
+import com.booklink.model.book.disscussion.BookDiscussionDto;
 import com.booklink.model.book.disscussion.BookDiscussionRegisterForm;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DBDataTypeMatcher;
@@ -42,11 +43,11 @@ public class BookDiscussionDao {
                 form.bookId(),
                 form.userId(),
                 form.title().toString(),
-                DBDataTypeMatcher.stringToClob(con, form.content().toString())
+                DBDataTypeMatcher.stringToClob(con, form.content()),
         };
     }
 
-    public List<BookDiscussion> findAllDiscussionAboundBook(Long bookId) {
+    public List<BookDiscussionDto> findAllDiscussionAboundBook(Long bookId) {
         String sql = "call book_disc_pkg.find_all(?, ?)";
         Connection con = null;
         CallableStatement cstmt = null;
@@ -58,7 +59,7 @@ public class BookDiscussionDao {
             cstmt.registerOutParameter(2, OracleTypes.CURSOR);
             cstmt.execute();
             rs = (ResultSet) cstmt.getObject(2);
-            List<BookDiscussion> bookDiscussions = new ArrayList<>();
+            List<BookDiscussionDto> bookDiscussions = new ArrayList<>();
             while (rs.next()) {
                 bookDiscussions.add(getBookDisc(rs));
             }
@@ -71,15 +72,15 @@ public class BookDiscussionDao {
         }
     }
 
-    private BookDiscussion getBookDisc(ResultSet rs) throws SQLException {
-        return new BookDiscussion(
+    private BookDiscussionDto getBookDisc(ResultSet rs) throws SQLException {
+        return new BookDiscussionDto(
                 rs.getLong("discussion_id"),
                 rs.getTimestamp("discussion_date").toLocalDateTime(),
                 rs.getString("discussion_content"),
                 rs.getString("discussion_title"),
                 rs.getLong("book_id"),
-                rs.getLong("user_id")
-
+                rs.getLong("user_id"),
+                rs.getString("user_name")
         );
     }
 }

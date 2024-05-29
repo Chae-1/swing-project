@@ -43,7 +43,7 @@ public class BookDetailPanel extends ContentPanel {
                 BookDiscussionPanel bookDiscussionPanel = new BookDiscussionPanel(mainFrame, book);
             } catch (Exception ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "카테고리가 중복되었습니다. 다른 카테고리를 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "경고", JOptionPane.WARNING_MESSAGE);
                 return;
             }
         });

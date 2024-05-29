@@ -1,35 +1,35 @@
-package com.booklink.ui.panel.content.book.bookdetail.comment;
+package com.booklink.ui.panel.content.book.bookdiscussion.comment;
 
-import com.booklink.model.book.comments.CommentSummaryDto;
+import com.booklink.model.book.disscussion.comment.DiscussionCommentDto;
+import com.booklink.model.book.disscussion.comment.DiscussionCommentRegisterDto;
 import com.booklink.utils.UserHolder;
-import java.awt.Dimension;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
-public class CommentSummaryPanel extends JPanel {
+import javax.swing.*;
+import java.awt.*;
 
-    public CommentSummaryPanel(CommentSummaryDto discussionCommentDto) {
+public class DiscussionCommentSummaryPanel extends JPanel {
+
+    public DiscussionCommentSummaryPanel(DiscussionCommentDto discussionCommentDto) {
         setLayout(null);
         setPreferredSize(new Dimension(1215, 70));
 
-        JLabel jLabel = new JLabel(discussionCommentDto.userName() + " / " + discussionCommentDto.regDate().toString() + " / " + discussionCommentDto.rating());
+        JLabel jLabel = new JLabel(discussionCommentDto.userName() + " / " + discussionCommentDto.regDate().toString());
         jLabel.setBounds(0, 0, 700, 30);
         add(jLabel);
 
         JButton removeButton = new JButton("remove");
+
         removeButton.setBounds(700, 0, 200, 30);
         removeButton.addActionListener((e) -> {
             try {
-                if (this.getParent() instanceof CommentPanel p) {
+                if (this.getParent() instanceof DiscussionCommentPanel p) {
                     p.removeComment(discussionCommentDto.commentId(), UserHolder.getId());
                     p.update(1);
                 }
 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(),
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "ex.getMessage()",
                         ex.getMessage(), JOptionPane.ERROR_MESSAGE);
             }
         });

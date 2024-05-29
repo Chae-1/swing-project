@@ -1,6 +1,7 @@
 package com.booklink.controller;
 
-import com.booklink.model.book.comments.CommentDto;
+import com.booklink.model.book.comments.CommentSummaryDto;
+import com.booklink.model.book.comments.Comments;
 import com.booklink.model.book.comments.CommentFormDto;
 import com.booklink.service.CommentService;
 import java.util.List;
@@ -16,7 +17,7 @@ public class CommentController {
         commentService.registerComment(dto);
     }
 
-    public List<CommentDto> findAllCommentByBookId(Long bookId) {
+    public List<CommentSummaryDto> findAllCommentByBookId(Long bookId) {
         return commentService.findAllCommentById(bookId);
     }
 

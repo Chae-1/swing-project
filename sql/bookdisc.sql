@@ -13,6 +13,29 @@ CREATE TABLE BookDiscussions (
                                  user_id INTEGER
 );
 
+CREATE TABLE DiscussionComments (
+                                    dis_comment_id INTEGER,
+                                    dis_comment_registration_date timestamp,
+                                    dis_comment_content clob,
+                                    discussion_id INTEGER,
+                                    user_id INTEGER,
+                                    dis_comment_is_purchased VARCHAR2(20)
+);
+
+create sequence discussion_comments_seq
+    start with 1
+    increment by 1
+    nocycle
+    cache 20;
+
+create unique index idx_discussion_comments on Discussioncomments(dis_comment_id);
+alter table Discussioncomments add constraint discussion_comments_pk primary key (dis_comment_id);
+alter table Discussioncomments add constraint discussion_comments_dis_fk foreign key (discussion_id) references bookdiscussions(discussion_id) on delete cascade;
+alter table Discussioncomments add constraint discussion_comments_users_fk foreign key (user_id) references users (user_id) on delete cascade;
+alter table Discussioncomments add constraint discussion_comments_discussion_id_nn check(discussion_id is not null);
+alter table Discussioncomments add constraint discussion_comments_user_id_nn check(user_id is not null);
+
+
 create sequence book_discussions_seq
     start with 1
     increment by 1
@@ -24,8 +47,20 @@ create or replace type book_disc_obj as object
     book_id integer,
     user_id integer,
     disc_title varchar2(30),
-    disc_content clob
+    disc_content clob,
+    user_name varchar2(50)
 );
+/
+
+create or replace type book_disc_obj as object
+(
+    book_id integer,
+    user_id integer,
+    disc_title varchar2(30),
+    disc_content clob,
+    user_name varchar2(50)
+);
+/
 
 create or replace package book_disc_pkg as
     procedure add_book_disc(
@@ -33,10 +68,12 @@ create or replace package book_disc_pkg as
     );
     procedure find_all(
         p_book_id books.book_id%type,
-        p_book_disc sys_refcursor
+        p_book_disc out sys_refcursor
     );
 
 end book_disc_pkg;
+/
+
 
 create or replace package body book_disc_pkg as
     procedure add_book_disc(
@@ -55,13 +92,85 @@ create or replace package body book_disc_pkg as
 
     procedure find_all(
         p_book_id books.book_id%type,
-        p_book_disc sys_refcursor
+        p_book_disc out sys_refcursor
     ) as
     begin
         open p_book_disc for
-            select *
-            from bookdiscussion
+            select bd.*, u.user_name
+            from bookdiscussions bd
+                     join users u on u.user_id = bd.user_id
             where book_id = p_book_id;
     end find_all;
-
 end book_disc_pkg;
+/
+
+create or replace type disc_com_reg as object
+(
+    user_id integer,
+    discussion_id integer,
+    reg_date timestamp,
+    com_content clob
+)
+/
+
+create or replace package disc_com_pkg as
+    procedure register_disc_comment(
+        p_disc_com_form in disc_com_reg
+    );
+    procedure find_disc_comment(
+        p_disc_id in DiscussionComments.dis_comment_id%type,
+        p_comment out sys_refcursor
+    );
+    procedure find_comment_by_id(
+        p_disc_comment_id in DiscussionComments.dis_comment_id%type,
+        p_comment out sys_refcursor
+    );
+    procedure remove_by_id(
+        p_disc_commentId DiscussionComments.dis_comment_id%type
+    );
+end disc_com_pkg;
+/
+
+create or replace package body disc_com_pkg as
+    procedure register_disc_comment(
+        p_disc_com_form in disc_com_reg
+    ) as
+    begin
+        insert into DiscussionComments
+            values (discussion_comments_seq.nextval, p_disc_com_form.reg_date,
+                    p_disc_com_form.com_content, p_disc_com_form.discussion_id, p_disc_com_form.user_id, null);
+    end register_disc_comment;
+
+    procedure find_disc_comment(
+        p_disc_id in DiscussionComments.dis_comment_id%type,
+        p_comment out sys_refcursor
+    ) as
+    begin
+        open p_comment for
+            select dc.*, u.user_name
+            from DiscussionComments dc
+            join users u on dc.user_id = u.user_id
+            where dc.discussion_id = p_disc_id;
+    end find_disc_comment;
+
+    procedure find_comment_by_id(
+        p_disc_comment_id in DiscussionComments.dis_comment_id%type,
+        p_comment out sys_refcursor
+    ) as
+    begin
+        open p_comment for
+            select dc.*, u.user_name
+            from DiscussionComments dc
+                     join users u on u.user_id = dc.user_id
+            where dc.dis_comment_id = p_disc_comment_id;
+    end find_comment_by_id;
+
+    procedure remove_by_id(
+        p_disc_commentId in DiscussionComments.dis_comment_id%type
+    ) as
+    begin
+        delete DiscussionComments
+        where dis_comment_id = p_disc_commentId;
+    end remove_by_id;
+end disc_com_pkg;
+/

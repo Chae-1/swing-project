@@ -1,7 +1,7 @@
 package com.booklink.dao;
 
-import com.booklink.model.book.comments.CommentDto;
 import com.booklink.model.book.comments.CommentFormDto;
+import com.booklink.model.book.comments.CommentSummaryDto;
 import com.booklink.model.book.comments.Comments;
 import com.booklink.utils.DBConnectionUtils;
 import com.booklink.utils.DBDataTypeMatcher;
@@ -38,7 +38,7 @@ public class CommentDao {
         }
     }
 
-    public List<CommentDto> findAllCommentByBookId(Long bookId) {
+    public List<CommentSummaryDto> findAllCommentByBookId(Long bookId) {
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
@@ -50,9 +50,9 @@ public class CommentDao {
             cstmt.registerOutParameter(2, OracleTypes.CURSOR);
             cstmt.execute();
             rs = (ResultSet) cstmt.getObject(2);
-            List<CommentDto> commentDtos = new ArrayList<>();
+            List<CommentSummaryDto> comments = new ArrayList<>();
             while (rs.next()) {
-                commentDtos.add(new CommentDto(
+                comments.add(new CommentSummaryDto(
                         rs.getLong("comment_id"),
                         rs.getString("user_name"),
                         rs.getInt("comment_rating"),
@@ -60,7 +60,7 @@ public class CommentDao {
                         rs.getString("comment_content")
                 ));
             }
-            return commentDtos;
+            return comments;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -127,22 +127,29 @@ public class CommentDao {
         }
     }
 
-    public List<String> findAllCategoryNames() {
+    public Optional<Comments> findUserCommentOnBook(Long userId, Long bookId) {
         Connection con = null;
         CallableStatement cstmt = null;
         ResultSet rs = null;
-        String sql = "call comment_pkg.find_all_category_names(?)";
+        String sql = "call comment_pkg.find_user_comment_on_book(?, ?, ?)";
         try {
             con = DBConnectionUtils.getConnection();
             cstmt = con.prepareCall(sql);
-            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.setLong(1, userId);
+            cstmt.setLong(2, bookId);
+            cstmt.registerOutParameter(3, OracleTypes.CURSOR);
             cstmt.execute();
-            rs = (ResultSet) rs.getObject(1);
-            List<String> categories = new ArrayList<>();
-            while (rs.next()) {
-                categories.add(rs.getString("category_name"));
+            rs = (ResultSet) rs.getObject(3);
+            Comments comments = null;
+            if (rs.next()) {
+                comments = new Comments(rs.getString("comment_content"),
+                        rs.getTimestamp("comment_reg_date").toLocalDateTime(),
+                        rs.getInt("comment_rating"),
+                        rs.getString("comment_is_purchased"),
+                        rs.getLong("book_id"),
+                        rs.getLong("user_id"));
             }
-            return categories;
+            return Optional.ofNullable(comments);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
