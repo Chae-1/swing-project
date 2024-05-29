@@ -338,7 +338,8 @@ create or replace package body book_pkg as
                        book_description,
                        book_price,
                        book_rating,
-                       book_publisher
+                       book_publisher,
+                       book_image_url
                 FROM Books;
         END IF;
     END find_books_by_cat_name;
