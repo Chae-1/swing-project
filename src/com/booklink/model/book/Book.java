@@ -20,6 +20,10 @@ public class Book {
     private String imageUrl;
     private Categories categories;
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public String getDescription() {
         return description;
     }

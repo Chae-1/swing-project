@@ -80,7 +80,7 @@ public class BookDetailPanel extends ContentPanel {
         // 이미지 490 * 200, 위치 :
         URL location = null;
         try {
-            location = new URL("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5298bac0-b8bf-4c80-af67-725c1272dbb0/dd81df5-04364350-282a-441a-ac71-ff7674d70f6d.jpg/v1/fit/w_828,h_466,q_70,strp/aladdin__2019__wallpaper_by_thekingblader995_dd81df5-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTA4MCIsInBhdGgiOiJcL2ZcLzUyOThiYWMwLWI4YmYtNGM4MC1hZjY3LTcyNWMxMjcyZGJiMFwvZGQ4MWRmNS0wNDM2NDM1MC0yODJhLTQ0MWEtYWM3MS1mZjc2NzRkNzBmNmQuanBnIiwid2lkdGgiOiI8PTE5MjAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.6tu1tC6Ilkb_DdjvsuwbTywPsSgiZnrDwRnogX5rj0Q");
+            location = new URL(book.getImageUrl());
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
