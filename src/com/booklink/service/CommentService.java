@@ -37,9 +37,9 @@ public class CommentService {
     private boolean isExistComment(Long userId, Long bookId) {
         Optional<Comments> userCommentOnBook = commentDao.findUserCommentOnBook(userId, bookId);
         if (userCommentOnBook.isPresent()) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public void removeComment(Long commentId, Long userId) {
