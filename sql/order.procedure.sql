@@ -40,7 +40,6 @@ CREATE OR REPLACE PACKAGE order_pkg AS
         p_user_id users.user_id%type,
         p_book_price books.book_price%type
     );
-<<<<<<< HEAD
 
     PROCEDURE find_order_count(
            p_book_id books.book_id%type,
@@ -67,7 +66,6 @@ CREATE OR REPLACE PACKAGE BODY order_pkg AS
         VALUES (orders_seq.nextval, SYSDATE, p_book_price, p_book_id, p_user_id);
     END create_order;
 
-<<<<<<< HEAD
     PROCEDURE find_order_count(
                p_book_id books.book_id%type,
                p_user_id users.user_id%type,
