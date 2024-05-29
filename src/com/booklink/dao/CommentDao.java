@@ -139,7 +139,7 @@ public class CommentDao {
             cstmt.setLong(2, bookId);
             cstmt.registerOutParameter(3, OracleTypes.CURSOR);
             cstmt.execute();
-            rs = (ResultSet) rs.getObject(3);
+            rs = (ResultSet) cstmt.getObject(3);
             Comments comments = null;
             if (rs.next()) {
                 comments = new Comments(rs.getString("comment_content"),
