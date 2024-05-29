@@ -17,6 +17,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class BookDao {
 
@@ -58,8 +59,8 @@ public class BookDao {
         String sql = "{ call book_pkg.find_book_by_title(?, ?) }";
         ResultSet rs = null;
 
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setString(1, title);
             // Register output parameter
             cstmt.registerOutParameter(2, OracleTypes.CURSOR);
@@ -76,9 +77,9 @@ public class BookDao {
     }
 
     public void deleteBook(Long bookId) {
-           String sql = "{call book_pkg.delete_book(?)}";
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        String sql = "{call book_pkg.delete_book(?)}";
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setLong(1, bookId);
             // Register output parameter
             int result = cstmt.executeUpdate();
@@ -93,8 +94,8 @@ public class BookDao {
     public void updateBook(Long bookId, BookDto bookDto) {
         String sql = "{call book_pkg.update_book(?, ?)}";
 
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setLong(1, bookId);
             StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_INFO_REC", con);
             STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookInfo(con, bookDto));
@@ -111,8 +112,8 @@ public class BookDao {
     public Optional<Book> findBookById(Long bookId) {
         String sql = "{call book_pkg.find_book_by_id(?, ?)}";
         ResultSet rs = null;
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setLong(1, bookId);
             cstmt.registerOutParameter(2, OracleTypes.CURSOR);
             // Register output parameter
@@ -238,6 +239,7 @@ public class BookDao {
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("eeror");
             throw new RuntimeException(e);
         } finally {
             DBConnectionUtils.releaseConnection(con, cstmt, null);
@@ -245,7 +247,7 @@ public class BookDao {
     }
 
     private Object[] createBookWithCategoriesInfo(Connection con, BookRegisterDto dto) {
-        return new Object[] {
+        return new Object[]{
                 dto.title(),
                 dto.author(),
                 Date.valueOf(dto.publicationDate()),

@@ -50,7 +50,7 @@ public class LoginForm extends JFrame {
         tfId = new JTextField(tfSize);
         tfPw = new JPasswordField(tfSize);
 
-        btnLogin = new JButton("Login");
+        btnLogin = new JButton("로그인");
         btnLogin.setPreferredSize(btnSize);
         btnsign = new JButton("회원가입");
         btnsign.setPreferredSize(btnSize);
@@ -68,17 +68,17 @@ public class LoginForm extends JFrame {
     public void setDisplay() {
 
         // FlowLayout 왼쪽 정렬
-        FlowLayout flowLeft = new FlowLayout(FlowLayout.LEFT);
+        FlowLayout flowCenter = new FlowLayout(FlowLayout.CENTER);
 
         // pnlNorth(pnlId, pnlPw)
         JPanel pnlNorth = new JPanel(new GridLayout(0, 1));
 
 
-        JPanel pnlId = new JPanel(flowLeft);
+        JPanel pnlId = new JPanel(flowCenter);
         pnlId.add(lblId);
         pnlId.add(tfId);
 
-        JPanel pnlPw = new JPanel(flowLeft);
+        JPanel pnlPw = new JPanel(flowCenter);
         pnlPw.add(lblPw);
         pnlPw.add(tfPw);
 
@@ -126,7 +126,7 @@ public class LoginForm extends JFrame {
 
     public void showFrame() {
         setTitle("Login");
-        setSize(500, 400); // 로그인 폼 크기 설정
+        setSize(500, 200); // 로그인 폼 크기 설정
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE); // 로그인 창을 닫을 때 프로그램 종료 설정
         setResizable(false);
@@ -143,7 +143,7 @@ public class LoginForm extends JFrame {
             // 로그인 성공 처리
             UserHolder.logIn(authenticatedUser.get());
 
-                JOptionPane.showMessageDialog(LoginForm.this,
+            JOptionPane.showMessageDialog(LoginForm.this,
                     "로그인 성공!",
                     "로그인 성공",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -162,4 +162,3 @@ public class LoginForm extends JFrame {
 
 
 }
-

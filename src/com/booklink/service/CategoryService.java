@@ -2,6 +2,7 @@ package com.booklink.service;
 
 import com.booklink.dao.CategoriesDao;
 import com.booklink.model.categories.Categories;
+import com.booklink.model.categories.CategoryDto;
 import com.booklink.model.categories.CategoryWithLevelDto;
 
 import java.util.ArrayList;
@@ -45,5 +46,11 @@ public class CategoryService {
         return dtos.stream()
                 .map(dto -> dto.name())
                 .collect(Collectors.toList());
+
+
+    }
+
+    public List<CategoryDto> findAllCategories(){
+        return dao.allCategories();
     }
 }
