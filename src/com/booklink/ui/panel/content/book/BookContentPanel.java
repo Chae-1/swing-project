@@ -61,6 +61,21 @@ public class BookContentPanel extends ContentPanel {
 
     }
 
+    public BookContentPanel(MainFrame mainFrame, Set<String> categoryNames) {
+        super(mainFrame);
+        bookController = new BookController();
+        // books And count를 가지고 온다.
+        books = bookController.findBooksByContainsCategoryNames(categoryNames);
+        maxPage = Math.max(1, (int) Math.ceil(books.size() / pagePerContent));
+        currentPage = 1;
+        // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
+        pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
+        update(currentPage);
+
+        mainFrame.changeCurrentContent(this);
+    }
+
+
     public BookContentPanel(MainFrame mainFrame, CategoryDto categoryDto) {
         super(mainFrame);
         bookController = new BookController();

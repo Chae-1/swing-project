@@ -53,4 +53,8 @@ public class CategoryService {
     public List<CategoryDto> findAllCategories(){
         return dao.allCategories();
     }
+
+    public List<String> findAll() {
+        return dao.findAll();
+    }
 }

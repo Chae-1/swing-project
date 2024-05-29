@@ -36,6 +36,7 @@ public class CommentService {
 
     private boolean isExistComment(Long userId, Long bookId) {
         Optional<Comments> userCommentOnBook = commentDao.findUserCommentOnBook(userId, bookId);
+        System.out.println(userCommentOnBook.isPresent());
         if (userCommentOnBook.isPresent()) {
             return true;
         }

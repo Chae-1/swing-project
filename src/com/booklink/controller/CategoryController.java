@@ -20,4 +20,7 @@ public class CategoryController {
     }
 
 
+    public List<String> findAll() {
+        return categoryService.findAll();
+    }
 }

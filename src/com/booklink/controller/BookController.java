@@ -47,4 +47,8 @@ public class BookController {
     public Optional<Book> findByBookId(Long bookId) {
         return bookService.findBookById(bookId);
     }
+
+    public List<Book> findBooksByContainsCategoryNames(Set<String> categoryNames) {
+        return bookService.findBooksByContainsCategoryNames(categoryNames);
+    }
 }

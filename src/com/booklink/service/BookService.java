@@ -83,4 +83,8 @@ public class BookService {
 
         bookDao.updateBookWithCategories(dto, bookId, currentCategories, updatedCategories);
     }
+
+    public List<Book> findBooksByContainsCategoryNames(Set<String> categoryNames) {
+        return bookDao.findBooksByContainsCategoryNames(categoryNames);
+    }
 }

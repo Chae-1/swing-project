@@ -1,5 +1,6 @@
 package com.booklink.ui.panel.menu;
 
+import com.booklink.controller.CategoryController;
 import com.booklink.service.UserService;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
@@ -11,15 +12,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class MyPagePanel extends ContentPanel {
     private String username;
     private MainFrame mainFrame;
     private Set<String> selectedCategories;
-
+    private CategoryController controller;
+    private List<String> categoryNames;
     public MyPagePanel(MainFrame mainFrame) {
         super(mainFrame);
+        controller = new CategoryController();
+        categoryNames = controller.findAll();
         this.username = UserHolder.getName();
         this.mainFrame = mainFrame;
         this.selectedCategories = new HashSet<>();
@@ -58,7 +65,11 @@ public class MyPagePanel extends ContentPanel {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(4, 2, 10, 10)); // 2열 4행, 간격 10픽셀
 
-        String[] categories = {"category 1", "category 2", "category 3", "category 4", "category 5", "category 6", "category 7", "category 8"};
+        String[] categories = new Random().ints(0, categoryNames.size())
+                .distinct()
+                .limit(8)
+                .mapToObj(num -> categoryNames.get(num))
+                .toArray(String[]::new);
 
         for (String category : categories) {
             JToggleButton btn = new JToggleButton(category);
@@ -85,7 +96,8 @@ public class MyPagePanel extends ContentPanel {
         selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(mainFrame, "선택된 카테고리: " + selectedCategories.toString());
+                // selectedCategories
+                new BookContentPanel(mainFrame, selectedCategories);
             }
         });
 

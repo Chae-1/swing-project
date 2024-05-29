@@ -156,4 +156,26 @@ public class CategoriesDao {
         }
     }
 
+    public List<String> findAll() {
+        String sql = "call categories_pkg.find_all(?)";
+        Connection con = null;
+        ResultSet rs = null;
+        CallableStatement cstmt = null;
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(1);
+            List<String> names = new ArrayList<>();
+            while (rs.next()) {
+                names.add(rs.getString("category_name"));
+            }
+            return names;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
 }
