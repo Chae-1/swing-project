@@ -317,11 +317,7 @@ create or replace package body book_pkg as
                    book_rating,
                    book_publisher
             FROM Books
-<<<<<<< HEAD
             where book_title like '%' || p_book_title || '%';
-=======
-            where book_title like '%' || p_book_title ||'%';
->>>>>>> 5fae4ce114202e87941391291d3d2da33634f6c4
     end find_book_contains_title;
 
     PROCEDURE find_books_by_cat_name(
@@ -373,7 +369,7 @@ create or replace package body book_pkg as
     begin
         insert into books
         (book_id, book_title, book_author, book_publication_date, book_sales_point, book_summary,
-         book_description, book_price, book_rating, book_publisher)
+         book_description, book_price, book_rating, book_publisher, book_image_url)
         values (books_seq.nextval,
                 p_book_categories_info.book_title,
                 p_book_categories_info.book_author,
@@ -383,7 +379,8 @@ create or replace package body book_pkg as
                 p_book_categories_info.book_description,
                 p_book_categories_info.book_price,
                 0,
-                p_book_categories_info.book_publisher);
+                p_book_categories_info.book_publisher,
+                p_book_categories_info.book_image_url);
         p_book_id := books_seq.currval;
 
         for i in 1 .. input_categories.count loop
