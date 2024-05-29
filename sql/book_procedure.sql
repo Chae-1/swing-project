@@ -317,7 +317,7 @@ create or replace package body book_pkg as
                    book_rating,
                    book_publisher
             FROM Books
-            where book_title like '%title%';
+            where book_title like '%' || p_book_title ||'%';
     end find_book_contains_title;
 
     PROCEDURE find_books_by_cat_name(
