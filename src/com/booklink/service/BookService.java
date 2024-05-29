@@ -10,10 +10,11 @@ import com.booklink.utils.UserHolder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BookService {
     private final BookDao bookDao;
-
     private final CategoriesDao categoriesDao;
 
     public BookService() {
@@ -70,6 +71,7 @@ public class BookService {
     public List<Book> findBookByCategoryName(String categoryName) {
         return bookDao.findBookByCategoryName(categoryName);
     }
+
 
     public void registerBookWithCategories(BookRegisterDto dto, List<String> inputCategories) {
         bookDao.registerBookWithCategories(dto, inputCategories);

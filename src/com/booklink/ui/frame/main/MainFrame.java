@@ -10,12 +10,14 @@ import com.booklink.ui.panel.menu.MyPagePanel;
 import javax.swing.*;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Set;
+
 
 public class MainFrame extends JFrame {
     private MenuPanel menuPanel;
     private CategoryPanel categoryPanel;
     private ContentPanel contentPanel;
+
 
     public static final int WIDTH = 1920;
     public static final int HEIGHT = 1080;
@@ -32,6 +34,7 @@ public class MainFrame extends JFrame {
 
         init(new BookContentPanel(this));
     }
+
 
     private void init(ContentPanel contentPanel) {
         // 레이아웃 매니저를 null로 설정하여 절대 위치 사용
@@ -96,4 +99,6 @@ public class MainFrame extends JFrame {
         loadPrevContent(contentPanel);
         changeCurrentContent(myPagePanel);
     }
+
+
 }
