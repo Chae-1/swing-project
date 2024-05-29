@@ -46,6 +46,15 @@ CREATE OR REPLACE PACKAGE Categories_Pkg IS
         p_category out sys_refcursor
     );
 
+    procedure find_all(
+        p_category out sys_refcursor
+    );
+
+    procedure find_book_category_names(
+        category_name_array in CATEGORY_NAME_ARRAY,
+        p_category out sys_refcursor
+    );
+
 END Categories_Pkg;
 /
 
@@ -121,5 +130,26 @@ CREATE OR REPLACE PACKAGE BODY Categories_Pkg IS
                      join bookcategories bc on c.category_id = bc.category_id
             where bc.book_id = p_book_id;
     end find_all_simple_category;
+    procedure find_all(
+            p_category out sys_refcursor
+    ) as
+    begin
+        open p_category for
+            select *
+            from categories;
+    end find_all;
+
+    procedure find_book_category_names(
+        category_name_array in CATEGORY_NAME_ARRAY,
+        p_category out sys_refcursor
+    ) as
+    begin
+        open p_category for
+        SELECT b.*
+                FROM books b
+                JOIN bookcategories bc ON b.book_id = bc.book_id
+                JOIN categories c ON bc.category_id = c.category_id
+                WHERE c.category_name IN (SELECT COLUMN_VALUE FROM TABLE(category_name_array));
+    end;
 END Categories_Pkg;
 /

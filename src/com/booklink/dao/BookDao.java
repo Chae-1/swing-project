@@ -286,4 +286,29 @@ public class BookDao {
         }
     }
 
+    public List<Book> findBooksByContainsCategoryNames(Set<String> categoryNames) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call Categories_Pkg.find_book_category_names(?, ?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("CATEGORY_NAME_ARRAY", con);
+            ARRAY prevCategoriesArray = new ARRAY(arrayDescriptor, con, categoryNames.toArray());
+            cstmt.setArray(1, prevCategoriesArray);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
 }
