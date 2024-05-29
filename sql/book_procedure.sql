@@ -17,7 +17,7 @@ CREATE TABLE Books
     book_price            INTEGER,
     book_rating           number(2, 1),
     book_publisher        VARCHAR2(50),
-    book_image_url        varchar2(300)
+    book_image_url        varchar2(3000)
 );
 
 create unique index idx_books on books (book_id);
@@ -73,7 +73,7 @@ create or replace type book_register_info as object
     book_description      CLOB,
     book_price            INTEGER,
     book_publisher        VARCHAR2(50),
-    book_image_url        varchar2(200)
+    book_image_url        varchar2(3000)
 );
 
 drop sequence books_seq;
@@ -317,7 +317,11 @@ create or replace package body book_pkg as
                    book_rating,
                    book_publisher
             FROM Books
+<<<<<<< HEAD
             where book_title like '%' || p_book_title || '%';
+=======
+            where book_title like '%' || p_book_title ||'%';
+>>>>>>> 5fae4ce114202e87941391291d3d2da33634f6c4
     end find_book_contains_title;
 
     PROCEDURE find_books_by_cat_name(

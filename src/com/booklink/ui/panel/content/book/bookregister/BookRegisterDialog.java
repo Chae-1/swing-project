@@ -239,6 +239,7 @@ public class BookRegisterDialog extends JDialog {
             String category2 = categoryComboBox2.getSelectedItem().toString();
             String imageUrl = imageUrlField.getText();
 
+            System.out.println(imageUrl);
             if (category1.equals(category2)) {
                 JOptionPane.showMessageDialog(this, "카테고리가 중복되었습니다. 다른 카테고리를 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
                 return; // Stop further execution
