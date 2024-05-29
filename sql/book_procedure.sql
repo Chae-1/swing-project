@@ -61,7 +61,8 @@ CREATE OR REPLACE TYPE book_info_rec AS OBJECT
     book_description      CLOB,
     book_price            INTEGER,
     book_rating           NUMBER(2, 1),
-    book_publisher        VARCHAR2(50)
+    book_publisher        VARCHAR2(50),
+    book_image_url varchar2(3000)
 );
 
 create or replace type book_register_info as object
@@ -189,7 +190,8 @@ create or replace package body book_pkg as
                            book_description,
                            book_price,
                            book_rating,
-                           book_publisher)
+                           book_publisher,
+                           book_image_url)
         values (books_seq.nextval,
                 book_info.book_title,
                 book_info.book_author,
@@ -199,7 +201,8 @@ create or replace package body book_pkg as
                 book_info.book_description,
                 book_info.book_price,
                 book_info.book_rating,
-                book_info.book_publisher);
+                book_info.book_publisher,
+                book_image_url);
     end add_book;
 
     PROCEDURE find_book_by_title(
@@ -217,7 +220,8 @@ create or replace package body book_pkg as
                    book_description,
                    book_price,
                    book_rating,
-                   book_publisher
+                   book_publisher,
+                   book_image_url
             FROM Books
             WHERE book_title = p_book_title;
     END find_book_by_title;
@@ -226,6 +230,7 @@ create or replace package body book_pkg as
     BEGIN
         DELETE FROM Books WHERE book_id = p_book_id;
     END delete_book;
+
     procedure update_book(
         p_book_id in books.book_id%type,
         book_info in book_info_rec) as
@@ -257,7 +262,8 @@ create or replace package body book_pkg as
                    book_description,
                    book_price,
                    book_rating,
-                   book_publisher
+                   book_publisher,
+                   book_image_url
             FROM Books
             WHERE book_id = p_book_id;
     end find_book_by_id;
@@ -276,7 +282,8 @@ create or replace package body book_pkg as
                    book_description,
                    book_price,
                    book_rating,
-                   book_publisher
+                   book_publisher,
+                   book_image_url
             FROM Books
             where book_id > 0;
     end find_all_book;
@@ -295,7 +302,8 @@ create or replace package body book_pkg as
                    book_description,
                    book_price,
                    book_rating,
-                   book_publisher
+                   book_publisher,
+                   book_image_url
             FROM Books
             where book_id > 0;
     end find_all_book_with_count;
@@ -390,6 +398,7 @@ create or replace package body book_pkg as
                          where category_name = input_categories(i)), p_book_id);
         end loop;
     end add_book_with_categories;
+
     procedure update_book_with_categories(
         p_book_categories_info in book_register_info,
         p_book_id books.book_id%type,

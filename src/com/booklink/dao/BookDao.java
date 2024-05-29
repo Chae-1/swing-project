@@ -50,7 +50,8 @@ public class BookDao {
                 DBDataTypeMatcher.stringToClob(con, bookDto.description()),
                 bookDto.price(),
                 bookDto.rating() != null ? new BigDecimal(bookDto.rating()) : null,
-                bookDto.publisher()
+                bookDto.publisher(),
+
         };
     }
 
@@ -112,10 +113,16 @@ public class BookDao {
     public Optional<Book> findBookById(Long bookId) {
         String sql = "{call book_pkg.find_book_by_id(?, ?)}";
         ResultSet rs = null;
+        System.out.println("asdadadad");
+
         try (Connection con = DBConnectionUtils.getConnection();
              CallableStatement cstmt = con.prepareCall(sql)) {
+            System.out.println("asdadadad");
+
             cstmt.setLong(1, bookId);
             cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+
+            System.out.println("asdadadad");
             // Register output parameter
             cstmt.execute();
             rs = (ResultSet) cstmt.getObject(2);
@@ -136,6 +143,9 @@ public class BookDao {
     }
 
     private Book getBook(ResultSet rs) throws SQLException {
+        System.out.println(
+                "ok "
+        );
         double bookRating = rs.getBigDecimal("book_rating").doubleValue();
         System.out.println("bookRating: " + bookRating);
         return new Book.BookBuilder()
@@ -149,6 +159,7 @@ public class BookDao {
                 .publisher(rs.getString("book_publisher"))
                 .salesPoint(rs.getInt("book_sales_point"))
                 .rating(bookRating)
+                .imageUrl(rs.getString("book_image_url"))
                 .build();
     }
 
@@ -247,6 +258,7 @@ public class BookDao {
     }
 
     private Object[] createBookWithCategoriesInfo(Connection con, BookRegisterDto dto) {
+
         return new Object[]{
                 dto.title(),
                 dto.author(),

@@ -10,5 +10,6 @@ public record BookDto(String title,
                       Integer price,
                       String publisher,
                       Integer salesPoint,
-                      Double rating) {
+                      Double rating,
+                      String imageUrl) {
 }

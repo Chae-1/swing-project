@@ -80,7 +80,9 @@ public class BookDetailPanel extends ContentPanel {
         // 이미지 490 * 200, 위치 :
         URL location = null;
         try {
-            location = new URL(book.getImageUrl());
+            String imageUrl = book.getImageUrl();
+            System.out.println(imageUrl);
+            location = new URL(imageUrl);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
