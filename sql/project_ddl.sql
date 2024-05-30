@@ -73,14 +73,6 @@ CREATE TABLE BookCategories (
                                 book_id INTEGER
 );
 
-drop sequence BookCategories_seq;
-create sequence BookCategories_seq
-    start with 1
-    increment by 1
-    nocycle
-    cache 20;
-
-
 create unique index idx_book_categories on bookcategories(book_id, category_id);
 alter table bookcategories add constraint bookcategories_pk primary key(book_id, category_id);
 alter table bookcategories add constraint bookcategories_category_fk foreign key (category_id) references categories(category_id) on delete cascade;
