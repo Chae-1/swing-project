@@ -2,12 +2,10 @@ package com.booklink.ui.panel.content.book.bookdiscussion.comment;
 
 import com.booklink.controller.DiscussionCommentController;
 import com.booklink.model.book.disscussion.comment.DiscussionCommentDto;
-import com.booklink.model.book.disscussion.comment.DiscussionCommentRegisterDto;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.content.PagingPanel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DiscussionCommentPanel extends ContentPanel {
@@ -30,7 +28,7 @@ public class DiscussionCommentPanel extends ContentPanel {
         this.discussionId = discussionId;
         comments = commentController.findAllCommentByDiscussionId(discussionId);
         pagingPanel = new PagingPanel(1600, 100, this);
-        update(currentPage);
+        updateDisplay(currentPage);
     }
 
     protected int getMaxPage() {
@@ -41,7 +39,7 @@ public class DiscussionCommentPanel extends ContentPanel {
         return currentPage;
     }
 
-    protected void update(int page) {
+    public void updateDisplay(int page) {
         removeAll();
         comments = commentController.findAllDiscCommentByDiscId(discussionId);
         currentPage = page;

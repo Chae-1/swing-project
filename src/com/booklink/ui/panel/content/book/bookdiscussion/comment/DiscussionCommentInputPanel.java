@@ -35,7 +35,7 @@ public class DiscussionCommentInputPanel extends JPanel {
                 commentController.registerComment(new DiscussionCommentRegisterDto(UserHolder.getId(), discussionId, LocalDateTime.now(), text));
                 Container parent = this.getParent();
                 if (parent instanceof DiscussionCommentPanel p) {
-                    p.update(1);
+                    p.updateDisplay(1);
                 }
             } catch (UserException e) {
                 // comment 예외시, 메세지를 출력

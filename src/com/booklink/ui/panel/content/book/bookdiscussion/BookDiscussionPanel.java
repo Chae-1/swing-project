@@ -8,9 +8,6 @@ import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.content.PagingPanel;
 
-import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 
 
@@ -40,9 +37,7 @@ public class BookDiscussionPanel extends ContentPanel {
 
         // 책 제목, 가운데 정렬,
         pagingPanel = new PagingPanel(contentWidth, 100, this);
-        update(currentPage);
-
-        mainFrame.changeCurrentContent(this);
+        updateDisplay(currentPage);
     }
 
     public void updateDiscussion(Long bookId, int currentPage) {
@@ -65,7 +60,7 @@ public class BookDiscussionPanel extends ContentPanel {
     }
 
     @Override
-    protected void update(int page) {
+    public void updateDisplay(int page) {
         removeAll();
         bookDiscussionTitle.setBounds(0, 0, contentWidth, 100);
         add(bookDiscussionTitle);
@@ -100,6 +95,6 @@ public class BookDiscussionPanel extends ContentPanel {
     }
 
     public void changeDetailDisc(BookDiscussionDto bookDiscussion) {
-        new BookDiscussionDetailPanel(mainFrame, bookDiscussion);
+        mainFrame.changeCurrentContent(new BookDiscussionDetailPanel(mainFrame, bookDiscussion));
     }
 }

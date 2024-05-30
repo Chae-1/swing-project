@@ -1,7 +1,5 @@
 package com.booklink.ui.panel.content;
 
-import com.booklink.ui.panel.content.book.BookContentPanel;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -38,7 +36,7 @@ public class PagingPanel extends JPanel {
         for (int i = startNum; i <= endNum; i++) {
             JButton pageButton = new JButton(String.valueOf(i));
             pageButton.addActionListener(e -> {
-                contentPanel.update(Integer.parseInt(pageButton.getText()));
+                contentPanel.updateDisplay(Integer.parseInt(pageButton.getText()));
             });
             pageButton.setPreferredSize(new Dimension(50, 30));
             add(pageButton);

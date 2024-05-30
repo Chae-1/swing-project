@@ -23,6 +23,7 @@ public class MyPagePanel extends ContentPanel {
     private Set<String> selectedCategories;
     private CategoryController controller;
     private List<String> categoryNames;
+
     public MyPagePanel(MainFrame mainFrame) {
         super(mainFrame);
         controller = new CategoryController();
@@ -77,7 +78,7 @@ public class MyPagePanel extends ContentPanel {
             btn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (btn.isSelected()){
+                    if (btn.isSelected()) {
                         selectedCategories.add(category);
                     } else {
                         selectedCategories.remove(category);
@@ -97,7 +98,7 @@ public class MyPagePanel extends ContentPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // selectedCategories
-                new BookContentPanel(mainFrame, selectedCategories);
+                mainFrame.changeCurrentContent(new BookContentPanel(mainFrame, selectedCategories));
             }
         });
 
@@ -164,7 +165,7 @@ public class MyPagePanel extends ContentPanel {
     }
 
     @Override
-    protected void update(int page) {
+    public void updateDisplay(int page) {
         // 예제에서는 페이지 업데이트가 필요하지 않음
     }
 }

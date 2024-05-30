@@ -43,7 +43,7 @@ public class CommentPanel extends ContentPanel {
     }
 
     @Override
-    protected void update(int page) {
+    public void updateDisplay(int page) {
         // 페이징이 눌리면 댓글 목륵을 전부 가지고 온다.
         // commentDto -> userId, commentId, comment, rating, userName
         removeAll();
