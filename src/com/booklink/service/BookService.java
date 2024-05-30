@@ -6,12 +6,13 @@ import com.booklink.model.book.Book;
 import com.booklink.model.book.BookDto;
 
 import com.booklink.model.book.BookRegisterDto;
+import com.booklink.model.book.exception.BookAlreadyExistException;
+import com.booklink.model.user.exception.UserPermissionException;
 import com.booklink.utils.UserHolder;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class BookService {
     private final BookDao bookDao;
@@ -23,16 +24,16 @@ public class BookService {
     }
 
     // to do -> 카테고리 이름 내역으로 조회가 가능해야한다.
-    public void findBookByTitle(String title) {
+    public void duplicateBook(String title) {
         Optional<Book> bookByTitle = bookDao.findBookByTitle(title);
         bookByTitle.ifPresent((book) -> {
-            throw new RuntimeException("이미 존재하는 책입니다.");
+            throw new BookAlreadyExistException();
         });
     }
 
     public void deleteBookById(Long bookId) {
         if (!UserHolder.isRoot()) {
-            throw new RuntimeException("삭제할 권한이 존재하지 않습니다.");
+            throw new UserPermissionException();
         }
         bookDao.deleteBook(bookId);
     }
@@ -60,6 +61,7 @@ public class BookService {
 
 
     public void registerBookWithCategories(BookRegisterDto dto, List<String> inputCategories) {
+        duplicateBook(dto.title());
         bookDao.registerBookWithCategories(dto, inputCategories);
     }
 

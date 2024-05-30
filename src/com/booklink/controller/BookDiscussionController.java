@@ -7,28 +7,23 @@ import com.booklink.model.book.disscussion.BookDiscussionDto;
 import com.booklink.model.book.disscussion.BookDiscussionRegisterForm;
 import com.booklink.model.order.OrderCount;
 import com.booklink.model.user.exception.UserPermissionException;
+import com.booklink.service.BookDiscussionService;
 import com.booklink.utils.UserHolder;
 
 import java.util.List;
 
 public class BookDiscussionController {
-    private BookDiscussionDao dao;
-    private OrderDao orderDao;
+    private BookDiscussionService service;
 
     public BookDiscussionController() {
-        this.dao = new BookDiscussionDao();
-        this.orderDao = new OrderDao();
+        this.service = new BookDiscussionService();
     }
 
     public List<BookDiscussionDto> findAllDiscussionAboutBook(Long bookId) {
-        OrderCount orderCountAboutBook = orderDao.findOrderCountAboutBook(UserHolder.getId(), bookId);
-        if (!orderCountAboutBook.isPurchased()) {
-            throw new UserPermissionException();
-        }
-        return dao.findAllDiscussionAboundBook(bookId);
+        return service.findAllDiscussionAboutBook(bookId);
     }
 
     public void addDiscussion(BookDiscussionRegisterForm form) {
-        dao.registerDiscussion(form);
+        service.addDiscussion(form);
     }
 }

@@ -1,0 +1,48 @@
+@startuml
+actor Manager
+participant "UserHolder" as A
+participant "BookController" as B
+participant "BookService" as C
+participant "BookDao" as D
+participant "DB" as E
+
+Manager -> B : remove
+activate B
+
+B -> C : removeById
+activate C
+
+B -> A : isRoot
+activate A
+
+A --> B : return
+deactivate A
+
+
+alt user hasn't sufficient permissions
+    C -> B : throw UserPermissionException
+    deactivate C
+
+    B -> Manager : throw UserPermissionException
+    deactivate B
+
+else user has sufficient permissions
+    C -> D : removeById
+    activate D
+
+    D -> E : remove
+    activate E
+
+    E --> D : return
+    deactivate E
+
+    D --> C : return
+    deactivate D
+
+    C --> B : return
+    deactivate C
+
+    B --> Manager : return
+    deactivate B
+end
+@enduml

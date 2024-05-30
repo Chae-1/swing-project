@@ -1,0 +1,53 @@
+@startuml
+actor Manager
+participant "BookController" as A
+participant "BookService" as B
+participant "BookDao" as C
+participant "DB" as D
+
+Manager -> A: registerBook
+activate A
+
+A -> B: registerBook
+activate B
+
+B -> B: duplicateBook
+activate B
+
+B -> C: findByTitle
+activate C
+
+C --> B: return book
+deactivate C
+
+alt Book found
+
+    B --> A: throw BookAlreadyExistException
+    deactivate B
+
+    A --> Manager: throw BookAlreadyExistException
+    deactivate A
+
+
+
+else Book not found
+
+    B -> C: registerBookWithCategories
+    activate C
+
+    C -> D: save
+    activate D
+
+    D --> C: return
+    deactivate D
+
+    C --> B: return
+    deactivate C
+
+    B --> A: return
+    deactivate B
+
+    A -->  Manager : return
+    deactivate A
+end
+@enduml
