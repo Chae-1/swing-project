@@ -135,6 +135,10 @@ public class LoginForm extends JFrame {
 
     public void login(String username, String password) {
         UserDao userDao = new UserDao();
+        // -> Controller
+        // 1. 파라미터에 대한 유효성 검증 -> Controller
+        // 2. 해당 파라미터로 조회를 했을 때, 중복 건 수가 없는지 확인 -> Service
+        // 3. 저장, 수정, 조회 -> Dao, Repository
 
         // UserDao를 통해 사용자 인증을 시도함.
         Optional<User> authenticatedUser = userDao.findByLogIdAndPassword(username, password);

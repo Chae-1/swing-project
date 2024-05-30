@@ -27,11 +27,9 @@ public class BookController {
         return bookService.findBookByCategoryName(categoryName);
     }
 
-
+    // 도서 등록
     public void registerBookWithCategories(BookRegisterDto dto, List<String> inputCategories) {
-        String title = dto.title();
         // 예외가 발생하면 예외의 내용을 출력해서 보여준다.
-        bookService.findBookByTitle(title);
         bookService.registerBookWithCategories(dto, inputCategories);
 
     }
@@ -45,6 +43,7 @@ public class BookController {
     }
 
     public Optional<Book> findByBookId(Long bookId) {
+
         return bookService.findBookById(bookId);
     }
 

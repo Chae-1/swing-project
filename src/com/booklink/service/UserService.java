@@ -22,11 +22,6 @@ public class UserService {
         userDao.registerUser(userRegistrationDto);
     }
 
-    public List<User> getAllUsers() {
-        return userDao.findAll();
-    }
-
-
     public Optional<User> findUserByLogIdAndPassword(String logId, String password) {
         if (logId.isBlank() || password.isBlank()) {
             throw new UserNotFoundException();
@@ -41,33 +36,6 @@ public class UserService {
     }
 
 
-
-    public static void main(String[] args) {
-        UserService userService = new UserService();
-
-//        UserRegistrationDto userDto = new UserRegistrationDto(
-//                "김호영2",
-//                "1272138",
-//                "377112",
-//                LocalDateTime.now(),
-//                "url:user사진이들어갈url"
-//
-//        );
-//        userService.registrationUser(userDto);
-
-
-
-        //모든 사용자 조회
-        List<User> users = userService.getAllUsers();
-        for (User user : users) {
-            System.out.println("ID: " + user.getId());
-            System.out.println("Name: " + user.getName());
-            System.out.println("Login ID: " + user.getLoginId());
-            System.out.println("Registration Date: " + user.getRegistrationDate());
-            System.out.println("Image: " + user.getImage());
-            System.out.println();
-        }
-    }
 }
 
 

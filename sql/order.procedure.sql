@@ -15,7 +15,6 @@ CREATE TABLE Orders (
 );
 
 
-alter table books add book_image_url varchar2(255);
 
 -- 구조체 타입 정의
 CREATE OR REPLACE TYPE ORDER_FORM AS OBJECT (
