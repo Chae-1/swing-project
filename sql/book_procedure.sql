@@ -39,9 +39,16 @@ CREATE TABLE Categories
 
 CREATE TABLE BookCategories
 (
+    book_category_id integer,
     category_id INTEGER,
     book_id     INTEGER
 );
+
+create sequence book_categories_seq
+    start with 1
+    increment by 1
+    nocycle
+    cache 20;
 
 create unique index idx_book_categories on bookcategories (book_id, category_id);
 alter table bookcategories
@@ -370,7 +377,7 @@ create or replace package body book_pkg as
                 insert into bookcategories
                 values ((select category_id
                          from categories
-                         where category_name = input_categories(i)), p_book_id);
+                         where category_name = input_categories(i)), p_book_id, book_categories_seq.nextval);
             end loop;
     end add_book_with_categories;
 
@@ -395,27 +402,30 @@ create or replace package body book_pkg as
         where book_id = p_book_id;
 
         FOR i IN 1 .. prev_categories.COUNT LOOP
-                update BookCategories
+             update BookCategories
                 set category_id =
                         (
                             select category_id
                             from categories
                             where category_name = curr_categories(i)
                         )
-                where book_id = p_book_id and category_id = (
+                    where book_id = p_book_id and category_id = (
                     select category_id
                     from Categories
                     where category_name = prev_categories(i)
                 );
                 p_idx := i;
-            END LOOP;
+        END LOOP;
 
+        if p_idx != 2 then
         for i in p_idx .. curr_categories.count loop
                 insert into BookCategories
-                values ((select category_id
+                values (book_categories_seq.nextval,(select category_id
                          from categories
                          where category_name = curr_categories(i)), p_book_id);
-            end loop;
+        end loop;
+        end if;
     end;
 end book_pkg;
 /
+

@@ -111,7 +111,7 @@ public class CommentDao {
         }
     }
 
-    public void removeComment(Long commentId) {
+    public void removeComment(Long commentId, Long userId) {
         Connection con = null;
         CallableStatement cstmt = null;
         String sql = "call comment_pkg.remove_comment(?)";

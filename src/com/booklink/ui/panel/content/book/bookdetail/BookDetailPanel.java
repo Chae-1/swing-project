@@ -10,6 +10,7 @@ import com.booklink.model.user.exception.UserNotFoundException;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 
+import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.ui.panel.content.book.bookdetail.comment.CommentPanel;
 import com.booklink.ui.panel.content.book.bookdiscussion.BookDiscussionPanel;
 import com.booklink.ui.panel.content.book.bookregister.BookRegisterDialog;
@@ -54,6 +55,17 @@ public class BookDetailPanel extends ContentPanel {
         removeBookButton.addActionListener((e) -> {
             try {
                 bookController.removeBookById(book.getId());
+                // 삭제 이후
+                JOptionPane optionPane = new JOptionPane(
+                        "삭제 되었습니다.",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                JDialog dialog = optionPane.createDialog(mainFrame, "삭제");
+                dialog.setLocationRelativeTo(mainFrame); /// 다이얼로그 화면 중앙에 표시.
+                dialog.setVisible(true);
+
+                mainFrame.changeCurrentContent(new BookContentPanel(mainFrame)); // 초기 화면으로 돌아가기
+
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "경고", JOptionPane.WARNING_MESSAGE);
@@ -84,7 +96,11 @@ public class BookDetailPanel extends ContentPanel {
             System.out.println(imageUrl);
             location = new URL(imageUrl);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            try {
+                location = new URL("https://th.bing.com/th/id/OIP.94MjdNLLzgxs1l_L0zNLGwHaHa?w=186&h=186&c=7&r=0&o=5&dpr=1.5&pid=1.7");
+            } catch (MalformedURLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         ImageIcon image = new ImageIcon(location);

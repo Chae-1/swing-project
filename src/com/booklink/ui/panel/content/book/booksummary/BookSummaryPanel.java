@@ -27,7 +27,7 @@ public class BookSummaryPanel extends JPanel {
         try {
             imageLabel = new JLabel(new ImageIcon(new URL(book.getImageUrl())));
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            imageLabel = new JLabel(new ImageIcon());
         }
         // 안좋은 방법이지만,
         // 해당 이미지 라벨을 클릭하면 book을 넘기고

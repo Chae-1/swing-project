@@ -39,7 +39,7 @@ public class BookContentPanel extends ContentPanel {
         bookController = new BookController();
         // books And count를 가지고 온다.
         books = bookController.findAllBookWithCount();
-        maxPage = Math.max(1, (int) Math.ceil((double) books.size() / pagePerContent));
+        maxPage = getMax();
         currentPage = 1;
 
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
@@ -52,7 +52,7 @@ public class BookContentPanel extends ContentPanel {
         bookController = new BookController();
         // books And count를 가지고 온다.
         books = bookController.findBooksByContainsTitle(title);
-        maxPage = Math.max(1, (int) Math.ceil((double) books.size() / pagePerContent));
+        maxPage = getMax();
         currentPage = 1;
 
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
@@ -66,7 +66,7 @@ public class BookContentPanel extends ContentPanel {
         bookController = new BookController();
         // books And count를 가지고 온다.
         books = bookController.findBooksByContainsCategoryNames(categoryNames);
-        maxPage = Math.max(1, (int) Math.ceil(books.size() / pagePerContent));
+        maxPage = getMax();
         currentPage = 1;
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
         pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
@@ -81,7 +81,8 @@ public class BookContentPanel extends ContentPanel {
         bookController = new BookController();
         // books And count를 가지고 온다.
         books = bookController.findBooksByContainsCategoryName(categoryDto.name());
-        maxPage = Math.max(1, (int) Math.ceil(books.size() / pagePerContent));
+        System.out.println(books.size());
+        maxPage = getMax();
         currentPage = 1;
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
         pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
@@ -89,6 +90,9 @@ public class BookContentPanel extends ContentPanel {
 
     }
 
+    private int getMax() {
+        return Math.max(1, (int) Math.ceil((double) books.size() / pagePerContent));
+    }
 
 
     // update가 호출되면 pageNum를 갱신하고 해당 페이지로 이동시킨다.

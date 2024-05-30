@@ -128,7 +128,7 @@ create or replace package body comment_pkg is
         p_book_id books.book_id%type;
     begin
 
-        select user_id into p_book_id
+        select book_id into p_book_id
         from comments
         where comment_id = p_comment_id;
 
@@ -137,7 +137,7 @@ create or replace package body comment_pkg is
 
         update books
         set book_rating = (
-            select nvl(avg(comment_rating), 0)
+            select nvl(avg(nvl(comment_rating, 0)), 0)
             from comments
             where book_id = p_book_id and comment_is_purchased = 'Y'
         )

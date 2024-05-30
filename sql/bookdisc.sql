@@ -47,20 +47,10 @@ create or replace type book_disc_obj as object
     book_id integer,
     user_id integer,
     disc_title varchar2(30),
-    disc_content clob,
-    user_name varchar2(50)
+    disc_content clob
 );
 /
 
-create or replace type book_disc_obj as object
-(
-    book_id integer,
-    user_id integer,
-    disc_title varchar2(30),
-    disc_content clob,
-    user_name varchar2(50)
-);
-/
 
 create or replace package book_disc_pkg as
     procedure add_book_disc(

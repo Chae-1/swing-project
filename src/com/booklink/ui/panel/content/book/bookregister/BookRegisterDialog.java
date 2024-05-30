@@ -86,7 +86,7 @@ public class BookRegisterDialog extends JDialog {
         panel.add(new JScrollPane(descriptionField));
 
         panel.add(new JLabel("Price:"));
-        JTextField priceField = new JTextField(book.getPrice());
+        JTextField priceField = new JTextField(String.valueOf(book.getPrice()));
         panel.add(priceField);
 
         panel.add(new JLabel("Publisher:"));
@@ -106,7 +106,7 @@ public class BookRegisterDialog extends JDialog {
 
         // Add image URL field and preview
         panel.add(new JLabel("Image URL:"));
-        JTextField imageUrlField = new JTextField();
+        JTextField imageUrlField = new JTextField(book.getImageUrl());
         panel.add(imageUrlField);
 
         imagePreviewLabel = new JLabel();

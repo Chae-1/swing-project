@@ -43,7 +43,7 @@ public class BookDiscussionDao {
                 form.bookId(),
                 form.userId(),
                 form.title().toString(),
-                DBDataTypeMatcher.stringToClob(con, form.content()),
+                DBDataTypeMatcher.stringToClob(con, form.content())
         };
     }
 

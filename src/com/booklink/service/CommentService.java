@@ -45,9 +45,10 @@ public class CommentService {
 
     public void removeComment(Long commentId, Long userId) {
         // 해당 commentId의 댓글 userId와 로그인한 user의 userId와 같으면 삭제
+
         commentDao.findCommentById(commentId, userId)
                 .ifPresentOrElse((comments) -> {
-                    commentDao.removeComment(commentId);
+                    commentDao.removeComment(commentId, userId);
                 }, () -> {
                     throw new CommentException("삭제할 수 있는 권한이 없습니다.");
                 });
