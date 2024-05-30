@@ -253,19 +253,8 @@ create or replace package body book_pkg as
     ) as
     begin
         OPEN p_books FOR
-            SELECT book_id,
-                   book_title,
-                   book_author,
-                   book_publication_date,
-                   book_sales_point,
-                   book_summary,
-                   book_description,
-                   book_price,
-                   book_rating,
-                   book_publisher,
-                   book_image_url
-            FROM Books
-            where book_id > 0;
+            select *
+            from books_all;
     end find_all_book;
 
     procedure find_all_book_with_count(
@@ -388,6 +377,8 @@ create or replace package body book_pkg as
         curr_categories in CATEGORY_NAME_ARRAY
     ) as
         p_idx int;
+        prev_category_id NUMBER;
+        curr_category_id NUMBER;
     begin
         p_idx := 1;
         update books
@@ -402,30 +393,49 @@ create or replace package body book_pkg as
         where book_id = p_book_id;
 
         FOR i IN 1 .. prev_categories.COUNT LOOP
+
+             prev_category_id := find_category_id_by_name(prev_categories(i));
+             curr_category_id := find_category_id_by_name(curr_categories(i));
              update BookCategories
-                set category_id =
-                        (
-                            select category_id
-                            from categories
-                            where category_name = curr_categories(i)
-                        )
-                    where book_id = p_book_id and category_id = (
-                    select category_id
-                    from Categories
-                    where category_name = prev_categories(i)
-                );
+             set category_id = curr_category_id
+             where book_id = p_book_id and category_id = prev_category_id;
                 p_idx := i;
         END LOOP;
 
         if p_idx != 2 then
         for i in p_idx .. curr_categories.count loop
+                curr_category_id := find_category_id_by_name(curr_categories(i));
                 insert into BookCategories
-                values (book_categories_seq.nextval,(select category_id
-                         from categories
-                         where category_name = curr_categories(i)), p_book_id);
+                values (book_categories_seq.nextval, curr_category_id, p_book_id);
         end loop;
         end if;
     end;
 end book_pkg;
 /
 
+create or replace function find_category_id_by_name(f_category_name in varchar2(200)) return integer is
+    f_category_id integer;
+begin
+    SELECT category_id into f_category_id
+    INTO category_id
+    FROM Categories
+    WHERE category_name = f_category_name;
+
+    RETURN f_category_id;
+end
+/
+
+create or replace view books_all as
+SELECT book_id,
+                   book_title,
+                   book_author,
+                   book_publication_date,
+                   book_sales_point,
+                   book_summary,
+                   book_description,
+                   book_price,
+                   book_rating,
+                   book_publisher,
+                   book_image_url
+            FROM Books
+            where book_id > 0;

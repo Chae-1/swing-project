@@ -202,3 +202,12 @@ alter table PreferCategories add constraint prefer_categories_category_fk foreig
 
 
 -- trigger
+create or replace trigger trg_after_insert_orders
+after insert on orders
+for each row
+begin
+    update books
+    set book_sales_point = book_sales_point + 1
+    where book_id = :new.book_id;
+end;
+/
