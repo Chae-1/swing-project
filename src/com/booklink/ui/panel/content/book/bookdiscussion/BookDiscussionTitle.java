@@ -67,7 +67,7 @@ public class BookDiscussionTitle extends JPanel {
             if (!discussionTitle.isEmpty() && !discussionContent.isEmpty()) {
                 bookDiscussionPanel.addDiscussion(new BookDiscussionRegisterForm(bookId, UserHolder.getId(), discussionTitle, discussionContent));
                 bookDiscussionPanel.updateDiscussion(bookId, bookDiscussionPanel.getCurrentPage());
-                bookDiscussionPanel.update(bookDiscussionPanel.getCurrentPage());
+                bookDiscussionPanel.updateDisplay(bookDiscussionPanel.getCurrentPage());
                 dialog.dispose();
             } else {
                 JOptionPane.showMessageDialog(dialog, "의견 제목과 내용을 입력해 주세요", "오류", JOptionPane.ERROR_MESSAGE);

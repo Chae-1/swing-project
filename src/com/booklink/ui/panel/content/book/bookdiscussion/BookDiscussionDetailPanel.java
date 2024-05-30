@@ -34,7 +34,6 @@ public class BookDiscussionDetailPanel extends ContentPanel {
         DiscussionCommentPanel commentPanel = new DiscussionCommentPanel(mainFrame, discussionDto.discussionId());
         commentPanel.setBounds(0, 400, 1215, 400);
         add(commentPanel);
-        mainFrame.changeCurrentContent(this);
     }
 
     public static String insertLineBreaks(String text, int maxLength) {
@@ -77,7 +76,7 @@ public class BookDiscussionDetailPanel extends ContentPanel {
     }
 
     @Override
-    protected void update(int page) {
+    public void updateDisplay(int page) {
 
     }
 
@@ -86,4 +85,5 @@ public class BookDiscussionDetailPanel extends ContentPanel {
         setLayout(null);
         setSize(contentWidth, contentHeight);
     }
+
 }

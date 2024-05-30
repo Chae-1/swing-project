@@ -22,13 +22,17 @@ public class MenuPanel extends JPanel {
         logoLabel.setFont(new Font("Arial", Font.BOLD, 24)); // 원하는 폰트와 크기로 설정
         logoLabel.setBounds(10, 0, 250, 50);
 
+        JButton backButton = new JButton("뒤로가기");
+        backButton.addActionListener(e -> {
+            MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+            mainFrame.updatePrevContent(new BookContentPanel(mainFrame));
+        });
 
         // 기존 패널 및 버튼.
         SearchPanel searchPanel = new SearchPanel();
         UserPanel userPanel = new UserPanel();
 
         JButton addBookButton = new JButton("도서 등록");
-
         addBookButton.addActionListener((e) -> {
             MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
 
@@ -67,11 +71,13 @@ public class MenuPanel extends JPanel {
         logoLabel.setBounds(10, 0, logoWidth, 50); // 로고 위치 설정
         searchPanel.setBounds(logoWidth + 20, 0, searchPanelWidth, searchPanelHeight);
         addBookButton.setBounds(logoWidth + searchPanelWidth + 30, 0, addBookButtonWidth, addBookButtonHeight);
+        backButton.setBounds(logoWidth + searchPanelWidth + addBookButtonWidth + 30, 0, addBookButtonWidth, addBookButtonHeight);
         userPanel.setBounds(logoWidth + searchPanelWidth + addBookButtonWidth + backButtonWidth + 50, 0, userPanelWidth, userPanelHeight);
 
         add(logoLabel); // 로고 추가
         add(searchPanel);
         add(addBookButton);
+        add(backButton);
         add(userPanel);
     }
 }

@@ -47,7 +47,7 @@ public class CommentInputPanel extends JPanel {
                         LocalDateTime.now(), text));
                 Container parent = this.getParent();
                 if (parent instanceof CommentPanel p) {
-                    p.update(1);
+                    p.updateDisplay(1);
                 }
             } catch (UserException e) {
                 // comment 예외시, 메세지를 출력

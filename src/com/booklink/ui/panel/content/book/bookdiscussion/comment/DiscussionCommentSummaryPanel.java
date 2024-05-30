@@ -1,7 +1,6 @@
 package com.booklink.ui.panel.content.book.bookdiscussion.comment;
 
 import com.booklink.model.book.disscussion.comment.DiscussionCommentDto;
-import com.booklink.model.book.disscussion.comment.DiscussionCommentRegisterDto;
 import com.booklink.utils.UserHolder;
 
 import javax.swing.*;
@@ -24,7 +23,7 @@ public class DiscussionCommentSummaryPanel extends JPanel {
             try {
                 if (this.getParent() instanceof DiscussionCommentPanel p) {
                     p.removeComment(discussionCommentDto.commentId(), UserHolder.getId());
-                    p.update(1);
+                    p.updateDisplay(1);
                 }
 
             } catch (Exception ex) {

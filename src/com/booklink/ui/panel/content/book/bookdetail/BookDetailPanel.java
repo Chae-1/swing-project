@@ -41,7 +41,7 @@ public class BookDetailPanel extends ContentPanel {
         discBookButton.setBounds(715, 0, 100, 100);
         discBookButton.addActionListener((e) -> {
             try {
-                BookDiscussionPanel bookDiscussionPanel = new BookDiscussionPanel(mainFrame, book);
+                mainFrame.changeCurrentContent(new BookDiscussionPanel(mainFrame, book));
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "경고", JOptionPane.WARNING_MESSAGE);
@@ -223,7 +223,7 @@ public class BookDetailPanel extends ContentPanel {
     }
 
     @Override
-    protected void update(int page) {
+    public void updateDisplay(int page) {
 
     }
 

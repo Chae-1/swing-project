@@ -1,8 +1,6 @@
 package com.booklink.ui.panel.content;
 
-import com.booklink.model.book.Book;
 import com.booklink.ui.frame.main.MainFrame;
-import com.booklink.ui.panel.content.book.bookdetail.BookDetailPanel;
 
 import java.awt.*;
 import javax.swing.*;
@@ -24,14 +22,9 @@ public abstract class ContentPanel extends JPanel {
         setBackground(Color.LIGHT_GRAY);
     }
 
-    // 상위
-    public void moveOtherPanel(Book contentBook) {
-        mainFrame.loadPrevContent(this);
-        // BookDetailPanel을 생성해서 mainFrame으로 전달하면 된다.w\
-        mainFrame.changeCurrentContent(new BookDetailPanel(mainFrame, contentBook));
-    }
+
 
     protected abstract int getMaxPage();
     protected abstract int getCurrentPage();
-    protected abstract void update(int page);
+    protected abstract void updateDisplay(int page);
 }

@@ -5,12 +5,10 @@ import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.ui.panel.content.CategoryPanel;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.menu.MenuPanel;
-import com.booklink.ui.panel.menu.MyPagePanel;
 
 import javax.swing.*;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Set;
 
 
 public class MainFrame extends JFrame {
@@ -32,7 +30,8 @@ public class MainFrame extends JFrame {
         setSize(WIDTH, HEIGHT); // 전체 프레임 크기 설정
         setResizable(false); // 프레임 고정
 
-        init(new BookContentPanel(this));
+        contentPanel = new BookContentPanel(this);
+        init(contentPanel);
     }
 
 
@@ -66,7 +65,7 @@ public class MainFrame extends JFrame {
 
     // 페이지를 갱신하기 이전 페이지를 queue 에 저장한다.
     public void loadPrevContent(ContentPanel contentPanel) {
-        prevPanelDeque.add(contentPanel);
+        prevPanelDeque.push(contentPanel);
     }
 
     public static void main(String[] args) {
@@ -80,6 +79,7 @@ public class MainFrame extends JFrame {
 
     public void changeCurrentContent(ContentPanel contentPanel) {
         remove(this.contentPanel);
+        loadPrevContent(this.contentPanel);
         this.contentPanel = contentPanel;
         int categoryWidth = WIDTH / 4 - 250;
         int contentWidth = WIDTH - (WIDTH / 4) - 20 - 250;
@@ -90,15 +90,34 @@ public class MainFrame extends JFrame {
         repaint();
     }
 
-    public void updatePrevContent() {
-        changeCurrentContent(prevPanelDeque.pop());
+    public void updatePrevContent(ContentPanel contentPanel) {
+        if (prevPanelDeque.isEmpty()) {
+            return ;
+        }
+
+        remove(this.contentPanel);
+        this.contentPanel = prevPanelDeque.pop();
+        int categoryWidth = WIDTH / 4 - 250;
+        int contentWidth = WIDTH - (WIDTH / 4) - 20 - 250;
+        int contentHeight = HEIGHT - 50 - 100;
+
+        add(this.contentPanel).setBounds(categoryWidth, 50, contentWidth, contentHeight);
+        // 레이아웃을 재검증하고 다시 그리기
+        revalidate();
+        repaint();
     }
 
-    public void showMyPage(){
-        MyPagePanel myPagePanel = new MyPagePanel(this);
-        loadPrevContent(contentPanel);
-        changeCurrentContent(myPagePanel);
+    public void clearPrevPage(BookContentPanel bookContentPanel) {
+        prevPanelDeque.clear();
+        remove(this.contentPanel);
+        this.contentPanel = bookContentPanel;
+        int categoryWidth = WIDTH / 4 - 250;
+        int contentWidth = WIDTH - (WIDTH / 4) - 20 - 250;
+        int contentHeight = HEIGHT - 50 - 100;
+        add(this.contentPanel).setBounds(categoryWidth, 50, contentWidth, contentHeight);
+        // 레이아웃을 재검증하고 다시 그리기
+        revalidate();
+        repaint();
     }
-
 
 }

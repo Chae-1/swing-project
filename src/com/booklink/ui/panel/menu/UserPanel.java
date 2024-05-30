@@ -52,7 +52,7 @@ public class UserPanel extends JPanel {
             UserHolder.logOut(); // 로그아웃
             updateButtons();
             MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
-
+            mainFrame.clearPrevPage(new BookContentPanel(mainFrame));
             // 로그아웃 메세지 다이얼로그
             JOptionPane optionPane = new JOptionPane(
                     "로그아웃 되었습니다.",

@@ -8,8 +8,6 @@ import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.content.PagingPanel;
 import com.booklink.ui.panel.content.book.booksummary.BookSummaryPanel;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.Set;
 // 1488, 970
@@ -44,7 +42,7 @@ public class BookContentPanel extends ContentPanel {
 
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
         pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
-        update(currentPage);
+        updateDisplay(currentPage);
     }
 
     public BookContentPanel(MainFrame mainFrame, String title) {
@@ -57,7 +55,7 @@ public class BookContentPanel extends ContentPanel {
 
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
         pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
-        update(currentPage);
+        updateDisplay(currentPage);
 
     }
 
@@ -70,9 +68,7 @@ public class BookContentPanel extends ContentPanel {
         currentPage = 1;
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
         pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
-        update(currentPage);
-
-        mainFrame.changeCurrentContent(this);
+        updateDisplay(currentPage);
     }
 
 
@@ -86,8 +82,7 @@ public class BookContentPanel extends ContentPanel {
         currentPage = 1;
         // ContentPanel에서 시작하는 번호와, 끝번호를 가지고 있어야 한다.
         pagingPanel = new PagingPanel(contentWidth, contentHeight, this);
-        update(currentPage);
-
+        updateDisplay(currentPage);
     }
 
     private int getMax() {
@@ -97,7 +92,7 @@ public class BookContentPanel extends ContentPanel {
 
     // update가 호출되면 pageNum를 갱신하고 해당 페이지로 이동시킨다.
     @Override
-    public void update(int page) {
+    public void updateDisplay(int page) {
         removeAll();
         currentPage = page;
         pagingPanel.updatePagingPanel();
@@ -111,5 +106,7 @@ public class BookContentPanel extends ContentPanel {
             add(bookSummaryPanel);
         }
         add(pagingPanel);
+        revalidate();
+        repaint();
     }
 }

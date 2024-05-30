@@ -25,7 +25,7 @@ public class CommentSummaryPanel extends JPanel {
             try {
                 if (this.getParent() instanceof CommentPanel p) {
                     p.removeComment(discussionCommentDto.commentId(), UserHolder.getId());
-                    p.update(1);
+                    p.updateDisplay(1);
                 }
 
             } catch (Exception ex) {
