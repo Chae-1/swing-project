@@ -23,6 +23,7 @@ public abstract class ContentPanel extends JPanel {
     }
 
 
+
     protected abstract int getMaxPage();
     protected abstract int getCurrentPage();
     protected abstract void updateDisplay(int page);

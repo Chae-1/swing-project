@@ -25,7 +25,7 @@ public class MenuPanel extends JPanel {
         JButton backButton = new JButton("뒤로가기");
         backButton.addActionListener(e -> {
             MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
-            mainFrame.updatePrevContent();
+            mainFrame.updatePrevContent(new BookContentPanel(mainFrame));
         });
 
         // 기존 패널 및 버튼.

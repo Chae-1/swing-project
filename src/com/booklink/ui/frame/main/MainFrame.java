@@ -5,12 +5,10 @@ import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.ui.panel.content.CategoryPanel;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.menu.MenuPanel;
-import com.booklink.ui.panel.menu.MyPagePanel;
 
 import javax.swing.*;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Set;
 
 
 public class MainFrame extends JFrame {
@@ -92,9 +90,27 @@ public class MainFrame extends JFrame {
         repaint();
     }
 
-    public void updatePrevContent() {
+    public void updatePrevContent(ContentPanel contentPanel) {
+        if (prevPanelDeque.isEmpty()) {
+            return ;
+        }
+
         remove(this.contentPanel);
         this.contentPanel = prevPanelDeque.pop();
+        int categoryWidth = WIDTH / 4 - 250;
+        int contentWidth = WIDTH - (WIDTH / 4) - 20 - 250;
+        int contentHeight = HEIGHT - 50 - 100;
+
+        add(this.contentPanel).setBounds(categoryWidth, 50, contentWidth, contentHeight);
+        // 레이아웃을 재검증하고 다시 그리기
+        revalidate();
+        repaint();
+    }
+
+    public void clearPrevPage(BookContentPanel bookContentPanel) {
+        prevPanelDeque.clear();
+        remove(this.contentPanel);
+        this.contentPanel = bookContentPanel;
         int categoryWidth = WIDTH / 4 - 250;
         int contentWidth = WIDTH - (WIDTH / 4) - 20 - 250;
         int contentHeight = HEIGHT - 50 - 100;
