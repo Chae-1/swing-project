@@ -5,6 +5,7 @@ import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.ui.panel.content.book.bookregister.BookRegisterDialog;
 import com.booklink.utils.UserHolder;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -12,6 +13,8 @@ import java.awt.event.MouseEvent;
 
 // MenuPanel 클래스
 public class MenuPanel extends JPanel {
+    private SearchPanel searchPanel;
+    private UserPanel userPanel;
 
     public MenuPanel(int width, int height) {
         setSize(new Dimension(width, height));
@@ -29,8 +32,8 @@ public class MenuPanel extends JPanel {
         });
 
         // 기존 패널 및 버튼.
-        SearchPanel searchPanel = new SearchPanel();
-        UserPanel userPanel = new UserPanel();
+        searchPanel = new SearchPanel();
+        userPanel = new UserPanel();
 
         JButton addBookButton = new JButton("도서 등록");
         addBookButton.addActionListener((e) -> {
@@ -79,5 +82,9 @@ public class MenuPanel extends JPanel {
         add(addBookButton);
         add(backButton);
         add(userPanel);
+    }
+
+    public void updateButton() {
+        userPanel.updateButtons();
     }
 }

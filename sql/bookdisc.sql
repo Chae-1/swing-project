@@ -46,7 +46,7 @@ create or replace type book_disc_obj as object
 (
     book_id integer,
     user_id integer,
-    disc_title varchar2(30),
+    disc_title varchar2(100),
     disc_content clob
 );
 /

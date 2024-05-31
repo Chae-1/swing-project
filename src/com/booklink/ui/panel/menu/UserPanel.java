@@ -61,7 +61,6 @@ public class UserPanel extends JPanel {
             JDialog dialog = optionPane.createDialog(mainFrame, "로그아웃");
             dialog.setLocationRelativeTo(mainFrame); /// 다이얼로그 화면 중앙에 표시.
             dialog.setVisible(true);
-
             mainFrame.changeCurrentContent(new BookContentPanel(mainFrame)); // 초기 화면으로 돌아가기
         });
 

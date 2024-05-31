@@ -10,11 +10,11 @@ public class UserHolder {
     private static MainFrame mainFrame;
 
 
-    static {
-        UserService userService = new UserService();
-        user = userService.findUserByLogIdAndPassword("test", "test")
-                .orElse(null);
-    }
+//    static {
+//        UserService userService = new UserService();
+//        user = userService.findUserByLogIdAndPassword("test", "test")
+//                .orElse(null);
+//    }
 
     public static boolean isLogin() {
         return user != null;

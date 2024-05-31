@@ -147,6 +147,7 @@ public class MyPagePanel extends ContentPanel {
                 UserService userService = new UserService();
                 userService.deleteUserById(UserHolder.getId());
                 UserHolder.logOut();
+                mainFrame.updateButton();
                 mainFrame.changeCurrentContent(new BookContentPanel(mainFrame));
                 JOptionPane.showMessageDialog(this,
                         "회원 탈퇴가 완료되었습니다.", "탈퇴 완료", JOptionPane.INFORMATION_MESSAGE);
