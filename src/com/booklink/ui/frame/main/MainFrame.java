@@ -120,4 +120,8 @@ public class MainFrame extends JFrame {
         repaint();
     }
 
+
+    public void updateButton() {
+        menuPanel.updateButton();
+    }
 }
