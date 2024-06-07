@@ -2,11 +2,17 @@ package com.booklink.ui.panel.content.book.bookdetail;
 
 import com.booklink.controller.BookController;
 import com.booklink.controller.CategoryController;
+import com.booklink.controller.OrderController;
 import com.booklink.model.book.Book;
+import com.booklink.model.book.exception.BookNotExistException;
+import com.booklink.model.user.exception.UserException;
+import com.booklink.model.user.exception.UserNotFoundException;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 
+import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.ui.panel.content.book.bookdetail.comment.CommentPanel;
+import com.booklink.ui.panel.content.book.bookdiscussion.BookDiscussionPanel;
 import com.booklink.ui.panel.content.book.bookregister.BookRegisterDialog;
 import com.booklink.utils.UserHolder;
 
@@ -20,24 +26,49 @@ public class BookDetailPanel extends ContentPanel {
 
     private CategoryController controller = new CategoryController();
     private BookController bookController = new BookController();
+    private OrderController orderController = new OrderController();
 
     public BookDetailPanel(MainFrame mainFrame, Book book) {
         super(mainFrame);
         init();
-        JLabel titleLabel = new JLabel(book.getTitle() + ": " + book.getAuthor() + "/" + book.getPublisher());
+        JLabel titleLabel = new JLabel(book.getTitle() + " : " + book.getAuthor() + "/" + book.getPublisher());
         titleLabel.setSize(815, 100);
         titleLabel.setFont(new Font("Malgun Gothic", Font.BOLD, 24));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        add(titleLabel).setBounds(0, 0, 815, 100);
+        add(titleLabel).setBounds(0, 0, 715, 100);
+
+        JButton discBookButton = new JButton("의견공유");
+        discBookButton.setBounds(715, 0, 100, 100);
+        discBookButton.addActionListener((e) -> {
+            try {
+                mainFrame.changeCurrentContent(new BookDiscussionPanel(mainFrame, book));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "경고", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        });
+        add(discBookButton);
 
         JButton removeBookButton = new JButton("삭제");
         removeBookButton.setBounds(815, 0, 100, 100);
         removeBookButton.addActionListener((e) -> {
             try {
                 bookController.removeBookById(book.getId());
+                // 삭제 이후
+                JOptionPane optionPane = new JOptionPane(
+                        "삭제 되었습니다.",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                JDialog dialog = optionPane.createDialog(mainFrame, "삭제");
+                dialog.setLocationRelativeTo(mainFrame); /// 다이얼로그 화면 중앙에 표시.
+                dialog.setVisible(true);
+
+                mainFrame.changeCurrentContent(new BookContentPanel(mainFrame)); // 초기 화면으로 돌아가기
 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "카테고리가 중복되었습니다. 다른 카테고리를 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, ex.getMessage(), "경고", JOptionPane.WARNING_MESSAGE);
                 return;
             }
         });
@@ -61,9 +92,15 @@ public class BookDetailPanel extends ContentPanel {
         // 이미지 490 * 200, 위치 :
         URL location = null;
         try {
-            location = new URL("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5298bac0-b8bf-4c80-af67-725c1272dbb0/dd81df5-04364350-282a-441a-ac71-ff7674d70f6d.jpg/v1/fit/w_828,h_466,q_70,strp/aladdin__2019__wallpaper_by_thekingblader995_dd81df5-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTA4MCIsInBhdGgiOiJcL2ZcLzUyOThiYWMwLWI4YmYtNGM4MC1hZjY3LTcyNWMxMjcyZGJiMFwvZGQ4MWRmNS0wNDM2NDM1MC0yODJhLTQ0MWEtYWM3MS1mZjc2NzRkNzBmNmQuanBnIiwid2lkdGgiOiI8PTE5MjAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.6tu1tC6Ilkb_DdjvsuwbTywPsSgiZnrDwRnogX5rj0Q");
+            String imageUrl = book.getImageUrl();
+            System.out.println(imageUrl);
+            location = new URL(imageUrl);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            try {
+                location = new URL("https://th.bing.com/th/id/OIP.94MjdNLLzgxs1l_L0zNLGwHaHa?w=186&h=186&c=7&r=0&o=5&dpr=1.5&pid=1.7");
+            } catch (MalformedURLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
 
         ImageIcon image = new ImageIcon(location);
@@ -89,14 +126,14 @@ public class BookDetailPanel extends ContentPanel {
         JLabel summaryLabel = new JLabel(book.getSummary());
         summaryLabel.setFont(malgunGothic);
         summaryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        summaryLabel.setBounds(490,150,715,50);
+        summaryLabel.setBounds(490, 150, 715, 50);
         add(summaryLabel);
 
-        String description = "<html>"+insertLineBreaks(book.getDescription(), 30) + "</html>";
+        String description = "<html>" + insertLineBreaks(book.getDescription(), 30) + "</html>";
         JLabel descriptionLabel = new JLabel(description);
         descriptionLabel.setFont(malgunGothic);
         descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        descriptionLabel.setBounds(490,200,715,200);
+        descriptionLabel.setBounds(490, 200, 715, 200);
         add(descriptionLabel);
 
         JLabel scoreLabel = new JLabel(book.getRating() + " / " + " 5");
@@ -120,6 +157,23 @@ public class BookDetailPanel extends ContentPanel {
         add(categoriesLabel);
 
         JButton purchaseButton = new JButton("구매");
+        purchaseButton.addActionListener((e) -> {
+            try {
+                if (UserHolder.isLogin()) {
+                    // ValueObj
+                    orderController.createOrder(book.getId(), UserHolder.getId());
+                    JOptionPane.showMessageDialog(this, "주문을 성공적으로 완료했습니다.",
+                            "Success", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "로그인을 우선적으로 해주세요.",
+                            "Fail", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, ex.getMessage(),
+                        "Fail", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         purchaseButton.setFont(malgunGothic);
         purchaseButton.setBounds(1005, 400, 100, 100);
         add(purchaseButton);
@@ -169,7 +223,7 @@ public class BookDetailPanel extends ContentPanel {
     }
 
     @Override
-    protected void update(int page) {
+    public void updateDisplay(int page) {
 
     }
 

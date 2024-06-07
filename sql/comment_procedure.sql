@@ -73,6 +73,13 @@ create or replace package comment_pkg is
     procedure remove_comment(
         p_comment_id in comments.comment_id%type
     );
+
+    procedure find_user_comment_on_book(
+        p_user_id in users.user_id%type,
+        p_book_id in books.book_id%type,
+        p_comment out sys_refcursor
+    );
+
 end comment_pkg;
 /
 
@@ -89,7 +96,7 @@ create or replace package body comment_pkg is
         set book_rating = (
             select nvl(avg(comment_rating), 0)
             from comments
-            where book_id = p_comment.book_id
+            where book_id = p_comment.book_id and comment_is_purchased = 'Y'
         )
         where book_id = p_comment.book_id;
     end register_comment;
@@ -121,7 +128,7 @@ create or replace package body comment_pkg is
         p_book_id books.book_id%type;
     begin
 
-        select user_id into p_book_id
+        select book_id into p_book_id
         from comments
         where comment_id = p_comment_id;
 
@@ -130,11 +137,23 @@ create or replace package body comment_pkg is
 
         update books
         set book_rating = (
-            select nvl(avg(comment_rating), 0)
+            select nvl(avg(nvl(comment_rating, 0)), 0)
             from comments
-            where book_id = p_book_id
+            where book_id = p_book_id and comment_is_purchased = 'Y'
         )
         where book_id = p_book_id;
     end remove_comment;
+    procedure find_user_comment_on_book(
+        p_user_id in users.user_id%type,
+        p_book_id in books.book_id%type,
+        p_comment out sys_refcursor
+    ) as
+    begin
+        open p_comment for
+            select *
+            from comments
+            where user_id = p_user_id and book_id = p_book_id;
+    end find_user_comment_on_book;
+
 end comment_pkg;
 /

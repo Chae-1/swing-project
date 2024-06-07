@@ -28,45 +28,67 @@ create or replace type user_form as object (
     user_image VARCHAR2(30)
 );
 
-create or replace package user_pkg as
-    procedure add_user(p_user_form in user_form);
-    procedure find_user_by_logid(
-        p_user_log_id in users.user_log_id%type,
-        p_user_password in users.user_password%type,
-        p_user out SYS_REFCURSOR
+CREATE OR REPLACE PACKAGE user_pkg AS
+    PROCEDURE add_user(p_user_form IN user_form);
+    PROCEDURE find_user_by_logid(p_user_log_id IN users.user_log_id%TYPE,
+           				 	p_user_password IN users.user_password%TYPE,
+            				 	p_user out SYS_REFCURSOR);
+    PROCEDURE delete_user_by_id(p_user_id IN users.user_id%TYPE);
+    PROCEDURE update_user_password(p_user_id IN users.user_id%TYPE, p_new_password IN users.user_password%TYPE);
+    procedure find_user_by_id(
+        p_user_id in users.user_id%type,
+        p_user out sys_refcursor
     );
-    --procedure find_all_user();
-    procedure delete_user_by_id(p_user_id in users.user_id%type);
-    -- user 변경 및 선호 카테고리를 변경할 수 있도록 설정
-end user_pkg;
-
-create or replace package body user_pkg as
-procedure add_user(p_user_form in user_form) as
-begin
-insert into users(user_id, user_name, user_password,
-                  user_log_id, user_registration_date, user_image)
-values (users_seq.nextval, p_user_form.user_name,
-        p_user_form.user_password, p_user_form.user_log_id,
-        p_user_form.user_registration_date, p_user_form.user_image);
-end add_user;
+END user_pkg;
+/
 
 
-    procedure find_user_by_logid(
-        p_user_log_id in users.user_log_id%type,
-        p_user_password in users.user_password%type,
-        p_user out SYS_REFCURSOR
+
+CREATE OR REPLACE PACKAGE BODY user_pkg AS
+    PROCEDURE add_user(p_user_form IN user_form) is
+    BEGIN
+	insert into users(user_id, user_name, user_password,
+                  	user_log_id, user_registration_date, user_image)
+	values (users_seq.nextval, p_user_form.user_name,
+       		p_user_form.user_password, p_user_form.user_log_id,
+        	p_user_form.user_registration_date, p_user_form.user_image);
+    END add_user;
+
+    PROCEDURE find_user_by_logid(
+		p_user_log_id IN users.user_log_id%TYPE,
+		p_user_password IN users.user_password%TYPE,
+		p_user OUT SYS_REFCURSOR
+	) is
+    BEGIN
+        OPEN p_user FOR
+        SELECT u.*
+        from users u
+        WHERE user_log_id = p_user_log_id AND user_password = p_user_password;
+    END find_user_by_logid;
+
+    PROCEDURE delete_user_by_id(p_user_id IN users.user_id%TYPE) is
+    BEGIN
+        DELETE FROM users
+	WHERE user_id = p_user_id;
+    	END delete_user_by_id;
+    PROCEDURE update_user_password(
+		p_user_id IN users.user_id%TYPE,
+	 	p_new_password IN users.user_password%TYPE) is
+    BEGIN
+        UPDATE users
+        SET user_password = p_new_password
+        WHERE user_id = p_user_id;
+    END update_user_password;
+
+    procedure find_user_by_id(
+            p_user_id in users.user_id%type,
+            p_user out sys_refcursor
     ) as
-begin
-open p_user for
-select u.*
-from users u
-where user_log_id = p_user_log_id and user_password =  p_user_password;
-end find_user_by_logid;
-
-procedure delete_user_by_id(p_user_id in users.user_id%type) as
-begin
-    delete from users
-    where user_id = p_user_id;
-end delete_user_by_id;
-end user_pkg;
+    begin
+        open p_user for
+            select *
+            from users
+            where user_id = p_user_id;
+    end find_user_by_id;
+END user_pkg;
 /

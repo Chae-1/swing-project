@@ -37,10 +37,10 @@ public class LoginForm extends JFrame {
     public void init() {
         // 사이즈 통합
         Dimension lblSize = new Dimension(80, 30);
-        int tfSize = 10;
+        int tfSize = 20;
         Dimension btnSize = new Dimension(100, 25);
 
-        lblLogTitle = new JLabel("로그인");
+        lblLogTitle = new JLabel("BookLink 로그인");
         lblLogTitle.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         lblId = new JLabel("ID");
         lblId.setPreferredSize(lblSize);
@@ -50,9 +50,9 @@ public class LoginForm extends JFrame {
         tfId = new JTextField(tfSize);
         tfPw = new JPasswordField(tfSize);
 
-        btnLogin = new JButton("Login");
+        btnLogin = new JButton("로그인");
         btnLogin.setPreferredSize(btnSize);
-        btnsign = new JButton("Sign up");
+        btnsign = new JButton("회원가입");
         btnsign.setPreferredSize(btnSize);
 
     }
@@ -68,17 +68,17 @@ public class LoginForm extends JFrame {
     public void setDisplay() {
 
         // FlowLayout 왼쪽 정렬
-        FlowLayout flowLeft = new FlowLayout(FlowLayout.LEFT);
+        FlowLayout flowCenter = new FlowLayout(FlowLayout.CENTER);
 
         // pnlNorth(pnlId, pnlPw)
         JPanel pnlNorth = new JPanel(new GridLayout(0, 1));
 
 
-        JPanel pnlId = new JPanel(flowLeft);
+        JPanel pnlId = new JPanel(flowCenter);
         pnlId.add(lblId);
         pnlId.add(tfId);
 
-        JPanel pnlPw = new JPanel(flowLeft);
+        JPanel pnlPw = new JPanel(flowCenter);
         pnlPw.add(lblPw);
         pnlPw.add(tfPw);
 
@@ -126,7 +126,7 @@ public class LoginForm extends JFrame {
 
     public void showFrame() {
         setTitle("Login");
-        setSize(300, 600); // 로그인 폼 크기 설정
+        setSize(500, 200); // 로그인 폼 크기 설정
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE); // 로그인 창을 닫을 때 프로그램 종료 설정
         setResizable(false);
@@ -135,6 +135,10 @@ public class LoginForm extends JFrame {
 
     public void login(String username, String password) {
         UserDao userDao = new UserDao();
+        // -> Controller
+        // 1. 파라미터에 대한 유효성 검증 -> Controller
+        // 2. 해당 파라미터로 조회를 했을 때, 중복 건 수가 없는지 확인 -> Service
+        // 3. 저장, 수정, 조회 -> Dao, Repository
 
         // UserDao를 통해 사용자 인증을 시도함.
         Optional<User> authenticatedUser = userDao.findByLogIdAndPassword(username, password);
@@ -162,4 +166,3 @@ public class LoginForm extends JFrame {
 
 
 }
-

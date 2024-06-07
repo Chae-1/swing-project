@@ -86,7 +86,7 @@ public class BookRegisterDialog extends JDialog {
         panel.add(new JScrollPane(descriptionField));
 
         panel.add(new JLabel("Price:"));
-        JTextField priceField = new JTextField(book.getPrice());
+        JTextField priceField = new JTextField(String.valueOf(book.getPrice()));
         panel.add(priceField);
 
         panel.add(new JLabel("Publisher:"));
@@ -106,7 +106,7 @@ public class BookRegisterDialog extends JDialog {
 
         // Add image URL field and preview
         panel.add(new JLabel("Image URL:"));
-        JTextField imageUrlField = new JTextField();
+        JTextField imageUrlField = new JTextField(book.getImageUrl());
         panel.add(imageUrlField);
 
         imagePreviewLabel = new JLabel();
@@ -238,6 +238,8 @@ public class BookRegisterDialog extends JDialog {
             String category1 = categoryComboBox1.getSelectedItem().toString();
             String category2 = categoryComboBox2.getSelectedItem().toString();
             String imageUrl = imageUrlField.getText();
+
+            System.out.println("imageURL : " + imageUrl);
 
             if (category1.equals(category2)) {
                 JOptionPane.showMessageDialog(this, "카테고리가 중복되었습니다. 다른 카테고리를 선택하세요.", "경고", JOptionPane.WARNING_MESSAGE);

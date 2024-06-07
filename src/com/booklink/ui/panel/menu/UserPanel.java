@@ -2,6 +2,7 @@ package com.booklink.ui.panel.menu;
 
 import com.booklink.model.user.User;
 import com.booklink.ui.frame.main.MainFrame;
+import com.booklink.ui.panel.content.book.BookContentPanel;
 import com.booklink.utils.UserHolder;
 
 import javax.swing.*;
@@ -27,13 +28,13 @@ public class UserPanel extends JPanel {
         mypageButton = new JButton("마이페이지");
 
 
-        logoutButton.setBounds(0, 0, 100, 50);
-        mypageButton.setBounds(100,0,100,50);
+        logoutButton.setBounds(100, 0, 100, 50);
+        mypageButton.setBounds(200,0,100,50);
 
         add(logoutButton);
         add(mypageButton);
-        add(loginButton).setBounds(0, 0, 100, 50);
-        add(signUpButton).setBounds(100, 0, 100, 50);
+        add(loginButton).setBounds(100, 0, 100, 50);
+        add(signUpButton).setBounds(200, 0, 100, 50);
 
 
         // 로그인 버튼 누르면 로그인 폼으로 이동
@@ -50,22 +51,25 @@ public class UserPanel extends JPanel {
         logoutButton.addActionListener(e -> {
             UserHolder.logOut(); // 로그아웃
             updateButtons();
+            MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+            mainFrame.clearPrevPage(new BookContentPanel(mainFrame));
+            // 로그아웃 메세지 다이얼로그
+            JOptionPane optionPane = new JOptionPane(
+                    "로그아웃 되었습니다.",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            JDialog dialog = optionPane.createDialog(mainFrame, "로그아웃");
+            dialog.setLocationRelativeTo(mainFrame); /// 다이얼로그 화면 중앙에 표시.
+            dialog.setVisible(true);
+
+            mainFrame.changeCurrentContent(new BookContentPanel(mainFrame)); // 초기 화면으로 돌아가기
         });
 
- //
-//        mypageButton.addActionListener(e -> {
-//            if (UserHolder.isLogin()) {
-//            }
-//        });
+        // 회원가입 버튼 누르면 회원가입 폼으로 이동
+        signUpButton.addActionListener(e -> new SignForm(null));
 
-        //sign up 버튼 누르면 회원가입 폼으로 이동
-        signUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new SignForm(null); // Open the SingForm
-            }
-        });
 
+        // 마이페이지 버튼 누르면 마이페이지 폼으로 이동
         mypageButton.addActionListener(e -> {
             if (UserHolder.isLogin()) {
                 MainFrame mainFrame = (MainFrame) SwingUtilities.getWindowAncestor(this);

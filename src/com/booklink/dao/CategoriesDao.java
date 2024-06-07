@@ -130,4 +130,52 @@ public class CategoriesDao {
             DBConnectionUtils.releaseConnection(con, cstmt, rs);
         }
     }
+
+
+    // 사용자 선호 categories
+    public List<CategoryDto> allCategories() {
+        String sql = "call categories_pkg.find_all_categories(?)";
+        Connection con = null;
+        ResultSet rs = null;
+        CallableStatement cstmt = null;
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(1);
+            List<CategoryDto> dtos = new ArrayList<>();
+            while (rs.next()) {
+                dtos.add(new CategoryDto(rs.getString("category_name"), rs.getLong("prior_category_id")));
+            }
+            return dtos;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
+
+    public List<String> findAll() {
+        String sql = "call categories_pkg.find_all(?)";
+        Connection con = null;
+        ResultSet rs = null;
+        CallableStatement cstmt = null;
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(1);
+            List<String> names = new ArrayList<>();
+            while (rs.next()) {
+                names.add(rs.getString("category_name"));
+            }
+            return names;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
 }

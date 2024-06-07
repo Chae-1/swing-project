@@ -1,7 +1,5 @@
 package com.booklink.ui.panel.content;
 
-import com.booklink.ui.panel.content.book.BookContentPanel;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,10 +16,8 @@ public class PagingPanel extends JPanel {
         setBackground(Color.GRAY);
         this.width = width;
         this.height = height;
-
         // pagingPanel의 부모가 되는 패널
         this.contentPanel = contentPanel;
-
         updatePagingPanel();
     }
 
@@ -35,10 +31,12 @@ public class PagingPanel extends JPanel {
 
         int startNum = Math.max(1, contentPanel.getCurrentPage() - 5);
         int endNum = Math.min(startNum + 10, contentPanel.getMaxPage());
+        System.out.println(startNum);
+        System.out.println(endNum);
         for (int i = startNum; i <= endNum; i++) {
             JButton pageButton = new JButton(String.valueOf(i));
             pageButton.addActionListener(e -> {
-                contentPanel.update(Integer.parseInt(pageButton.getText()));
+                contentPanel.updateDisplay(Integer.parseInt(pageButton.getText()));
             });
             pageButton.setPreferredSize(new Dimension(50, 30));
             add(pageButton);

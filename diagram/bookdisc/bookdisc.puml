@@ -1,0 +1,53 @@
+@startuml
+actor User
+participant "BookDiscussionController" as A
+participant "BookDiscussionService" as B
+participant "BookDiscussionDao" as C
+participant "OrderDao" as D
+participant "DB" as E
+
+User -> A : addDiscussion
+activate A
+
+A -> B : addDiscussion
+activate B
+
+B -> D : findOrderCount
+activate D
+
+D -> E : findOrderCount
+activate E
+
+E --> D : return count
+deactivate E
+
+D --> B : return count
+deactivate D
+
+
+alt user has ordered
+    B -> C : addDiscussion
+    activate C
+
+    C -> E :addDiscussion
+    activate E
+
+    E --> C : return
+    deactivate E
+
+    C --> B : return
+    deactivate C
+
+    B --> A : return
+    deactivate B
+
+    A --> User : return
+    deactivate A
+else user has't ordered
+    B --> A : throw UserPermissionException
+    deactivate B
+
+    A --> User : throw UserPermissionException
+    deactivate A
+end
+@enduml

@@ -159,4 +159,52 @@ public class UserDao {
         }
     }
 
+    public Optional<User> findById(Long userId) {
+        String sql = "{call user_pkg.find_user_by_id(?, ?)}"; // 비밀번호 업데이트를 위한 저장 프로시저 호출
+        // open for
+        // close
+        Connection con = null;
+        CallableStatement cs = null;
+        ResultSet rs = null;
+        try {
+            con = DBConnectionUtils.getConnection();
+            cs = con.prepareCall(sql);
+            cs.setLong(1, userId);
+            cs.registerOutParameter(2, OracleTypes.CURSOR);
+            cs.execute();
+            rs = (ResultSet) cs.getObject(2);
+            User user = null;
+            if (rs.next()) {
+                user = new User(rs.getLong("user_id"), rs.getString("user_name"),
+                        rs.getString("user_password"),
+                        rs.getString("user_log_id"), rs.getTimestamp("user_registration_date").toLocalDateTime(),
+                        rs.getString("user_image"));
+            }
+            return Optional.ofNullable(user);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("비밀번호 업데이트 중 오류가 발생했습니다. 사용자 ID: " + userId, e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cs, rs);
+        }
+    }
+
+    public void updatePassword(long userId, String newPassword) {
+        String sql = "{call user_pkg.UPDATE_USER_PASSWORD(?, ?)}"; // 비밀번호 업데이트를 위한 저장 프로시저 호출
+
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cs = con.prepareCall(sql)) {
+
+            cs.setLong(1, userId);
+            cs.setString(2, newPassword);
+            cs.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("비밀번호 업데이트 중 오류가 발생했습니다. 사용자 ID: " + userId, e);
+        }
+    }
+
+
 }

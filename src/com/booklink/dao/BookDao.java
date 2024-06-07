@@ -17,31 +17,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class BookDao {
-
-    public void registerBooks(List<BookDto> bookDtos) {
-        Connection con = null;
-        CallableStatement cstmt = null;
-        String sql = "call book_pkg.add_books(?)";
-        try {
-            con = DBConnectionUtils.getConnection();
-            cstmt = con.prepareCall(sql);
-
-            StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_INFO_REC", con);
-            ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("BOOK_INFO_TAB", con);
-            STRUCT[] structArray = new STRUCT[bookDtos.size()];
-            for (int i = 0; i < bookDtos.size(); i++) {
-                structArray[i] = new STRUCT(structDescriptor, con, createBookInfo(con, bookDtos.get(i)));
-            }
-            cstmt.setArray(1, new ARRAY(arrayDescriptor, (OracleConnection) con, structArray));
-            cstmt.execute();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            DBConnectionUtils.releaseConnection(con, cstmt, null);
-        }
-    }
 
     // 등록 수정 삭제 조회
     public void registerBook(BookDto bookDto) {
@@ -72,7 +50,8 @@ public class BookDao {
                 DBDataTypeMatcher.stringToClob(con, bookDto.description()),
                 bookDto.price(),
                 bookDto.rating() != null ? new BigDecimal(bookDto.rating()) : null,
-                bookDto.publisher()
+                bookDto.publisher(),
+
         };
     }
 
@@ -81,8 +60,8 @@ public class BookDao {
         String sql = "{ call book_pkg.find_book_by_title(?, ?) }";
         ResultSet rs = null;
 
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setString(1, title);
             // Register output parameter
             cstmt.registerOutParameter(2, OracleTypes.CURSOR);
@@ -99,9 +78,9 @@ public class BookDao {
     }
 
     public void deleteBook(Long bookId) {
-           String sql = "{call book_pkg.delete_book(?)}";
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        String sql = "{call book_pkg.delete_book(?)}";
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setLong(1, bookId);
             // Register output parameter
             int result = cstmt.executeUpdate();
@@ -116,8 +95,8 @@ public class BookDao {
     public void updateBook(Long bookId, BookDto bookDto) {
         String sql = "{call book_pkg.update_book(?, ?)}";
 
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
             cstmt.setLong(1, bookId);
             StructDescriptor structDescriptor = StructDescriptor.createDescriptor("BOOK_INFO_REC", con);
             STRUCT bookInfoStruct = new STRUCT(structDescriptor, con, createBookInfo(con, bookDto));
@@ -134,10 +113,16 @@ public class BookDao {
     public Optional<Book> findBookById(Long bookId) {
         String sql = "{call book_pkg.find_book_by_id(?, ?)}";
         ResultSet rs = null;
-        try(Connection con = DBConnectionUtils.getConnection();
-            CallableStatement cstmt = con.prepareCall(sql)) {
+        System.out.println("asdadadad");
+
+        try (Connection con = DBConnectionUtils.getConnection();
+             CallableStatement cstmt = con.prepareCall(sql)) {
+            System.out.println("asdadadad");
+
             cstmt.setLong(1, bookId);
             cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+
+            System.out.println("asdadadad");
             // Register output parameter
             cstmt.execute();
             rs = (ResultSet) cstmt.getObject(2);
@@ -158,6 +143,9 @@ public class BookDao {
     }
 
     private Book getBook(ResultSet rs) throws SQLException {
+        System.out.println(
+                "ok "
+        );
         double bookRating = rs.getBigDecimal("book_rating").doubleValue();
         System.out.println("bookRating: " + bookRating);
         return new Book.BookBuilder()
@@ -171,30 +159,8 @@ public class BookDao {
                 .publisher(rs.getString("book_publisher"))
                 .salesPoint(rs.getInt("book_sales_point"))
                 .rating(bookRating)
+                .imageUrl(rs.getString("book_image_url"))
                 .build();
-    }
-
-    public List<Book> findAllBook() {
-        Connection con = null;
-        CallableStatement cstmt = null;
-        ResultSet rs = null;
-        String sql = "call book_pkg.find_all_book(?)";
-        try {
-            con = DBConnectionUtils.getConnection();
-            cstmt = con.prepareCall(sql);
-            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
-            cstmt.execute();
-            rs = (ResultSet) cstmt.getObject(1);
-            List<Book> books = new ArrayList<>();
-            while (rs.next()) {
-                books.add(getBook(rs));
-            }
-            return books;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            DBConnectionUtils.releaseConnection(con, cstmt, rs);
-        }
     }
 
     public List<Book> findAllBookWithCount() {
@@ -284,6 +250,7 @@ public class BookDao {
             cstmt.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("eeror");
             throw new RuntimeException(e);
         } finally {
             DBConnectionUtils.releaseConnection(con, cstmt, null);
@@ -291,7 +258,8 @@ public class BookDao {
     }
 
     private Object[] createBookWithCategoriesInfo(Connection con, BookRegisterDto dto) {
-        return new Object[] {
+
+        return new Object[]{
                 dto.title(),
                 dto.author(),
                 Date.valueOf(dto.publicationDate()),
@@ -330,4 +298,29 @@ public class BookDao {
         }
     }
 
+    public List<Book> findBooksByContainsCategoryNames(Set<String> categoryNames) {
+        Connection con = null;
+        CallableStatement cstmt = null;
+        ResultSet rs = null;
+        String sql = "call Categories_Pkg.find_book_category_names(?, ?)";
+        try {
+            con = DBConnectionUtils.getConnection();
+            cstmt = con.prepareCall(sql);
+            ArrayDescriptor arrayDescriptor = ArrayDescriptor.createDescriptor("CATEGORY_NAME_ARRAY", con);
+            ARRAY prevCategoriesArray = new ARRAY(arrayDescriptor, con, categoryNames.toArray());
+            cstmt.setArray(1, prevCategoriesArray);
+            cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+            cstmt.execute();
+            rs = (ResultSet) cstmt.getObject(2);
+            List<Book> books = new ArrayList<>();
+            while (rs.next()) {
+                books.add(getBook(rs));
+            }
+            return books;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DBConnectionUtils.releaseConnection(con, cstmt, rs);
+        }
+    }
 }

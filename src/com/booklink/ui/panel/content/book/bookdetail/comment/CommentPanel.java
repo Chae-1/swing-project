@@ -1,7 +1,8 @@
 package com.booklink.ui.panel.content.book.bookdetail.comment;
 
 import com.booklink.controller.CommentController;
-import com.booklink.model.book.comments.CommentDto;
+import com.booklink.model.book.comments.CommentSummaryDto;
+import com.booklink.model.book.comments.Comments;
 import com.booklink.ui.frame.main.MainFrame;
 import com.booklink.ui.panel.content.ContentPanel;
 import com.booklink.ui.panel.content.PagingPanel;
@@ -15,7 +16,7 @@ public class CommentPanel extends ContentPanel {
     private CommentController commentController;
     private PagingPanel pagingPanel;
     private int currentPage;
-    private List<CommentDto> comments;
+    private List<CommentSummaryDto> comments;
     private Long bookId;
 
     public CommentPanel(MainFrame mainFrame, Long bookId) {
@@ -42,7 +43,7 @@ public class CommentPanel extends ContentPanel {
     }
 
     @Override
-    protected void update(int page) {
+    public void updateDisplay(int page) {
         // 페이징이 눌리면 댓글 목륵을 전부 가지고 온다.
         // commentDto -> userId, commentId, comment, rating, userName
         removeAll();
@@ -60,8 +61,8 @@ public class CommentPanel extends ContentPanel {
         int start = (currentPage - 1) * 2;
         int end = Math.min(currentPage * 2, comments.size());
         for (int i = start; i < end; i++) {
-            CommentDto commentDto = comments.get(i);
-            CommentSummaryPanel summary = new CommentSummaryPanel(commentDto);
+            CommentSummaryDto commentSummaryDto = comments.get(i);
+            CommentSummaryPanel summary = new CommentSummaryPanel(commentSummaryDto);
             add(summary);
         }
         // 입력란

@@ -47,7 +47,7 @@ public class CommentInputPanel extends JPanel {
                         LocalDateTime.now(), text));
                 Container parent = this.getParent();
                 if (parent instanceof CommentPanel p) {
-                    p.update(1);
+                    p.updateDisplay(1);
                 }
             } catch (UserException e) {
                 // comment 예외시, 메세지를 출력
@@ -59,4 +59,10 @@ public class CommentInputPanel extends JPanel {
         add(submitButton);
     }
 
+
+    public static void main(String[] args) {
+        int n1 = 1;
+        int n2 = 2;
+        System.out.println("adsasd");
+    }
 }

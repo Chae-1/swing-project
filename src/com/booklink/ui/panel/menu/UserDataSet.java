@@ -6,7 +6,7 @@ public class UserDataSet {
     private ArrayList<UserLoginForm> userLoginForms;
 
     public UserDataSet() {
-        userLoginForms = new ArrayList<UserLoginForm>();
+        userLoginForms = new ArrayList<>();
     }
 
     // 회원 추가

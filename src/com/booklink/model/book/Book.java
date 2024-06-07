@@ -1,7 +1,6 @@
 package com.booklink.model.book;
 
 import com.booklink.model.categories.Categories;
-import com.booklink.ui.BookShortInfo;
 
 import java.time.LocalDate;
 
@@ -19,6 +18,10 @@ public class Book {
     private Double rating;
     private String imageUrl;
     private Categories categories;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
     public String getDescription() {
         return description;
@@ -122,11 +125,6 @@ public class Book {
         public Book build() {
             return new Book(this);
         }
-    }
-
-
-    public BookShortInfo bookShortInfo() {
-        return new BookShortInfo(summary);
     }
 
     public String getTitle() {
