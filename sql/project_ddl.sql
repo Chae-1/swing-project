@@ -52,7 +52,7 @@ CREATE TABLE Books (
                        book_price INTEGER,
                        book_rating number(2, 1),
                        book_publisher VARCHAR2(50),
-                       book_image_url        varchar2(3000)
+                       book_image_url varchar2(3000)
 );
 
 create unique index idx_books on books(book_id);
@@ -174,7 +174,7 @@ CREATE TABLE DiscussionComments (
                                     dis_comment_registration_date timestamp,
                                     dis_comment_content clob,
                                     discussion_id INTEGER,
-                                    user_id INTEGER,
+                                    user_id INTEGER
 );
 
 create sequence discussion_comments_seq

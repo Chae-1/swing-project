@@ -25,7 +25,7 @@ public class UserOrderList extends JDialog {
     private JButton btnCancel;
     private JList<String> orderList;
     private DefaultListModel<String> listModel;
-    private List<OrderDto> orders; // 주문 목록을 저장하느 필드
+    private List<OrderDto> orders;
     private BookController bookController = new BookController();
 
     public UserOrderList(MyPagePanel owner) {

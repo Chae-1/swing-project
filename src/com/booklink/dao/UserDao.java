@@ -61,13 +61,6 @@ public class UserDao {
         }
     }
 
-    /*
-        user_name VARCHAR2(30),
-        user_password VARCHAR2(30),
-        user_log_id VARCHAR2(30),
-        user_registration_date timestamp,
-        user_image VARCHAR2(30)
-     */
     private Object[] createUserInfo(UserRegistrationDto dto) {
         return new Object[]{
                 dto.name(),

@@ -1,22 +1,4 @@
-String sql = "call order_pkg_create_order(?, ?, ?)";
-drop sequence orders_seq;
-create sequence orders_seq
-    start with 1
-    increment by 1
-    nocycle
-    cache 20;
 
-CREATE TABLE Orders (
-                        order_id INTEGER,
-                        order_date timestamp,
-                        order_amount INTEGER,
-                        book_id INTEGER,
-                        user_id INTEGER
-);
-
-
-
--- 구조체 타입 정의
 CREATE OR REPLACE TYPE ORDER_FORM AS OBJECT (
     order_id         NUMBER,
     book_id          number,

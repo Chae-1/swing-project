@@ -1,23 +1,3 @@
-create sequence categories_seq
-    start with 1
-    increment by 1
-    nocycle
-    cache 20;
-CREATE OR REPLACE TYPE CATEGORY_NAME_ARRAY AS TABLE OF VARCHAR2(255);/
-CREATE TABLE Categories
-(
-    category_id       INTEGER,
-    category_name     VARCHAR2(50),
-    prior_category_id INTEGER
-);
-create unique index idx_categories on Categories (category_id);
-alter table categories
-    add constraint category_pk primary key (category_id);
-alter table categories
-    add constraint category_name_nn check (category_name is not null);
-alter table categories
-    add constraint prior_category_fk foreign key (prior_category_id) references categories (category_id) on delete cascade;
-
 CREATE OR REPLACE PACKAGE Categories_Pkg IS
     procedure insert_maincategory(
         p_category_name in Categories.category_name%type

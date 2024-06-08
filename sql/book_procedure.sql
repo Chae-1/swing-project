@@ -1,35 +1,3 @@
--- 프로시저의 in, out 모드 -
--- 파라미터는 호출 시 값이 전달되는 읽기 전용 인자다. -> final
--- in 모드는 사용은 가능하지만, 수정할 수는 없는 프로시저의 인자다.
--- out 모드는 프로시저나 함수가 값을 반환하기 위해 사용하는 인자이다.
--- 프로시저나 함수가 작업 결과를 호출자에게 반환할 때 사용한다.
--- ex ) 프로시저 내부에서 전달된 in 인자는 내부에서 사용되기만 한다.
--- -- out 인자는 호출 결과로 리턴받을 수 있다.
-CREATE TABLE Books
-(
-    book_id               INTEGER,
-    book_title            VARCHAR2(50),
-    book_author           VARCHAR2(30),
-    book_publication_date DATE,
-    book_sales_point      INTEGER,
-    book_summary          CLOB,
-    book_description      CLOB,
-    book_price            INTEGER,
-    book_rating           number(2, 1),
-    book_publisher        VARCHAR2(50),
-    book_image_url        varchar2(3000)
-);
-
-create unique index idx_books on books (book_id);
-CREATE INDEX books_title_idx ON books (book_title) INDEXTYPE IS CTXSYS.CONTEXT;
-alter table books
-    add constraint books_pk primary key (book_id);
-alter table books
-    add constraint books_title_nn check (book_title is not null);
-alter table books
-    add constraint books_author_nn check (book_author is not null);
-
-
 CREATE TABLE Categories
 (
     category_id       INTEGER,
@@ -102,6 +70,7 @@ CREATE OR REPLACE TYPE book_rec as OBJECT
     book_info book_info_rec
 );
 
+-- 도서 등록시 전달받은 카테고리 목록
 CREATE OR REPLACE TYPE CATEGORY_NAME_ARRAY AS TABLE OF VARCHAR2(255);/
 
 create or replace package book_pkg as

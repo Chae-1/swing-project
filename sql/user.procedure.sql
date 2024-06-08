@@ -1,19 +1,3 @@
-drop table users;
-create table users (
-                       user_id int,
-                       user_name VARCHAR2(30),
-                       user_password VARCHAR2(30),
-                       user_log_id VARCHAR2(30),
-                       user_registration_date timestamp,
-                       user_image VARCHAR2(30)
-);
-
-create unique index idx_users on users(user_id);
-alter table users add constraint users_pk primary key(user_id);
-alter table users add constraint user_name_nn check(user_name is not null);
-alter table users add constraint user_password_nn check(user_password is not null);
-
-
 create sequence users_seq
     start with 1
     increment by 1

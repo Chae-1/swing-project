@@ -7,15 +7,6 @@ import com.booklink.ui.frame.main.MainFrame;
 
 public class UserHolder {
     private static User user;
-    private static MainFrame mainFrame;
-
-
-//    static {
-//        UserService userService = new UserService();
-//        user = userService.findUserByLogIdAndPassword("test", "test")
-//                .orElse(null);
-//    }
-
     public static boolean isLogin() {
         return user != null;
     }
