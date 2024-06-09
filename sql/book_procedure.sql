@@ -1,31 +1,3 @@
-CREATE TABLE Categories
-(
-    category_id       INTEGER,
-    category_name     VARCHAR2(50),
-    prior_category_id INTEGER
-);
-
-CREATE TABLE BookCategories
-(
-    book_category_id integer,
-    category_id INTEGER,
-    book_id     INTEGER
-);
-
-create sequence book_categories_seq
-    start with 1
-    increment by 1
-    nocycle
-    cache 20;
-
-create unique index idx_book_categories on bookcategories (book_id, category_id);
-alter table bookcategories
-    add constraint bookcategories_pk primary key (book_id, category_id);
-alter table bookcategories
-    add constraint bookcategories_category_fk foreign key (category_id) references categories (category_id) on delete cascade;
-alter table bookcategories
-    add constraint bookcategories_book_fk foreign key (book_id) references books (book_id) on delete cascade;
-
 CREATE OR REPLACE TYPE book_info_rec AS OBJECT
 (
     book_title            VARCHAR2(50),
